@@ -26,15 +26,18 @@ abstract class Feature<Wish, Action, in Effect, State, News>(
     private val states: ConflatedBroadcastChannel<State> =
         ConflatedBroadcastChannel(initialState)
 
-    val state: State
-        get() = states.value
-
-    override fun getFlow(): Flow<State> = states.asFlow()
-
 
     private val wishChanel: BroadcastChannel<Wish> = BroadcastChannel(10)
     private val actionChanel: BroadcastChannel<Action> = BroadcastChannel(10)
     private val newsChanel: BroadcastChannel<News> = BroadcastChannel(10)
+
+    val state: State
+        get() = states.value
+
+    val news: Flow<News> get() = newsChanel.asFlow()
+
+    override fun getFlow(): Flow<State> = states.asFlow()
+
 
     init {
         wishChanel.asFlow()

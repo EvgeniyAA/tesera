@@ -14,7 +14,7 @@ apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 android {
     compileSdkVersion(29)
     defaultConfig {
-        applicationId = "com.gemini.base"
+        applicationId = "com.boardgames.tesera"
         minSdkVersion(23)
         targetSdkVersion(29)
         versionCode = 1

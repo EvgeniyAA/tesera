@@ -1,11 +1,11 @@
-package com.gemini.base
+package com.boardgames.tesera
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bluelinelabs.conductor.Conductor
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
-import com.gemini.base.ui.root.RootFlowController
+import com.boardgames.tesera.ui.root.RootFlowController
 import kotlinx.android.synthetic.main.layout_container.*
 
 class AppActivity : AppCompatActivity() {

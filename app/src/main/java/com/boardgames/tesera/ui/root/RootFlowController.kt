@@ -1,9 +1,9 @@
-package com.gemini.base.ui.root
+package com.boardgames.tesera.ui.root
 
 import android.view.View
-import com.gemini.base.R
-import com.gemini.base.ui.NavigationTestController
-import com.gemini.base.ui.news.NewsController
+import com.boardgames.tesera.R
+import com.boardgames.tesera.ui.NavigationTestController
+import com.boardgames.tesera.ui.news.NewsController
 import core.BaseController
 import core.utils.TabRouter
 import core.utils.TabScreen

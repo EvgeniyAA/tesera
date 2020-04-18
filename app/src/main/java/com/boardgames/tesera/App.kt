@@ -1,4 +1,4 @@
-package com.gemini.base
+package com.boardgames.tesera
 
 import android.app.Application
 import com.facebook.stetho.BuildConfig
@@ -7,6 +7,7 @@ import toothpick.ktp.KTP
 import timber.log.Timber.DebugTree
 import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
+import core.di.AppModule
 import core.di.DI
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
@@ -17,14 +18,20 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         Toothpick.setConfiguration(Configuration.forDevelopment())
+        openScopes()
         initStetho()
         initTimber()
         initThreetenABP()
     }
 
+    private fun openScopes() {
+        KTP.openScope(DI.APP_SCOPE).installModules(AppModule(this))
+    }
+
     private fun initThreetenABP() {
         AndroidThreeTen.init(this)
     }
+
     private fun initStetho() {
         if (BuildConfig.DEBUG) {
             val initializerBuilder = Stetho

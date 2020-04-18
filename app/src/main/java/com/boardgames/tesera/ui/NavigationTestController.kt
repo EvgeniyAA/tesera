@@ -1,4 +1,4 @@
-package com.gemini.base.ui
+package com.boardgames.tesera.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

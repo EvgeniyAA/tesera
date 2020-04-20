@@ -2,15 +2,13 @@ val toothpickVersion = "3.1.0"
 val SERVER_ENDPOINT = "\"https://api.tesera.ru/\""
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("kotlin-kapt")
-
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
 }
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
+
+
 android {
     compileSdkVersion(29)
     defaultConfig {
@@ -20,6 +18,12 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
+    }
+    kotlinOptions {
+        freeCompilerArgs += listOf(
+            "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+            "-Xuse-experimental=kotlinx.coroutines.ObsoleteCoroutinesApi"
+        )
     }
     buildTypes {
         getByName("release") {

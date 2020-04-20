@@ -9,8 +9,8 @@ import kotlin.coroutines.CoroutineContext
 @ExperimentalCoroutinesApi
 abstract class Feature<Wish, Action, in Effect, State, News>(
     initialState: State,
-    actor: Actor<State, Action, Effect>,
-    private val reducer: Reducer<State, Effect>,
+    actor: MviActor<State, Action, Effect>,
+    private val reducer: MviReducer<State, Effect>,
     wishToAction: WishToAction<Wish, Action>,
     bootstrapper: Bootstrapper<Action> = EmptyBootstrapper<Action>(),
     private val newsPublisher: NewsPublisher<Action, Effect, State, News> = EmptyNewsPublisher(),
@@ -91,9 +91,9 @@ interface Bootstrapper<T> {
     fun invoke(): Flow<T>
 }
 
-typealias Reducer<State, Effect> = (state: State, effect: Effect) -> State
+typealias MviReducer<State, Effect> = (state: State, effect: Effect) -> State
 
-typealias  Actor<State, Wish, Effect> =
+typealias  MviActor<State, Wish, Effect> =
             (state: State, wish: Wish) -> Flow<Effect>
 
 typealias NewsPublisher<Action, Effect, State, News> =

@@ -1,9 +1,9 @@
 package com.boardgames.tesera.ui.news
 
+import com.boardgames.tesera.features.news.NewsFeature
 import com.boardgames.tesera.mvi.Binding
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@ExperimentalCoroutinesApi
 class NewsBinding(
     controller: NewsController,
     private val newsFeature: NewsFeature

@@ -35,6 +35,7 @@ class NewsController : BaseController(R.layout.news_controller),
                     emit(NewsFeature.Wish.Click)
                 }
                 .withUiScope()
+
         }
 
     }

@@ -23,10 +23,7 @@ abstract class Feature<Wish, Action, in Effect, State, News>(
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    private val states: ConflatedBroadcastChannel<State> =
-        ConflatedBroadcastChannel(initialState)
-
-
+    private val states: MutableStateFlow<State> = MutableStateFlow(initialState)
     private val wishChanel: BroadcastChannel<Wish> = BroadcastChannel(10)
     private val actionChanel: BroadcastChannel<Action> = BroadcastChannel(10)
     private val newsChanel: BroadcastChannel<News> = BroadcastChannel(10)
@@ -36,7 +33,7 @@ abstract class Feature<Wish, Action, in Effect, State, News>(
 
     val news: Flow<News> get() = newsChanel.asFlow()
 
-    override fun getFlow(): Flow<State> = states.asFlow()
+    override fun getFlow(): Flow<State> = states
 
 
     init {
@@ -59,7 +56,7 @@ abstract class Feature<Wish, Action, in Effect, State, News>(
 
     suspend fun processEffect(state: State, action: Action, effect: Effect) {
         val newState = reducer.invoke(state, effect)
-        states.send(newState)
+        states.value = newState
         invokePostProcessor(action, effect, newState)
         invokeNewsPublisher(action, effect, newState)
     }

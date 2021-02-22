@@ -1,4 +1,4 @@
-package core.di
+package com.boardgames.tesera.di
 
 import android.content.Context
 import toothpick.config.Module

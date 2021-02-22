@@ -2,21 +2,23 @@ val toothpickVersion = "3.1.0"
 val SERVER_ENDPOINT = "\"https://api.tesera.ru/\""
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("kotlin-kapt")
 
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
 }
+
+androidExtensions {
+    isExperimental = true
+}
+
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
     defaultConfig {
         applicationId = "com.boardgames.tesera"
-        minSdkVersion(23)
-        targetSdkVersion(29)
+        minSdkVersion(24)
+        targetSdkVersion(30)
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
@@ -34,8 +36,12 @@ android {
 }
 dependencies {
     implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0")
     implementation("io.github.reactivecircus.flowbinding:flowbinding-android:0.10.2")
     implementation("io.github.reactivecircus.flowbinding:flowbinding-lifecycle:0.10.2")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.4.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.0")
     kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
 }

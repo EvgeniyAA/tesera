@@ -6,4 +6,5 @@
     <string name="third_screen_title">Favorites</string>
     <string name="load_more">Load More</string>
     <string name="stub" />
+    <string name="hotnessGamesTitle">Обсуждаемые</string>
 </resources>

@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
-import core.di.DI
+import com.boardgames.tesera.di.DI
 
 import core.extensions.objectScopeName
 import timber.log.Timber

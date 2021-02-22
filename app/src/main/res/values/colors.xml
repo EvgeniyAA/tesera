@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#FCA500</color>
-    <color name="colorAccent">#FCA500</color>
-    <color name="colorSelectItem">#FCA500</color>
+    <color name="web_orange">#FCA500</color>
+    <color name="amber">#FFC107</color>
+    <color name="mercury">#eaeaea</color>
+    <color name="coral">#f64d4d</color>
+    <color name="black">#000000</color>
+    <color name="mine_shaft">#333333</color>
+    <color name="black_10pc">#1a000000</color>
+    <color name="quick_silver">#a4a4a4</color>
 </resources>

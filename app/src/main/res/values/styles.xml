@@ -1,19 +1,37 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
+    <style name="AppTheme26ApiWrapper" parent="Theme.MaterialComponents.Light.NoActionBar" />
+
+    <style name="AppTheme" parent="AppTheme26ApiWrapper">
+        <!-- Colors -->
+        <item name="colorPrimary">@color/web_orange</item>
+        <item name="colorAccent">@color/amber</item>
+        <item name="colorControlNormal">@color/amber</item>
+        <item name="colorControlActivated">@color/amber</item>
+        <item name="colorOnSurface">@color/mercury</item>
+        <item name="colorControlHighlight">@color/mercury</item>
+        <item name="colorError">@color/coral</item>
+        <!-- /Colors -->
+
+        <!-- Text -->
+        <item name="android:textColor">@color/mine_shaft</item>
+        <item name="android:fontFamily">@font/futura_book</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingExtra">4sp</item>
+        <!-- /Text -->
+
+        <!-- Window -->
+        <item name="android:windowBackground">@color/amber</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/black_10pc</item>
+        <item name="android:navigationBarColor">@color/black_10pc</item>
+        <!-- /Window -->
+        <!-- Widgets -->
+        <item name="bottomNavigationStyle">@style/BottomNavigationView</item>
+        <!-- /Widgets -->
     </style>
 
-    <style name="BottomNavigation">
-        <item name="colorPrimary">@color/colorSelectItem</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+
 
 </resources>

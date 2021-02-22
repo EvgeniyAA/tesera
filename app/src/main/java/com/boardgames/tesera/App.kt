@@ -1,14 +1,14 @@
 package com.boardgames.tesera
 
 import android.app.Application
-import com.facebook.stetho.BuildConfig
 import timber.log.Timber
 import toothpick.ktp.KTP
 import timber.log.Timber.DebugTree
 import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
-import core.di.AppModule
-import core.di.DI
+import com.boardgames.tesera.di.AppModule
+import com.boardgames.tesera.di.DI
+import com.boardgames.tesera.di.NetworkModule
 import toothpick.Toothpick
 import toothpick.configuration.Configuration
 
@@ -26,6 +26,7 @@ class App : Application() {
 
     private fun openScopes() {
         KTP.openScope(DI.APP_SCOPE).installModules(AppModule(this))
+        KTP.openScope(DI.NETWORK_SCOPE).installModules(NetworkModule(BuildConfig.ENDPOINT))
     }
 
     private fun initThreetenABP() {

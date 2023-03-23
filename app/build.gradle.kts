@@ -1,22 +1,17 @@
-val toothpickVersion = "3.1.0"
-val SERVER_ENDPOINT = "\"https://api.tesera.ru/\""
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("kotlin-kapt")
-
+    id("com.google.dagger.hilt.android")
     kotlin("android")
     kotlin("kapt")
-    kotlin("android.extensions")
 }
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 android {
-    compileSdkVersion(29)
+    compileSdk = 33
     defaultConfig {
-        applicationId = "com.gemini.base"
-        minSdkVersion(23)
-        targetSdkVersion(29)
+        applicationId = "com.tesera.base"
+        minSdk = 24
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
@@ -25,14 +20,31 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
-            buildConfigField("String", "ENDPOINT", SERVER_ENDPOINT)
         }
         getByName("debug") {
-            buildConfigField("String", "ENDPOINT", SERVER_ENDPOINT)
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.2"
+    }
+    namespace = "com.tesera.base"
 }
 dependencies {
     implementation(project(":core"))
-    kapt("com.github.stephanenicolas.toothpick:toothpick-compiler:$toothpickVersion")
+    implementation(project(":domain"))
+    implementation(project(":data"))
+    implementation(project(":feature:login"))
+    implementation(project(":feature:splash"))
+    val hiltNav = "1.0.0"
+    implementation("androidx.hilt:hilt-navigation-compose:$hiltNav")
+    implementation("com.google.dagger:hilt-android:2.44.2")
+    kapt("com.google.dagger:hilt-compiler:2.44.2")
+}
+
+kapt {
+    correctErrorTypes = true
 }

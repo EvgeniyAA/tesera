@@ -5,9 +5,14 @@ buildscript {
 
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.6.1")
-        classpath(kotlin("gradle-plugin", version = "1.3.50"))
+        classpath("com.android.tools.build:gradle:7.4.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.20")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44.2")
     }
+}
+
+plugins {
+    id("com.google.dagger.hilt.android") version "2.44.2" apply false
 }
 
 allprojects {

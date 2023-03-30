@@ -1,6 +1,7 @@
-include(":app",":core")
 rootProject.name = "Tesera"
-include(":feature:login")
+include(":app",":core")
 include(":data")
 include(":domain")
+include(":feature:login")
 include(":feature:splash")
+include(":feature:dashboard")

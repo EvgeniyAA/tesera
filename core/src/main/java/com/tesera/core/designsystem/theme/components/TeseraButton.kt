@@ -36,13 +36,13 @@ fun TeseraButton(
             CircularProgressIndicator(
                 modifier = modifier.size(24.dp),
                 strokeWidth = 2.dp,
-                color = AppTheme.colors.primaryTextInvertColor
+                color = AppTheme.colors.secondaryTintColor
             )
         } else {
             Text(
                 text = text,
                 style = AppTheme.typography.body,
-                color = AppTheme.colors.primaryTextInvertColor
+                color = AppTheme.colors.secondaryTextColor
             )
         }
     }

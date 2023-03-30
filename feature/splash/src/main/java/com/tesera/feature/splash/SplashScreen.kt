@@ -16,32 +16,17 @@ import com.tesera.core.ui.NavigationTree
 import timber.log.Timber
 
 @Composable
-fun SplashScreen(
-    navController: NavController,
-    splashViewModel: SplashViewModel = hiltViewModel()
-) {
-    val viewState = splashViewModel.splashViewState.collectAsState()
+fun SplashScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Yellow),
         contentAlignment = Alignment.Center
     ) {
-        when (val state = viewState.value) {
-            SplashViewState.Display -> Unit
-            SplashViewState.ToHome -> LaunchedEffect(state) {
-                navController.navigate(NavigationTree.Dashboard.name) {
-                    popUpTo(NavigationTree.Splash.name) { inclusive = true }
-                }
-            }
-            SplashViewState.ToLogin -> LaunchedEffect(state) {
-                navController.navigate(NavigationTree.Login.name) {
-                    popUpTo(NavigationTree.Splash.name) { inclusive = true }
-                }
+        LaunchedEffect(Unit) {
+            navController.navigate(NavigationTree.Dashboard.name) {
+                popUpTo(NavigationTree.Splash.name) { inclusive = true }
             }
         }
     }
-//    LaunchedEffect(key1 = Unit, block = {
-//        //navController.navigate(NavigationTree.Login.name)
-//    })
 }

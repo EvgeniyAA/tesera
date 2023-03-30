@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":feature:login"))
     implementation(project(":feature:splash"))
+    implementation(project(":feature:dashboard"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

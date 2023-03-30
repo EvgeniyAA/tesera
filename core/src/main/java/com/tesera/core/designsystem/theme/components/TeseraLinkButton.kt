@@ -31,7 +31,7 @@ fun TeseraLinkButton(
             CircularProgressIndicator(
                 modifier = Modifier.size(18.dp),
                 strokeWidth = 2.dp,
-                color = AppTheme.colors.primaryTextInvertColor
+                color = AppTheme.colors.primaryTintColor
             )
         } else {
             Text(

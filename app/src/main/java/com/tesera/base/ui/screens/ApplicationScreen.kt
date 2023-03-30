@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.tesera.core.ui.NavigationTree
+import com.tesera.feature.dashboard.dashboardScreen
 import com.tesera.feature.login.navigation.loginScreen
 import com.tesera.feature.splash.navigation.splashScreen
 

@@ -1,4 +1,4 @@
-package com.tesera.base.ui.screens
+package com.tesera.feature.dashboard
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home

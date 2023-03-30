@@ -40,6 +40,9 @@ dependencies {
     implementation(project(":feature:login"))
     implementation(project(":feature:splash"))
     implementation(project(":feature:dashboard"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:search"))
+    implementation(project(":feature:profile"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

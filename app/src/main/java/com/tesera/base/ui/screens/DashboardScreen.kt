@@ -2,7 +2,7 @@ package com.tesera.base.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -33,7 +33,7 @@ fun DashboardScreen(
         BottomNavItem(
             name = "Profile",
             route = NavigationTree.Profile.name,
-            icon = Icons.Rounded.Menu,
+            icon = Icons.Rounded.Person,
         )
     )
 

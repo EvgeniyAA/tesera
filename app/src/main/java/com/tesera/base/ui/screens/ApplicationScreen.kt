@@ -24,7 +24,7 @@ fun ApplicationScreen() {
             ScreenContainer { LoginScreen(navController) }
         }
         composable(route = NavigationTree.Dashboard.name) {
-            ScreenContainer { DashboardScreen(navController) }
+            ScreenContainer { DashboardScreen() }
         }
     }
 }

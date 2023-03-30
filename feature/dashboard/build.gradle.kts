@@ -45,6 +45,9 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:search"))
+    implementation(project(":feature:profile"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

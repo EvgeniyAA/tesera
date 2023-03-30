@@ -7,6 +7,7 @@ object ProjectSettings {
 }
 
 object Versions {
+    const val appCompat = "1.4.1"
     const val kotlin = "1.7.20"
     const val kotlinComposeCompiler = "1.4.0"
     const val gradle = "7.4.2"
@@ -32,6 +33,7 @@ object Versions {
 
 
 object Deps {
+    const val androidxAppCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
     // DI
     const val hilt_navigation = "androidx.hilt:hilt-navigation-compose:${Versions.hiltNav}"
     const val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"

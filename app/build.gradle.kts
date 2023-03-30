@@ -44,6 +44,9 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:profile"))
 
+    // to remove actionBar
+    implementation(Deps.androidxAppCompat)
+
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)
     kapt(Deps.hilt_compiler)

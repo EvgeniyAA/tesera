@@ -8,8 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tesera.core.designsystem.theme.AppTheme
 import com.tesera.core.ui.NavigationTree
@@ -70,8 +68,4 @@ fun DashboardScreen(
             it.calculateBottomPadding()
         }
     )
-}
-
-fun NavGraphBuilder.dashboardScreen(navController: NavController) {
-    composable(route = NavigationTree.Dashboard.name) { DashboardScreen(navController = navController) }
 }

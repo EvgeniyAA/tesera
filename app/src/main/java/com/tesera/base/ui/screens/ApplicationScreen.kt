@@ -1,19 +1,38 @@
 package com.tesera.base.ui.screens
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tesera.core.designsystem.theme.AppTheme
 import com.tesera.core.ui.NavigationTree
-import com.tesera.feature.dashboard.dashboardScreen
-import com.tesera.feature.login.navigation.loginScreen
-import com.tesera.feature.splash.navigation.splashScreen
+import com.tesera.feature.dashboard.DashboardScreen
+import com.tesera.feature.login.LoginScreen
+import com.tesera.feature.splash.SplashScreen
 
 @Composable
 fun ApplicationScreen() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = NavigationTree.Splash.name) {
-        splashScreen(navController)
-        loginScreen(navController)
-        dashboardScreen(navController)
+        composable(route = NavigationTree.Splash.name) {
+            ScreenContainer { SplashScreen(navController) }
+        }
+        composable(route = NavigationTree.Login.name) {
+            ScreenContainer { LoginScreen(navController) }
+        }
+        composable(route = NavigationTree.Dashboard.name) {
+            ScreenContainer { DashboardScreen(navController) }
+        }
     }
+}
+
+@Composable
+private fun ScreenContainer(screen: @Composable () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = AppTheme.colors.primaryBackground
+    ) { screen() }
 }

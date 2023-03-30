@@ -7,13 +7,13 @@ plugins {
 }
 apply(from = "${project.rootDir}/codequality/ktlint.gradle.kts")
 android {
-    compileSdk = 33
+    compileSdk = ProjectSettings.compileSdk
     defaultConfig {
         applicationId = "com.tesera.base"
-        minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = ProjectSettings.minSdk
+        targetSdk = ProjectSettings.targetSdk
+        versionCode = ProjectSettings.versionCode
+        versionName = ProjectSettings.versionName
         testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,7 +29,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = Versions.kotlinComposeCompiler
     }
     namespace = "com.tesera.base"
 }
@@ -39,10 +39,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":feature:login"))
     implementation(project(":feature:splash"))
-    val hiltNav = "1.0.0"
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltNav")
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    kapt("com.google.dagger:hilt-compiler:2.44.2")
+
+    implementation(Deps.hilt_navigation)
+    implementation(Deps.hilt_android)
+    kapt(Deps.hilt_compiler)
 }
 
 kapt {

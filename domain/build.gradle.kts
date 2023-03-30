@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.tesera.domain"
-    compileSdk = 33
+    compileSdk = ProjectSettings.compileSdk
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 33
+        minSdk = ProjectSettings.minSdk
+        targetSdk = ProjectSettings.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

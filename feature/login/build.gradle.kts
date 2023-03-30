@@ -7,11 +7,11 @@ plugins {
 
 android {
     namespace = "com.tesera.feature.login"
-    compileSdk = 33
+    compileSdk = ProjectSettings.compileSdk
 
     defaultConfig {
-        minSdk = 24
-        targetSdk = 33
+        minSdk = ProjectSettings.minSdk
+        targetSdk = ProjectSettings.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -38,17 +38,17 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = Versions.kotlinComposeCompiler
     }
 }
 
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
-    val hiltNav = "1.0.0"
-    implementation("androidx.hilt:hilt-navigation-compose:$hiltNav")
-    implementation("com.google.dagger:hilt-android:2.44.2")
-    kapt("com.google.dagger:hilt-compiler:2.44.2")
+
+    implementation(Deps.hilt_navigation)
+    implementation(Deps.hilt_android)
+    kapt(Deps.hilt_compiler)
 }
 
 kapt {

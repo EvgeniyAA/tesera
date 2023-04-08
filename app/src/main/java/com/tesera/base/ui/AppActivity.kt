@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.tesera.base.ui.screens.ApplicationScreen
-import com.tesera.core.designsystem.theme.TeseraTheme
+import com.tesera.designsystem.theme.TeseraTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

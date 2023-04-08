@@ -59,6 +59,8 @@ dependencies {
     api(Deps.hilt_navigation)
     api(Deps.hilt_android)
     kapt(Deps.hilt_compiler)
+    api(Deps.paging_runtime)
+    api(Deps.paging_compose)
 
     //Tests
     testImplementation(Deps.junit)

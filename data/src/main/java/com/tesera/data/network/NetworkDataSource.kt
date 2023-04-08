@@ -11,4 +11,7 @@ class NetworkDataSource @Inject constructor(
         api.login(AuthParams(username, password))
 
     suspend fun authInfo() = api.authInfo()
+
+    suspend fun getGames(limit: Int, offset: Int, type: String, sort: String) =
+        api.games(limit, offset, type, sort)
 }

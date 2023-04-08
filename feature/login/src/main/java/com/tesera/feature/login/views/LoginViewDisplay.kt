@@ -14,11 +14,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.tesera.core.designsystem.theme.AppTheme
-import com.tesera.core.designsystem.theme.TeseraTheme
-import com.tesera.core.designsystem.theme.components.TeseraButton
-import com.tesera.core.designsystem.theme.components.TeseraInputField
-import com.tesera.core.designsystem.theme.components.TeseraLinkButton
+import com.tesera.designsystem.theme.AppTheme
+import com.tesera.designsystem.theme.TeseraTheme
+import com.tesera.designsystem.theme.components.TeseraButton
+import com.tesera.designsystem.theme.components.TeseraInputField
+import com.tesera.designsystem.theme.components.TeseraLinkButton
 import com.tesera.core.model.CredentialsField
 import com.tesera.core.model.CredentialsField.Companion.toCredentialsField
 import com.tesera.feature.login.R
@@ -53,7 +53,7 @@ fun LoginViewDisplay(
                 .padding(top = 16.dp)
                 .constrainAs(title) { top.linkTo(logo.bottom) },
             text = "Login",
-            style = AppTheme.typography.heading,
+            style = AppTheme.typography.heading1,
             color = AppTheme.colors.primaryTextColor,
             textAlign = TextAlign.Center
         )

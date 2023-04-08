@@ -45,6 +45,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
+    implementation(project(":designsystem"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

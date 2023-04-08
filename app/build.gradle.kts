@@ -37,6 +37,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":designsystem"))
     implementation(project(":feature:login"))
     implementation(project(":feature:splash"))
     implementation(project(":feature:dashboard"))

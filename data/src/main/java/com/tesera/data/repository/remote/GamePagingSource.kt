@@ -1,0 +1,62 @@
+package com.tesera.data.repository.remote
+
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.tesera.data.network.NetworkDataSource
+import com.tesera.data.network.model.response.toGamePreviewModel
+import com.tesera.domain.games.GamePageParams
+import com.tesera.domain.games.GamePreviewModel
+
+class GamePagingSource(
+    private val datasource: NetworkDataSource,
+    private val pageParams: GamePageParams
+) : PagingSource<Int, GamePreviewModel>() {
+    override fun getRefreshKey(state: PagingState<Int, GamePreviewModel>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        }
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GamePreviewModel> {
+        return try {
+            val page = params.key ?: 0
+
+            val games =
+                datasource.getGames(pageParams.limit, page, pageParams.type, pageParams.sort)
+                    .getOrElse {
+                        return LoadResult.Error(it)
+                    }
+            return LoadResult.Page(
+                data = games.map { it.toGamePreviewModel() },
+                prevKey = if (page == 0) null else page.minus(1),
+                nextKey = if (games.isEmpty()) null else page.plus(1)
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
+    }
+}
+
+class TeseraPagingSource<T : Any>(
+    private val request: suspend (offset: Int) -> List<T>
+) : PagingSource<Int, T>() {
+    override fun getRefreshKey(state: PagingState<Int, T>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+        }
+    }
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
+        val page = params.key ?: 0
+        val response = request(page)
+
+        return LoadResult.Page(
+            data = response,
+            prevKey = page.takeIf { it > 1 }?.minus(1),
+            nextKey = if (response.isEmpty()) null else page.plus(1)
+        )
+    }
+
+}

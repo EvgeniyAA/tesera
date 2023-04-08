@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tesera.core.designsystem.theme.AppTheme
+import com.tesera.designsystem.theme.AppTheme
 import com.tesera.core.ui.NavigationTree
 import com.tesera.feature.dashboard.DashboardScreen
 import com.tesera.feature.login.LoginScreen

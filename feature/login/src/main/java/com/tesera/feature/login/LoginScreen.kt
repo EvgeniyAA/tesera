@@ -8,14 +8,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.tesera.core.ui.DisplayViewLoading
 import com.tesera.core.ui.NavigationTree
 import com.tesera.feature.login.models.LoginIntent
 import com.tesera.feature.login.models.LoginViewState
 import com.tesera.feature.login.views.LoginViewDisplay
-import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(

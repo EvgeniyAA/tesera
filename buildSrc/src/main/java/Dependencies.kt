@@ -24,8 +24,10 @@ object Versions {
 
     const val hiltNav = "1.0.0"
     const val hilt = "2.44.2"
-    const val coil = "2.2.2"
+    const val coil = "2.3.0"
     const val securityCrypto = "1.1.0-alpha05"
+    const val paging = "3.1.1"
+    const val composePaging = "1.0.0-alpha18"
 
     const val junit = "4.13.2"
     const val mockito = "2.2.0"
@@ -54,8 +56,10 @@ object Deps {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofit_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
 
-    const val coil = "io.coil-kt:coil:${Versions.coil}"
+    const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
+    const val paging_runtime = "androidx.paging:paging-runtime:${Versions.paging}"
+    const val paging_compose = "androidx.paging:paging-compose:${Versions.composePaging}"
 
     const val plugin_gradle = "com.android.tools.build:gradle:${Versions.gradle}"
     const val plugin_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"

@@ -17,11 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
-fun LazyListScope.stickyHeader(
+fun LazyListScope.StickyHeader(
     @DrawableRes icon: Int? = null,
     @StringRes text: Int? = null,
     onClick: () -> Unit = {}
@@ -36,9 +35,10 @@ fun LazyListScope.stickyHeader(
             ) {
             if (icon != null) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_hotness),
+                    painter = painterResource(id = icon),
                     contentDescription = null,
                     modifier = Modifier
+                        .padding(start = 4.dp)
                         .size(16.dp)
                         .align(Alignment.CenterVertically)
                 )

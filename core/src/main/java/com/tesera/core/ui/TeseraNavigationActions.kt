@@ -1,8 +1,15 @@
 package com.tesera.core.ui
 
 enum class NavigationTree {
-    Splash, Login, Home, Profile, Search, Dashboard
+    Splash,
+    Login,
+    Home,
+    Profile,
+    Search,
+    Dashboard,
+    Games, GamesDetails
 }
+
 object TeseraDestinations {
     const val SPLASH_ROUTE = "splash"
     const val HOME_ROUTE = "home"

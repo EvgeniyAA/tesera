@@ -7,9 +7,9 @@ import javax.inject.Inject
 class GamesUseCase @Inject constructor(
     private val gamesRepository: GamesRepository
 ) {
-    fun getLastHotnessGames(): Flow<List<GamePreviewModel>> =
-        gamesRepository.games(GamePageParams(type = "hotness", sort = "hotness"))
+    fun getLatestHotnessGames(): Flow<List<GamePreviewModel>> =
+        gamesRepository.getLatestGames(GamePageParams(limit = 15, type = "hotness", sort = "hotness"))
 
-    fun getLastHotnessGames1(): Flow<PagingData<GamePreviewModel>> =
+    fun getHotnessGames(): Flow<PagingData<GamePreviewModel>> =
         gamesRepository.getGames(GamePageParams(type = "hotness", sort = "hotness"))
 }

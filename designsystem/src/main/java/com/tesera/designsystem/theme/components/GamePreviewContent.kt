@@ -30,14 +30,14 @@ import com.tesera.domain.games.GamePreviewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GamePreviewContent(game: GamePreviewModel) {
+fun GamePreviewContent(game: GamePreviewModel, onClick: (GamePreviewModel) -> Unit = {}) {
     val showRating = rememberSaveable { mutableStateOf(game.n10Rating > 0) }
     Card(
         modifier = Modifier
             .padding(horizontal = 4.dp, vertical = 4.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-        onClick = { }
+        onClick = { onClick(game) }
     ) {
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (rating, image, mainInfo, comments) = createRefs()
@@ -46,7 +46,7 @@ fun GamePreviewContent(game: GamePreviewModel) {
                     .zIndex(1f)
                     .constrainAs(rating) {
                         top.linkTo(parent.top)
-                        start.linkTo(image.end, margin = (-24).dp)
+                        start.linkTo(image.end, margin = (-26).dp)
                     }
             ) {
                 if (showRating.value) {

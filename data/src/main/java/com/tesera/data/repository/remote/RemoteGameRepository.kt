@@ -22,7 +22,7 @@ class RemoteGameRepository @Inject constructor(
     @Dispatcher(TeseraDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     private val datasource: NetworkDataSource
 ) : GamesRepository {
-    override fun games(params: GamePageParams): Flow<List<GamePreviewModel>> = flow {
+    override fun getLatestGames(params: GamePageParams): Flow<List<GamePreviewModel>> = flow {
         datasource.getGames(params.limit, params.offset, params.type, params.sort)
             .onSuccess { games ->
                 emit(games.map { it.toGamePreviewModel() })

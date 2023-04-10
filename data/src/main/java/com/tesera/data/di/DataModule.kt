@@ -5,9 +5,11 @@ import com.tesera.data.network.createApi
 import com.tesera.data.repository.remote.RemoteGameRepository
 import com.tesera.domain.authentication.LoginRepository
 import com.tesera.data.repository.remote.RemoteLoginRepository
+import com.tesera.data.repository.remote.RemoteNewsRepository
 import com.tesera.data.storage.TeseraEncryptedPrefs
 import com.tesera.data.storage.TeseraPrefs
 import com.tesera.domain.games.GamesRepository
+import com.tesera.domain.news.NewsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,6 +25,9 @@ interface DataModule {
 
     @Binds
     fun bindsGamesRepository(gamesRepository: RemoteGameRepository): GamesRepository
+
+    @Binds
+    fun bindsNewsRepository(newsRepository: RemoteNewsRepository): NewsRepository
 
     @Binds
     fun bindsTeseraPrefs(teseraPrefs: TeseraEncryptedPrefs): TeseraPrefs

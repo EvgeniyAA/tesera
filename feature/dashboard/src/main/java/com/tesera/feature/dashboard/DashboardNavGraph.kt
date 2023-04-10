@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.tesera.core.ui.NavigationTree
+import com.tesera.feature.games.GamesScreen
 import com.tesera.feature.home.HomeScreen
 import com.tesera.feature.profile.ProfileScreen
 import com.tesera.feature.search.SearchScreen
@@ -23,6 +24,9 @@ fun DashboardNavGraph(navController: NavHostController) {
         }
         composable(route = NavigationTree.Profile.name) {
             ProfileScreen(navController)
+        }
+        composable(route = NavigationTree.Games.name) {
+            GamesScreen(navController)
         }
     }
 }

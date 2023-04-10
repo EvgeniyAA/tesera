@@ -57,16 +57,16 @@ fun BottomBar(navController: NavHostController) {
 
     val bottomBarDestination = bottomNavItems.any { it.route == currentDestination?.route }
     if (bottomBarDestination) {
-        NavigationBar(containerColor = com.tesera.designsystem.theme.AppTheme.colors.primaryBackground) {
+        NavigationBar(containerColor = AppTheme.colors.primaryBackground) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy
                     ?.any { it.route == item.route } == true
 
                 val contentColor =
-                    if (selected) com.tesera.designsystem.theme.AppTheme.colors.primaryTextColor else com.tesera.designsystem.theme.AppTheme.colors.secondaryTextColor
+                    if (selected) AppTheme.colors.primaryTextColor else com.tesera.designsystem.theme.AppTheme.colors.secondaryTextColor
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
-                        indicatorColor = com.tesera.designsystem.theme.AppTheme.colors.interactiveBackground,
+                        indicatorColor = AppTheme.colors.interactiveBackground,
                     ),
                     selected = selected,
                     onClick = {

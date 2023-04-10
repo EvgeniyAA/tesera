@@ -14,4 +14,7 @@ class NetworkDataSource @Inject constructor(
 
     suspend fun getGames(limit: Int, offset: Int, type: String, sort: String) =
         api.games(limit, offset, type, sort)
+
+    suspend fun getNews(limit: Int, offset: Int) =
+        api.news(limit, offset)
 }

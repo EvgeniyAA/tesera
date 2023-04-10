@@ -37,26 +37,3 @@ class GamePagingSource(
         }
     }
 }
-
-class TeseraPagingSource<T : Any>(
-    private val request: suspend (offset: Int) -> List<T>
-) : PagingSource<Int, T>() {
-    override fun getRefreshKey(state: PagingState<Int, T>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-        }
-    }
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
-        val page = params.key ?: 0
-        val response = request(page)
-
-        return LoadResult.Page(
-            data = response,
-            prevKey = page.takeIf { it > 1 }?.minus(1),
-            nextKey = if (response.isEmpty()) null else page.plus(1)
-        )
-    }
-
-}

@@ -2,25 +2,23 @@ package com.tesera.feature.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.GamePreviewContent
-import com.tesera.designsystem.theme.components.stickyHeader
+import com.tesera.designsystem.theme.components.StickyHeader
 import com.tesera.domain.games.GamePreviewModel
+import com.tesera.domain.news.NewsPreviewModel
+import com.tesera.feature.home.models.HomeAction
 import com.tesera.feature.home.models.HomeIntent
 import com.tesera.feature.home.models.HomeViewState
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -28,62 +26,89 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val viewState = homeViewModel.homeViewState.collectAsState()
-    val hotnessGames = homeViewModel.getHotnessGames().collectAsLazyPagingItems()
     Column(
         modifier = Modifier
             .background(AppTheme.colors.primaryBackground)
     ) {
-        GamesView(hotnessGames)
-
+        ListView(viewState.value, homeViewModel)
     }
 
-    when (val state = viewState.value) {
-        is HomeViewState.Content -> {
-
-
+    LaunchedEffect(key1 = viewState.value.action, block = {
+        when (viewState.value.action) {
+            HomeAction.None -> Unit
+            is HomeAction.ToGameDetails -> Unit
+            HomeAction.ToGamesList -> navController.navigate(NavigationTree.Games.name)
+            HomeAction.ToNewsList -> navController.navigate(NavigationTree.Games.name)
         }
-        HomeViewState.Loading -> Unit
-    }
+    })
 
-    LaunchedEffect(key1 = viewState, block = {
-        homeViewModel.obtainIntent(intent = HomeIntent.GetContent)
+    DisposableEffect(key1 = Unit, effect = {
+        onDispose {
+            homeViewModel.obtainIntent(HomeIntent.ActionInvoked)
+        }
     })
 }
 
 @Composable
-fun GamesView(hotnessGames: LazyPagingItems<GamePreviewModel>) {
-    GamesList(hotnessGames)
-    when (val state = hotnessGames.loadState.refresh) {
-        is LoadState.Error -> Unit // todo error item
-        LoadState.Loading -> Unit // todo loading
-        else -> Unit
-    }
-    when (val state = hotnessGames.loadState.append) {
-        is LoadState.Error -> Unit // todo error item
-        LoadState.Loading -> Unit // todo loading
-        else -> Unit
-    }
+fun ListView(
+    state: HomeViewState,
+    homeViewModel: HomeViewModel
+) {
+    List(state.hotnessGames, state.news, homeViewModel)
 }
 
 @Composable
-fun GamesList(hotnessGames: LazyPagingItems<GamePreviewModel>) {
-    LazyColumn(contentPadding = PaddingValues(horizontal = 8.dp)) {
-        stickyHeader(com.tesera.designsystem.R.drawable.ic_hotness, com.tesera.designsystem.R.string.hotness_title)
-        items(
-            items = hotnessGames,
-            key = { game -> game.id }
-        ) {
-            it?.let { game ->
-                GamePreviewContent(game)
+fun List(
+    hotnessGames: List<GamePreviewModel>,
+    news: List<NewsPreviewModel>,
+    homeViewModel: HomeViewModel
+) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    LazyColumn(state = listState) {
+        StickyHeader(
+            com.tesera.designsystem.R.drawable.ic_hotness,
+            com.tesera.designsystem.R.string.hotness_title
+        )
+        {
+            coroutineScope.launch {
+                listState.animateScrollToItem(0)
             }
         }
-        stickyHeader(com.tesera.designsystem.R.drawable.ic_hotness, com.tesera.designsystem.R.string.hotness_title)
         items(
             items = hotnessGames,
             key = { game -> game.id }
         ) {
-            it?.let { game ->
-                GamePreviewContent(game)
+            GamePreviewContent(it) {
+                homeViewModel.obtainIntent(HomeIntent.GameListClicked)
+            }
+        }
+        StickyHeader(
+            com.tesera.designsystem.R.drawable.ic_publications,
+            com.tesera.designsystem.R.string.news_title
+        ) {
+            coroutineScope.launch {
+                listState.animateScrollToItem(hotnessGames.size + 1)
+            }
+        }
+        items(
+            items = news,
+            key = { newsItem -> newsItem.teseraId }
+        ) {
+            GamePreviewContent(
+                GamePreviewModel(
+                    it.teseraId,
+                    it.title,
+                    "",
+                    2023,
+                    it.photoUrl,
+                    144,
+                    45,
+                    8.89
+                )
+            ) {
+                homeViewModel.obtainIntent(HomeIntent.NewsListClicked)
             }
         }
     }

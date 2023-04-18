@@ -3,6 +3,7 @@ package com.tesera.data.network
 import com.tesera.data.network.model.request.AuthParams
 import com.tesera.data.network.model.request.WakeUpParams
 import com.tesera.data.network.model.response.AuthResponse
+import com.tesera.data.network.model.response.GameDetailsResponse
 import com.tesera.data.network.model.response.GameResponse
 import com.tesera.data.network.model.response.NewsPreviewResponse
 import retrofit2.http.Body
@@ -26,12 +27,12 @@ interface ApiService {
     @GET("/news")
     suspend fun news(
         @Query("limit") limit: Int = 15,
-        @Query("offset") offset: Int = 0
+        @Query("offset") offset: Int = 0,
     ): Result<List<NewsPreviewResponse>>
 
     @GET("/news/{alias}")
     suspend fun news(
-        @Path("alias") id: Int
+        @Path("alias") id: Int,
     ): Result<Any>
 
     // игры
@@ -40,6 +41,9 @@ interface ApiService {
         @Query("limit") limit: Int = 15,
         @Query("offset") offset: Int = 0,
         @Query("Type") type: String,
-        @Query("sort") sort: String
+        @Query("sort") sort: String,
     ): Result<List<GameResponse>>
+
+    @GET("/games/{alias}")
+    suspend fun gameDetails(@Path("alias") id: String): Result<GameDetailsResponse>
 }

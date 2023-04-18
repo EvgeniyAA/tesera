@@ -12,7 +12,12 @@ data class Colors(
     val secondaryTintColor: Color,
     val notificationColor: Color,
     val interactiveBackground: Color,
-    val increaseTextColor: Color
+    val increaseTextColor: Color,
+    val bggBackgroundGradientStart: Color,
+    val bggBackgroundGradientEnd : Color,
+    val teseraBackgroundGradientStart: Color,
+    val teseraBackgroundGradientEnd: Color,
+    val lightTextColor: Color
 )
 
 private val orange = Color(0xFFFF8A00)
@@ -27,7 +32,12 @@ val lightPalette = Colors(
     hintTextColor = Color.White,
     notificationColor = Color.Red,
     interactiveBackground = Color(0xFFE7E7E7),
-    increaseTextColor = Color(0xFF008000)
+    increaseTextColor = Color(0xFF008000),
+    bggBackgroundGradientStart = Color(0xFF2f3f79),
+    bggBackgroundGradientEnd = Color(0xFF1b2547),
+    teseraBackgroundGradientStart = Color(0xFFf99c00),
+    teseraBackgroundGradientEnd = Color(0xFFf55c00),
+    lightTextColor = Color.White
 )
 
 val darkPalette = Colors(
@@ -40,5 +50,10 @@ val darkPalette = Colors(
     hintTextColor = Color.White,
     notificationColor = Color.Red,
     interactiveBackground = Color(0xFFFFFFFF),
-    increaseTextColor = Color(0xFF008000)
+    increaseTextColor = Color(0xFF008000),
+    bggBackgroundGradientStart = Color(0xFF2f3f79),
+    bggBackgroundGradientEnd = Color(0xFF1b2547),
+    teseraBackgroundGradientStart = Color(0xFFf99c00),
+    teseraBackgroundGradientEnd = Color(0xFFf55c00),
+    lightTextColor = Color.White
 )

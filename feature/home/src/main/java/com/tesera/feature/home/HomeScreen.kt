@@ -13,8 +13,8 @@ import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.GamePreviewContent
 import com.tesera.designsystem.theme.components.StickyHeader
-import com.tesera.domain.games.GamePreviewModel
-import com.tesera.domain.news.NewsPreviewModel
+import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.NewsPreviewModel
 import com.tesera.feature.home.models.HomeAction
 import com.tesera.feature.home.models.HomeIntent
 import com.tesera.feature.home.models.HomeViewState
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     navController: NavController,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val viewState = homeViewModel.homeViewState.collectAsState()
     Column(
@@ -34,11 +34,12 @@ fun HomeScreen(
     }
 
     LaunchedEffect(key1 = viewState.value.action, block = {
-        when (viewState.value.action) {
+        when (val action = viewState.value.action) {
             HomeAction.None -> Unit
-            is HomeAction.ToGameDetails -> Unit
+            is HomeAction.ToGameDetails ->
+                navController.navigate("${NavigationTree.GamesDetails.name}/${action.game.alias}")
             HomeAction.ToGamesList -> navController.navigate(NavigationTree.Games.name)
-            HomeAction.ToNewsList -> navController.navigate(NavigationTree.Games.name)
+            HomeAction.ToNewsList -> Unit // todo navController.navigate(NavigationTree.Games.name)
         }
     })
 
@@ -52,7 +53,7 @@ fun HomeScreen(
 @Composable
 fun ListView(
     state: HomeViewState,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
 ) {
     List(state.hotnessGames, state.news, homeViewModel)
 }
@@ -61,7 +62,7 @@ fun ListView(
 fun List(
     hotnessGames: List<GamePreviewModel>,
     news: List<NewsPreviewModel>,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
@@ -69,29 +70,40 @@ fun List(
     LazyColumn(state = listState) {
         StickyHeader(
             com.tesera.designsystem.R.drawable.ic_hotness,
-            com.tesera.designsystem.R.string.hotness_title
-        )
-        {
-            coroutineScope.launch {
-                listState.animateScrollToItem(0)
+            com.tesera.designsystem.R.string.hotness_title,
+            showMoreButton = true,
+            onClick = {
+                coroutineScope.launch {
+                    listState.animateScrollToItem(0)
+                }
+            },
+            onMoreButtonClick = {
+                homeViewModel.obtainIntent(HomeIntent.GameListClicked)
             }
-        }
+        )
+
         items(
             items = hotnessGames,
-            key = { game -> game.id }
+            key = { game -> game.bggId }
         ) {
-            GamePreviewContent(it) {
-                homeViewModel.obtainIntent(HomeIntent.GameListClicked)
+            GamePreviewContent(it) { game ->
+                homeViewModel.obtainIntent(HomeIntent.GameDetailsClicked(game))
             }
         }
         StickyHeader(
             com.tesera.designsystem.R.drawable.ic_publications,
-            com.tesera.designsystem.R.string.news_title
-        ) {
-            coroutineScope.launch {
-                listState.animateScrollToItem(hotnessGames.size + 1)
+            com.tesera.designsystem.R.string.news_title,
+            showMoreButton = true,
+            onClick = {
+                coroutineScope.launch {
+                    listState.animateScrollToItem(hotnessGames.size + 1)
+                }
+            },
+            onMoreButtonClick = {
+                homeViewModel.obtainIntent(HomeIntent.NewsListClicked)
             }
-        }
+        )
+
         items(
             items = news,
             key = { newsItem -> newsItem.teseraId }
@@ -99,13 +111,15 @@ fun List(
             GamePreviewContent(
                 GamePreviewModel(
                     it.teseraId,
+                    it.teseraId,
                     it.title,
                     "",
                     2023,
                     it.photoUrl,
                     144,
                     45,
-                    8.89
+                    8.89,
+                    "news"
                 )
             ) {
                 homeViewModel.obtainIntent(HomeIntent.NewsListClicked)

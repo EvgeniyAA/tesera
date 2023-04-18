@@ -1,4 +1,4 @@
-package com.tesera.domain.news
+package com.tesera.domain.model
 
 data class NewsPreviewModel(
     val teseraId: Int,

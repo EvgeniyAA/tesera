@@ -1,6 +1,7 @@
 package com.tesera.designsystem.theme.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,12 +26,15 @@ import coil.compose.AsyncImage
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.TeseraTheme
-import com.tesera.domain.games.GamePreviewModel
+import com.tesera.domain.model.GamePreviewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GamePreviewContent(game: GamePreviewModel, onClick: (GamePreviewModel) -> Unit = {}) {
+fun GamePreviewContent(
+    game: GamePreviewModel,
+    onClick: (GamePreviewModel) -> Unit = {}
+) {
     val showRating = rememberSaveable { mutableStateOf(game.n10Rating > 0) }
     Card(
         modifier = Modifier
@@ -39,7 +43,7 @@ fun GamePreviewContent(game: GamePreviewModel, onClick: (GamePreviewModel) -> Un
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         onClick = { onClick(game) }
     ) {
-        ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
+        ConstraintLayout(modifier = Modifier.fillMaxWidth().background(color = AppTheme.colors.interactiveBackground)) {
             val (rating, image, mainInfo, comments) = createRefs()
             Box(
                 modifier = Modifier
@@ -137,13 +141,15 @@ fun GameContent_Preview() {
         GamePreviewContent(
             GamePreviewModel(
                 0,
+                0,
                 "Game extra1 extra2 extra3 extra4 extra5 extra6 long title",
                 "",
                 2023,
                 "",
                 144,
                 45,
-                8.89
+                8.89,
+                ""
             )
         )
     }

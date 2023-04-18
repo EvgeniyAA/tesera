@@ -1,7 +1,5 @@
 package com.tesera.designsystem.theme.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -21,9 +19,7 @@ fun TeseraLinkButton(
     onClick: () -> Unit
 ) {
     TextButton(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(40.dp),
+        modifier = modifier,
         onClick = { if (!isProgress) onClick() }
     ) {
 

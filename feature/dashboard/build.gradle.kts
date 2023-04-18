@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":feature:search"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:games"))
+    implementation(project(":feature:gameDetails"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

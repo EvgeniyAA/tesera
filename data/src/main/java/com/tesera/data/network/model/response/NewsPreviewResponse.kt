@@ -1,6 +1,6 @@
 package com.tesera.data.network.model.response
 
-import com.tesera.domain.news.NewsPreviewModel
+import com.tesera.domain.model.NewsPreviewModel
 
 data class NewsPreviewResponse(
     val teseraId: Int? = null,

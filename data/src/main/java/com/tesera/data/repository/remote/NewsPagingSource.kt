@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.tesera.data.network.NetworkDataSource
 import com.tesera.data.network.model.response.toModel
 import com.tesera.domain.news.NewsPageParams
-import com.tesera.domain.news.NewsPreviewModel
+import com.tesera.domain.model.NewsPreviewModel
 
 class NewsPagingSource(
     private val datasource: NetworkDataSource,

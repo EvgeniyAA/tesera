@@ -1,0 +1,47 @@
+package com.tesera.domain.model
+
+data class GameModel(
+    val id: Int,
+    val teseraId: Int,
+    val bggId: Int,
+    val title: String,
+    val title2: String,
+    val alias: String,
+    val descriptionShort: String,
+    val description: String,
+    val modificationDateUtc: String,
+    val creationDateUtc: String,
+    val photoUrl: String,
+    val year: Int,
+    val ratingUser: Double,
+    val n10Rating: Double,
+    val n20Rating: Double,
+    val bggRating: Double,
+    val bggGeekRating: Double,
+    val bggNumVotes: Int,
+    val numVotes: Int,
+    val playersMin: Int,
+    val playersMax: Int,
+    val playersMinRecommend: Int,
+    val playersMaxRecommend: Int,
+    val playersAgeMin: Int,
+    val timeToLearn: Int,
+    val playtimeMin: Int,
+    val playtimeMax: Int,
+    val commentsTotal: Int,
+    val commentsTotalNew: Int,
+    val isAddition: Boolean,
+)
+
+fun GameModel.toPreview() = GamePreviewModel(
+    id = this.id,
+    bggId = this.bggId,
+    title = this.title,
+    title2 = this.title2,
+    year = this.year,
+    photoUrl = this.photoUrl,
+    commentsTotal = this.commentsTotal,
+    commentsTotalNew = this.commentsTotalNew,
+    n10Rating = this.n10Rating,
+    alias = this.alias
+)

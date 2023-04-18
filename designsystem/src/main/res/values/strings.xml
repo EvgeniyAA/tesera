@@ -2,4 +2,14 @@
     <string name="app_name">core</string>
     <string name="hotness_title">Самое обсуждаемое</string>
     <string name="news_title">Новости</string>
+    <string name="more">Еще</string>
+    <string name="show_more">  Показать еще</string>
+    <string name="publications_and_files">Ссылки и файлы</string>
+    <string name="has_game">Владеют игрой</string>
+    <string name="comments">Комментарии</string>
+    <string name="game_reports">Игровые отчеты</string>
+    <string name="people_sell">Продают</string>
+    <string name="people_buy">Покупают</string>
+    <string name="similar_games">Похожие игры</string>
+    <string name="related_games">Связанные игры</string>
 </resources>

@@ -1,0 +1,15 @@
+package com.tesera.domain.model
+
+data class NewsModel(
+    val teseraId: Int,
+    val title: String,
+    val alias: String,
+    val contentShort: String,
+    val creationDateUtc: String,
+    val modificationDateUtc: String,
+    val publicationDateUtc: String,
+    val photoUrl: String,
+    val rating: Double,
+    val commentsTotal: Int,
+    val numVotes: Int
+)

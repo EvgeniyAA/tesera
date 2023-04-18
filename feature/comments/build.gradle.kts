@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.tesera.feature.dashboard"
+    namespace = "com.tesera.feature.comments"
     compileSdk = ProjectSettings.compileSdk
 
     defaultConfig {
@@ -46,13 +46,6 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
     implementation(project(":designsystem"))
-    implementation(project(":feature:home"))
-    implementation(project(":feature:search"))
-    implementation(project(":feature:profile"))
-    implementation(project(":feature:games"))
-    implementation(project(":feature:gameDetails"))
-    implementation(project(":feature:media"))
-    implementation(project(":feature:comments"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

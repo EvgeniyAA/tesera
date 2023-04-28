@@ -85,8 +85,8 @@ fun GamePreviewContent(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                Text(text = game.title, style = AppTheme.typography.bodyMedium)
-                Text(text = game.year.toString(), style = AppTheme.typography.bodyRegular)
+                Text(text = game.title, style = AppTheme.typography.body1)
+                Text(text = game.year.toString(), style = AppTheme.typography.body2)
             }
             AsyncImage(
                 model = game.photoUrl,
@@ -120,12 +120,12 @@ fun GamePreviewContent(
                 )
                 Text(
                     text = game.commentsTotal.toString(),
-                    style = AppTheme.typography.bodyMedium,
+                    style = AppTheme.typography.body1,
                     modifier = Modifier.padding(start = 4.dp)
                 )
                 Text(
                     text = " +${game.commentsTotalNew}",
-                    style = AppTheme.typography.bodyRegular,
+                    style = AppTheme.typography.body2,
                     color = AppTheme.colors.increaseTextColor,
                     modifier = Modifier.align(Alignment.Bottom)
                 )

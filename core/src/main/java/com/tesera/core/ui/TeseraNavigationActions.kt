@@ -7,7 +7,9 @@ enum class NavigationTree {
     Profile,
     Search,
     Dashboard,
-    Games, GamesDetails
+    Games, GamesDetails,
+    Comments,
+    Media
 }
 
 object TeseraDestinations {

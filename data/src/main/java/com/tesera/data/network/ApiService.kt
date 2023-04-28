@@ -2,10 +2,7 @@ package com.tesera.data.network
 
 import com.tesera.data.network.model.request.AuthParams
 import com.tesera.data.network.model.request.WakeUpParams
-import com.tesera.data.network.model.response.AuthResponse
-import com.tesera.data.network.model.response.GameDetailsResponse
-import com.tesera.data.network.model.response.GameResponse
-import com.tesera.data.network.model.response.NewsPreviewResponse
+import com.tesera.data.network.model.response.*
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -32,7 +29,7 @@ interface ApiService {
 
     @GET("/news/{alias}")
     suspend fun news(
-        @Path("alias") id: Int,
+        @Path("alias") id: String,
     ): Result<Any>
 
     // игры
@@ -46,4 +43,12 @@ interface ApiService {
 
     @GET("/games/{alias}")
     suspend fun gameDetails(@Path("alias") id: String): Result<GameDetailsResponse>
+
+    @GET("/comments/{objecttype}/{alias}/{lastcommentid}")
+    suspend fun comments(
+        @Path("objecttype") objectType: String,
+        @Path("alias") alias: String,
+        @Path("lastcommentid") lastCommentId: Int,
+        @Query("limit") limit: Int?
+    ): Result<List<CommentResponse>>
 }

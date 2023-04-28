@@ -14,8 +14,16 @@ class NetworkDataSource @Inject constructor(
 
     suspend fun getGames(limit: Int, offset: Int, type: String, sort: String) =
         api.games(limit, offset, type, sort)
+
     suspend fun getGameDetails(alias: String) = api.gameDetails(alias)
 
     suspend fun getNews(limit: Int, offset: Int) =
         api.news(limit, offset)
+
+    suspend fun getComments(
+        objecttype: String,
+        alias: String,
+        lastCommentId: Int,
+        limit: Int?,
+    ) = api.comments(objecttype, alias, lastCommentId, limit)
 }

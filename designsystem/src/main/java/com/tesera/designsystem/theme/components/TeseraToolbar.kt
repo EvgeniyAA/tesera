@@ -12,7 +12,7 @@ import com.tesera.designsystem.theme.AppTheme
 @Composable
 fun TeseraToolbar(
     title: String,
-    description: String,
+    description: String? = null,
     navAction: () -> Unit,
 ): @Composable () -> Unit = {
     TopAppBar(
@@ -20,16 +20,17 @@ fun TeseraToolbar(
             Column {
                 Text(
                     text = title,
-                    style = AppTheme.typography.heading4,
+                    style = AppTheme.typography.heading6,
                     color = AppTheme.colors.lightTextColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(
-                    text = description,
-                    style = AppTheme.typography.bodyRegular,
-                    color = AppTheme.colors.lightTextColor
-                )
+                if (!description.isNullOrEmpty())
+                    Text(
+                        text = description,
+                        style = AppTheme.typography.body2,
+                        color = AppTheme.colors.lightTextColor
+                    )
             }
         },
         navigationIcon = {

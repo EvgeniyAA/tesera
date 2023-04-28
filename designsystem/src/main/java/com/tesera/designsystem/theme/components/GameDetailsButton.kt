@@ -2,7 +2,6 @@ package com.tesera.designsystem.theme.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,18 +19,18 @@ import com.tesera.designsystem.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameDetailsButton(
-    color: Color,
-    text: String,
-    @DrawableRes icon: Int,
-    count: Int,
-    click: () -> Unit,
+    gameDetailsButtonModel: GameDetailsButtonModel,
+    click: (GameDetailsButtonType) -> Unit,
 ) {
     Card(
         modifier = Modifier
-            .background(color = color, shape = RoundedCornerShape(8.dp)), onClick = { click() }) {
+            .background(
+                color = gameDetailsButtonModel.buttonStartColor,
+                shape = RoundedCornerShape(8.dp)
+            ), onClick = { click(gameDetailsButtonModel.type) }) {
         Box(
             modifier = Modifier
-                .background(color = color)
+                .background(color = gameDetailsButtonModel.buttonStartColor)
                 .fillMaxSize()
                 .padding(horizontal = 8.dp)
 
@@ -42,7 +41,7 @@ fun GameDetailsButton(
                     .align(Alignment.CenterStart)
             ) {
                 Text(
-                    text = text,
+                    text = gameDetailsButtonModel.title,
                     color = AppTheme.colors.lightTextColor,
                 )
                 Surface(
@@ -53,7 +52,7 @@ fun GameDetailsButton(
                 ) {
                     Text(
                         modifier = Modifier.padding(2.dp),
-                        text = count.toString(),
+                        text = gameDetailsButtonModel.count.toString(),
                         style = AppTheme.typography.hint,
                         color = AppTheme.colors.lightTextColor,
                     )
@@ -61,7 +60,7 @@ fun GameDetailsButton(
             }
 
             AsyncImage(
-                model = icon,
+                model = gameDetailsButtonModel.image,
                 contentDescription = "",
                 modifier = Modifier
                     .size(20.dp)
@@ -80,3 +79,16 @@ fun GameDetailsButton(
         }
     }
 }
+
+enum class GameDetailsButtonType {
+    Media, Comments, HasGame, Sell, Buy, GameReports
+}
+
+data class GameDetailsButtonModel(
+    val title: String,
+    @DrawableRes val image: Int,
+    val count: Int,
+    val type: GameDetailsButtonType,
+    val buttonStartColor: Color,
+    val buttonEndColor: Color,
+)

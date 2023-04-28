@@ -46,6 +46,7 @@ dependencies {
 
     api(Deps.compose_viewmodel)
     api(Deps.compose_material3)
+    api(Deps.compose_material)
     api(Deps.compose_navigation)
     api(Deps.compose_ui_preview)
     debugApi(Deps.compose_tooling)
@@ -63,8 +64,9 @@ dependencies {
     api(Deps.paging_compose)
 
     //Tests
-    testImplementation(Deps.junit)
-    testImplementation(Deps.mockito)
+    testApi(Deps.junit)
+    testApi(Deps.mockito)
+    testApi(Deps.mockK)
 }
 
 kapt {

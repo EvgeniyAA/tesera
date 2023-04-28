@@ -3,13 +3,11 @@ package com.tesera.data.di
 import com.tesera.data.network.ApiService
 import com.tesera.data.network.createApi
 import com.tesera.data.repository.local.LocalGamesFilterRepository
-import com.tesera.data.repository.remote.RemoteGameDetailsRepository
-import com.tesera.data.repository.remote.RemoteGameRepository
-import com.tesera.data.repository.remote.RemoteLoginRepository
-import com.tesera.data.repository.remote.RemoteNewsRepository
+import com.tesera.data.repository.remote.*
 import com.tesera.data.storage.TeseraEncryptedPrefs
 import com.tesera.data.storage.TeseraPrefs
 import com.tesera.domain.authentication.LoginRepository
+import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.gameDetails.GameDetailsRepository
 import com.tesera.domain.games.GamesRepository
 import com.tesera.domain.games.filters.GamesFilterRepository
@@ -32,6 +30,9 @@ interface DataModule {
 
     @Binds
     fun bindsGameDetailsRepository(gameDetailsRepository: RemoteGameDetailsRepository): GameDetailsRepository
+
+    @Binds
+    fun bindsCommentsRepository(commentsRepository: RemoteCommentsRepository): CommentsRepository
 
     @Binds
     fun bindsNewsRepository(newsRepository: RemoteNewsRepository): NewsRepository

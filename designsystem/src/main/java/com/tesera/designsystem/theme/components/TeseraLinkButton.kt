@@ -32,7 +32,7 @@ fun TeseraLinkButton(
         } else {
             Text(
                 text = text,
-                style = AppTheme.typography.bodyMedium,
+                style = AppTheme.typography.body1,
                 color = AppTheme.colors.primaryTextColor
             )
         }

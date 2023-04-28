@@ -46,7 +46,7 @@ fun LazyListScope.StickyHeader(
             if (text != null) {
                 Text(
                     text = stringResource(id = text),
-                    style = AppTheme.typography.bodyMedium,
+                    style = AppTheme.typography.body1,
                     modifier = Modifier
                         .padding(start = 4.dp, top = 8.dp, bottom = 8.dp)
                         .align(Alignment.CenterVertically)

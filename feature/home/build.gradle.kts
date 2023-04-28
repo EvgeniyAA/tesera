@@ -50,6 +50,11 @@ dependencies {
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)
     kapt(Deps.hilt_compiler)
+
+    //Tests
+    testApi(Deps.junit)
+    testApi(Deps.mockito)
+    testApi(Deps.mockK)
 }
 
 kapt {

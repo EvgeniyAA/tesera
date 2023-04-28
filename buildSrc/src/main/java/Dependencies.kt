@@ -17,6 +17,8 @@ object Versions {
     const val composeConstraintLayout = "1.0.1"
     const val composeViewModel = "2.6.1"
     const val composeNavigation = "2.5.3"
+    const val composeMaterial3 = "1.1.0-beta02"
+    const val composeMaterial = "1.4.2"
     const val okhttp = "4.10.0"
     const val retrofit = "2.9.0"
 
@@ -31,6 +33,7 @@ object Versions {
 
     const val junit = "4.13.2"
     const val mockito = "2.2.0"
+    const val mockk = "1.11.0"
 }
 
 
@@ -48,7 +51,9 @@ object Deps {
     const val compose_constraintlayout =
         "androidx.constraintlayout:constraintlayout-compose:${Versions.composeConstraintLayout}"
     const val compose_activity = "androidx.activity:activity-compose:${Versions.composeAcitivty}"
-    const val compose_material3 = "androidx.compose.material3:material3"
+    const val compose_material3 = "androidx.compose.material3:material3:${Versions.composeMaterial3}"
+    const val compose_material = "androidx.compose.material:material:${Versions.composeMaterial}"
+
 
     const val okhttp_bom = "com.squareup.okhttp3:okhttp-bom:${Versions.okhttp}"
     const val okhttp = "com.squareup.okhttp3:okhttp"
@@ -68,4 +73,6 @@ object Deps {
     const val security_crypto = "androidx.security:security-crypto-ktx:${Versions.securityCrypto}"
     const val junit = "junit:junit:${Versions.junit}"
     const val mockito = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito}"
+    const val mockK = "io.mockk:mockk:${Versions.mockk}"
+
 }

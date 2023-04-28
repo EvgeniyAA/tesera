@@ -5,25 +5,18 @@ import android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,10 +30,10 @@ import com.tesera.designsystem.theme.components.*
 import com.tesera.domain.model.GameDetailsModel
 import com.tesera.domain.model.toPreview
 import com.tesera.feature.gamedetails.models.GameDetailsAction
-import com.tesera.feature.gamedetails.models.GameDetailsButtonModel
 import com.tesera.feature.gamedetails.models.GameDetailsIntent
+import com.tesera.feature.gamedetails.models.GameDetailsIntent.GameDetailsButtonClicked
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GameDetailsScreen(
     navController: NavController,
@@ -82,7 +75,8 @@ fun GameDetailsScreen(
                                 )
                             }
                         )
-                        val roundedCorners = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                        val roundedCorners =
+                            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                         Column(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -91,7 +85,6 @@ fun GameDetailsScreen(
                                     color = AppTheme.colors.primaryBackground,
                                     shape = roundedCorners
                                 )
-                            //.shadow(0.1.dp, shape = roundedCorners)
                         ) {
                             Row(
                                 modifier = Modifier
@@ -126,18 +119,18 @@ fun GameDetailsScreen(
                             LazyVerticalGrid(
                                 GridCells.Fixed(2),
                                 modifier = Modifier.height(270.dp),
-                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                contentPadding = PaddingValues(
+                                    horizontal = 16.dp,
+                                    vertical = 8.dp
+                                ),
                                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 items(optionsList) { item ->
-                                    GameDetailsButton(
-                                        color = item.buttonStartColor,
-                                        text = item.title,
-                                        item.image,
-                                        count = item.count
-                                    ) {
-
+                                    GameDetailsButton(item) { type ->
+                                        gameDetailsViewModel.obtainIntent(
+                                            GameDetailsButtonClicked(allInfo, type)
+                                        )
                                     }
                                 }
                             }
@@ -161,35 +154,23 @@ fun GameDetailsScreen(
                                 minimumHeightState,
                                 density
                             )
-                            Text(
-                                text = stringResource(id = R.string.related_games),
-                                style = AppTheme.typography.bodyMedium,
-                                modifier = Modifier
-                                    .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-                            )
-                            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp)) {
-                                items(allInfo.relatedGames) { gameModel ->
-                                    HorizontalGamePreviewContent(modifier = minimumHeightStateModifier, game = gameModel.toPreview()) {
-                                        gameDetailsViewModel.obtainIntent(
-                                            GameDetailsIntent.GameDetailsClicked(it)
-                                        )
-                                    }
-                                }
+                            GameOfferBlock(
+                                text = stringResource(R.string.related_games),
+                                items = allInfo.relatedGames.map { it.toPreview() },
+                                modifier = minimumHeightStateModifier
+                            ) { gamePreview ->
+                                gameDetailsViewModel.obtainIntent(
+                                    GameDetailsIntent.GameDetailsClicked(gamePreview)
+                                )
                             }
-                            Text(
+                            GameOfferBlock(
                                 text = stringResource(id = R.string.similar_games),
-                                style = AppTheme.typography.bodyMedium,
-                                modifier = Modifier
-                                    .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
-                            )
-                            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp)) {
-                                items(allInfo.similarGames) { gameModel ->
-                                    HorizontalGamePreviewContent(modifier = minimumHeightStateModifier, game = gameModel.toPreview()) {
-                                        gameDetailsViewModel.obtainIntent(
-                                            GameDetailsIntent.GameDetailsClicked(it)
-                                        )
-                                    }
-                                }
+                                items = allInfo.similarGames.map { it.toPreview() },
+                                modifier = minimumHeightStateModifier
+                            ) {
+                                gameDetailsViewModel.obtainIntent(
+                                    GameDetailsIntent.GameDetailsClicked(it)
+                                )
                             }
                         }
                     }
@@ -205,6 +186,9 @@ fun GameDetailsScreen(
         when (val action = viewState.value.action) {
             is GameDetailsAction.ToGameDetails ->
                 navController.navigate("${NavigationTree.GamesDetails.name}/${action.game.alias}")
+            is GameDetailsAction.ToComments ->
+                navController.navigate("${NavigationTree.Comments.name}/${action.game.game.alias}/games")
+            is GameDetailsAction.ToMedia -> navController.navigate("${NavigationTree.Media.name}/${action.game.game.alias}")
             else -> Unit
         }
     }
@@ -222,6 +206,7 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.publications_and_files),
             R.drawable.ic_file,
             allGameInfo.filesTotal + allGameInfo.linksTotal,
+            GameDetailsButtonType.Media,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         ),
@@ -229,6 +214,7 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.has_game),
             R.drawable.ic_has_game,
             allGameInfo.ownersTotal,
+            GameDetailsButtonType.HasGame,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         ),
@@ -236,6 +222,7 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.comments),
             R.drawable.ic_game_comments_total,
             allGameInfo.commentsTotal,
+            GameDetailsButtonType.Comments,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         ),
@@ -243,6 +230,7 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.game_reports),
             R.drawable.ic_game_reports,
             allGameInfo.reportsTotal,
+            GameDetailsButtonType.GameReports,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         ),
@@ -250,6 +238,7 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.people_sell),
             R.drawable.ic_sell,
             allGameInfo.sellTotal,
+            GameDetailsButtonType.Sell,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         ),
@@ -257,23 +246,8 @@ private fun getContentForDetailsButtons(allGameInfo: GameDetailsModel) =
             stringResource(id = R.string.people_buy),
             R.drawable.ic_buy,
             allGameInfo.buyTotal,
+            GameDetailsButtonType.Buy,
             AppTheme.colors.teseraBackgroundGradientStart,
             AppTheme.colors.teseraBackgroundGradientEnd,
         )
     )
-
-
-fun Modifier.minimumHeightModifier(state: MinimumHeightState, density: Density) = onSizeChanged { size ->
-    val itemHeight = with(density) {
-        val height = size.height
-        height.toDp()
-    }
-
-    if (itemHeight > (state.minHeight ?: 0.dp)) {
-        state.minHeight = itemHeight
-    }
-}.defaultMinSize(minHeight = state.minHeight ?: Dp.Unspecified)
-
-class MinimumHeightState(minHeight: Dp? = null) {
-    var minHeight by mutableStateOf(minHeight)
-}

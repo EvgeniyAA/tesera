@@ -22,9 +22,10 @@ fun ExpandableText(
     text: String,
     modifier: Modifier = Modifier,
     minimizedMaxLines: Int = 4,
+    isExpanded: Boolean = false,
+    onExpandedClicked: () -> Unit = {}
 ) {
     var cutText by remember(text) { mutableStateOf<String?>(null) }
-    var expanded by remember { mutableStateOf(false) }
     val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
     val seeMoreSizeState = remember { mutableStateOf<IntSize?>(null) }
     val seeMoreOffsetState = remember { mutableStateOf<Offset?>(null) }
@@ -34,9 +35,9 @@ fun ExpandableText(
     val seeMoreSize = seeMoreSizeState.value
     val seeMoreOffset = seeMoreOffsetState.value
 
-    LaunchedEffect(text, expanded, textLayoutResult, seeMoreSize) {
+    LaunchedEffect(text, isExpanded, textLayoutResult, seeMoreSize) {
         val lastLineIndex = minimizedMaxLines - 1
-        if (!expanded && textLayoutResult != null && seeMoreSize != null
+        if (!isExpanded && textLayoutResult != null && seeMoreSize != null
             && lastLineIndex + 1 == textLayoutResult.lineCount
             && textLayoutResult.isLineEllipsized(lastLineIndex)
         ) {
@@ -56,11 +57,11 @@ fun ExpandableText(
     Box(modifier) {
         Text(
             text = cutText ?: text,
-            maxLines = if (expanded) Int.MAX_VALUE else minimizedMaxLines,
+            maxLines = if (isExpanded) Int.MAX_VALUE else minimizedMaxLines,
             overflow = TextOverflow.Ellipsis,
             onTextLayout = { textLayoutResultState.value = it },
         )
-        if (!expanded) {
+        if (!isExpanded) {
             val density = LocalDensity.current
             Text(text = stringResource(id = R.string.show_more),
                 onTextLayout = { seeMoreSizeState.value = it.size },
@@ -76,8 +77,8 @@ fun ExpandableText(
                             Modifier
                     )
                     .clickable {
-                        expanded = true
                         cutText = null
+                        onExpandedClicked()
                     }
                     .alpha(if (seeMoreOffset != null) 1f else 0f)
             )

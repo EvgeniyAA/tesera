@@ -93,10 +93,10 @@ fun HorizontalGamePreviewContent(
                     }
             ) {
                 Text(
-                    text = game.title, style = AppTheme.typography.bodyMedium, maxLines = 2,
+                    text = game.title, style = AppTheme.typography.body1, maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(text = game.year.toString(), style = AppTheme.typography.bodyRegular)
+                Text(text = game.year.toString(), style = AppTheme.typography.body2)
             }
             AsyncImage(
                 model = game.photoUrl,

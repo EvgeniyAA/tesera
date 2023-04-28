@@ -3,6 +3,7 @@ package com.tesera.feature.gamedetails
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tesera.core.mvi.IntentHandler
+import com.tesera.designsystem.theme.components.GameDetailsButtonType
 import com.tesera.domain.gameDetails.GameDetailsUseCase
 import com.tesera.feature.gamedetails.models.GameDetailsAction
 import com.tesera.feature.gamedetails.models.GameDetailsIntent
@@ -31,6 +32,18 @@ class GameDetailsViewModel @Inject constructor(
         is GameDetailsIntent.GameDetailsClicked -> sendViewState(
             _gameDetailsViewState.value.copy(action = GameDetailsAction.ToGameDetails(intent.game))
         )
+        is GameDetailsIntent.GameDetailsButtonClicked -> {
+            val action = when (intent.type) {
+                GameDetailsButtonType.Media -> GameDetailsAction.ToMedia(intent.game)
+                GameDetailsButtonType.Comments -> GameDetailsAction.ToComments(intent.game)
+                GameDetailsButtonType.HasGame -> GameDetailsAction.ToMedia(intent.game)
+                GameDetailsButtonType.Sell -> GameDetailsAction.ToMedia(intent.game)
+                GameDetailsButtonType.Buy -> GameDetailsAction.ToMedia(intent.game)
+                GameDetailsButtonType.GameReports -> GameDetailsAction.ToMedia(intent.game)
+            }
+
+            sendViewState(_gameDetailsViewState.value.copy(action = action))
+        }
     }
 
     private fun getGameDetails(alias: String) {

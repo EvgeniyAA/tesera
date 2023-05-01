@@ -21,6 +21,7 @@ object Versions {
     const val composeMaterial = "1.4.2"
     const val okhttp = "4.10.0"
     const val retrofit = "2.9.0"
+    const val okio = "3.3.0"
 
     const val timber = "4.7.1"
 
@@ -60,6 +61,7 @@ object Deps {
     const val okhttp_logging = "com.squareup.okhttp3:logging-interceptor"
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
     const val retrofit_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit}"
+    const val okio = "com.squareup.okio:okio:${Versions.okio}"
 
     const val coil = "io.coil-kt:coil-compose:${Versions.coil}"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"

@@ -1,5 +1,7 @@
 package com.tesera.data.di
 
+import android.content.Context
+import com.tesera.core.model.ContextWorker
 import com.tesera.data.network.ApiService
 import com.tesera.data.network.createApi
 import com.tesera.data.repository.local.LocalGamesFilterRepository
@@ -11,11 +13,13 @@ import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.gameDetails.GameDetailsRepository
 import com.tesera.domain.games.GamesRepository
 import com.tesera.domain.games.filters.GamesFilterRepository
+import com.tesera.domain.media.MediaRepository
 import com.tesera.domain.news.NewsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -38,6 +42,9 @@ interface DataModule {
     fun bindsNewsRepository(newsRepository: RemoteNewsRepository): NewsRepository
 
     @Binds
+    fun bindsMediaRepository(mediaRepository: RemoteMediaRepository): MediaRepository
+
+    @Binds
     @Singleton
     fun bindsGamesFilterRepository(gamesFilterRepository: LocalGamesFilterRepository): GamesFilterRepository
 
@@ -51,4 +58,14 @@ object NetworkModule {
     @Provides
     @Singleton
     fun getApiService(teseraPrefs: TeseraEncryptedPrefs): ApiService = createApi(teseraPrefs)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+
+    @Provides
+    fun provideContextWorker(@ApplicationContext appContext: Context): ContextWorker {
+        return ContextWorker(appContext)
+    }
 }

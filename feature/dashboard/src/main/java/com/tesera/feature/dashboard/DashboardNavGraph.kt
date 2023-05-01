@@ -41,9 +41,11 @@ fun DashboardNavGraph(navController: NavHostController) {
                 objectType = it.arguments?.getString("objectType").orEmpty()
             )
         }
-        composable(route = "${NavigationTree.Media.name}/{alias}") {
+        composable(route = "${NavigationTree.Media.name}/{alias}/{linksLimit}/{filesLimit}") {
             MediaScreen(
                 alias = it.arguments?.getString("alias").orEmpty(),
+                linksLimit = it.arguments?.getString("linksLimit")?.toInt() ?: 0,
+                filesLimit = it.arguments?.getString("filesLimit")?.toInt() ?: 0,
                 navController = navController
             )
         }

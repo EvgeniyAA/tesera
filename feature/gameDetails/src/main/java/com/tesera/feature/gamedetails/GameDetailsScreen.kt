@@ -188,7 +188,7 @@ fun GameDetailsScreen(
                 navController.navigate("${NavigationTree.GamesDetails.name}/${action.game.alias}")
             is GameDetailsAction.ToComments ->
                 navController.navigate("${NavigationTree.Comments.name}/${action.game.game.alias}/games")
-            is GameDetailsAction.ToMedia -> navController.navigate("${NavigationTree.Media.name}/${action.game.game.alias}")
+            is GameDetailsAction.ToMedia -> navController.navigate("${NavigationTree.Media.name}/${action.game.game.alias}/${action.game.linksTotal}/${action.game.filesTotal}")
             else -> Unit
         }
     }

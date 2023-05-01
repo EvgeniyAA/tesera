@@ -25,9 +25,9 @@ class RemoteCommentsRepository @Inject constructor(
         get() = _comments
 
     override suspend fun expandComment(id: Int) {
+        withContext(ioDispatcher) {
         cachedComments =
             cachedComments.map { it.copy(isExpanded = if (id == it.id) !it.isExpanded else it.isExpanded) }
-        withContext(ioDispatcher) {
             _comments.emit(cachedComments)
         }
     }

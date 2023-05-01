@@ -29,20 +29,17 @@ fun CommentsScreen(
     val viewState = commentsViewModel.commentsViewState.collectAsState()
     val state = viewState.value
 
-    when {
-        state.comments.isNotEmpty() -> {
-            Scaffold(
-                modifier = Modifier.fillMaxHeight(),
-                topBar = TeseraToolbar(title = stringResource(id = R.string.comments)) {
-                    navController.popBackStack()
-                }
-            ) {
-                Box(modifier = Modifier.padding(it)) {
-                    CommentsList(commentsViewModel, state.comments)
-                }
-            }
+    Scaffold(
+        modifier = Modifier.fillMaxHeight(),
+        topBar = TeseraToolbar(title = stringResource(id = R.string.comments)) {
+            navController.popBackStack()
+        }
+    ) {
+        Box(modifier = Modifier.padding(it)) {
+            CommentsList(commentsViewModel, state.comments)
         }
     }
+
 
     LaunchedEffect(key1 = alias, key2 = objectType) {
         commentsViewModel.obtainIntent(CommentsIntent.GetComments(alias, objectType))

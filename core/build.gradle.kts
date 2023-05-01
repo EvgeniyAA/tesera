@@ -56,6 +56,7 @@ dependencies {
     api(Deps.okhttp_logging)
     api(Deps.retrofit)
     api(Deps.retrofit_gson)
+    api(Deps.okio)
     api(Deps.coil)
     api(Deps.hilt_navigation)
     api(Deps.hilt_android)

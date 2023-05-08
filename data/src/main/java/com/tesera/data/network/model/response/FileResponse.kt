@@ -13,7 +13,7 @@ data class FileResponse(
     val author: AuthorResponse? = AuthorResponse(),
 )
 
-fun FileResponse?.toFileModel() = FileModel(
+fun FileResponse?.toFileModel(alias: String?) = FileModel(
     teseraId = this?.teseraId ?: 0,
     objectType = this?.objectType.orEmpty(),
     title = this?.title.orEmpty(),
@@ -21,5 +21,6 @@ fun FileResponse?.toFileModel() = FileModel(
     photoUrl = this?.photoUrl.orEmpty(),
     modificationDateUtc = this?.modificationDateUtc.orEmpty(),
     creationDateUtc = this?.creationDateUtc.orEmpty(),
-    author = this?.author.toAuthorModel()
+    author = this?.author.toAuthorModel(),
+    alias = alias.orEmpty()
 )

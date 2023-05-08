@@ -1,13 +1,13 @@
 package com.tesera.data.di
 
 import android.content.Context
-import com.tesera.core.model.ContextWorker
-import com.tesera.data.network.ApiService
-import com.tesera.data.network.createApi
+import androidx.room.Room
 import com.tesera.data.repository.local.LocalGamesFilterRepository
 import com.tesera.data.repository.remote.*
 import com.tesera.data.storage.TeseraEncryptedPrefs
 import com.tesera.data.storage.TeseraPrefs
+import com.tesera.data.storage.db.AppDatabase
+import com.tesera.data.storage.db.dao.FileDao
 import com.tesera.domain.authentication.LoginRepository
 import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.gameDetails.GameDetailsRepository
@@ -50,22 +50,15 @@ interface DataModule {
 
     @Binds
     fun bindsTeseraPrefs(teseraPrefs: TeseraEncryptedPrefs): TeseraPrefs
-}
 
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
-    @Provides
-    @Singleton
-    fun getApiService(teseraPrefs: TeseraEncryptedPrefs): ApiService = createApi(teseraPrefs)
-}
+    companion object {
+        @Provides
+        @Singleton
+        fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase =
+            Room.databaseBuilder(appContext, AppDatabase::class.java, "app_database").build()
 
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Provides
-    fun provideContextWorker(@ApplicationContext appContext: Context): ContextWorker {
-        return ContextWorker(appContext)
+        @Provides
+        @Singleton
+        fun providesFileDao(database: AppDatabase): FileDao = database.fileDao()
     }
 }

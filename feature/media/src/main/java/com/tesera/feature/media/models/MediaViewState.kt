@@ -9,7 +9,8 @@ data class MediaViewState(
     val files: List<FileModel> = emptyList(),
     val linksError: String? = null,
     val filesError: String? = null,
-    val isLoading: Boolean = true,
+    val filesLoading: Boolean = false,
+    val linksLoading: Boolean = false,
     val action: MediaAction = MediaAction.None
 ) : UiState
 

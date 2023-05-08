@@ -43,6 +43,10 @@ dependencies {
     kapt(Deps.hilt_compiler)
     implementation(Deps.security_crypto)
 
+    implementation(Deps.room_runtime)
+    implementation(Deps.room_ktx)
+    kapt(Deps.room_compiler)
+
 }
 kapt {
     correctErrorTypes = true

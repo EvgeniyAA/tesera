@@ -11,6 +11,7 @@ data class FileModel(
     val author: AuthorModel,
     val downloadStatus: DownloadStatus = DownloadStatus.CanBeDownloaded,
     val isSelected: Boolean = false,
+    val alias: String
 )
 
 sealed class DownloadStatus {

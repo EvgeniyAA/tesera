@@ -154,24 +154,26 @@ fun GameDetailsScreen(
                                 minimumHeightState,
                                 density
                             )
-                            GameOfferBlock(
-                                text = stringResource(R.string.related_games),
-                                items = allInfo.relatedGames.map { it.toPreview() },
-                                modifier = minimumHeightStateModifier
-                            ) { gamePreview ->
-                                gameDetailsViewModel.obtainIntent(
-                                    GameDetailsIntent.GameDetailsClicked(gamePreview)
-                                )
-                            }
-                            GameOfferBlock(
-                                text = stringResource(id = R.string.similar_games),
-                                items = allInfo.similarGames.map { it.toPreview() },
-                                modifier = minimumHeightStateModifier
-                            ) {
-                                gameDetailsViewModel.obtainIntent(
-                                    GameDetailsIntent.GameDetailsClicked(it)
-                                )
-                            }
+                            if (allInfo.relatedGames.isNotEmpty())
+                                GameOfferBlock(
+                                    text = stringResource(R.string.related_games),
+                                    items = allInfo.relatedGames.map { it.toPreview() },
+                                    modifier = minimumHeightStateModifier
+                                ) { gamePreview ->
+                                    gameDetailsViewModel.obtainIntent(
+                                        GameDetailsIntent.GameDetailsClicked(gamePreview)
+                                    )
+                                }
+                            if (allInfo.similarGames.isNotEmpty())
+                                GameOfferBlock(
+                                    text = stringResource(id = R.string.similar_games),
+                                    items = allInfo.similarGames.map { it.toPreview() },
+                                    modifier = minimumHeightStateModifier
+                                ) {
+                                    gameDetailsViewModel.obtainIntent(
+                                        GameDetailsIntent.GameDetailsClicked(it)
+                                    )
+                                }
                         }
                     }
                 }

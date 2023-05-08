@@ -17,9 +17,7 @@ import com.tesera.feature.media.models.MediaIntent
 import com.tesera.feature.media.models.MediaViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -46,81 +44,49 @@ class MediaViewModel @Inject constructor(
         override fun reduce(oldState: MediaViewState, intent: MediaIntent) = when (intent) {
             MediaIntent.ActionInvoked -> setState(oldState.copy(action = MediaAction.None))
             is MediaIntent.FileClicked -> {
-                unselectFile()
+                unselectFile(intent.file)
                 selectFile(intent.file)
             }
             is MediaIntent.GetMedia -> {
                 viewModelScope.launch {
-                    mediaUseCase.links().combine(mediaUseCase.files()) { links, files ->
-                        links to files
-                    }.collect {
-                        val newState = reduceStateWithMedia(
-                            oldState,
-                            it.first as MediaPartialState.LinksData,
-                            it.second as MediaPartialState.FilesData
-                        )
+                    var oldUpdatedState = oldState
+                    mediaUseCase.media(intent.alias, intent.filesLimit, intent.linksLimit).collect {
+                        val newState = reduceStateWithMedia(oldUpdatedState, it)
+                        oldUpdatedState = newState
                         setState(newState)
                     }
                 }
-                getMedia(intent)
+                Unit
             }
             is MediaIntent.LinkClicked -> setState(oldState)
-            is MediaIntent.StartDownload -> downloadFile(intent.fileUrl)
-            MediaIntent.UnselectFile -> unselectFile()
+            is MediaIntent.StartDownload -> downloadFile(intent.fileModel)
+            is MediaIntent.UnselectFile -> unselectFile(intent.fileModel)
         }
 
-        private fun getMedia(
-            intent: MediaIntent.GetMedia,
-        ) {
-            viewModelScope.launch {
-                mediaUseCase.getMedia(intent.alias, intent.linksLimit, intent.filesLimit)
-            }
-        }
-
-        private fun downloadFile(fileUrl: String) {
-            // open and rename
-            val ext = fileUrl.toUri().getFileExtension(contextWorker.getContext()) ?: "tmp"
-            viewModelScope.launch { mediaUseCase.downloadFile(ext) }
+        private fun downloadFile(fileModel: FileModel) {
+            viewModelScope.launch { mediaUseCase.downloadFile(fileModel) }
         }
 
         private fun selectFile(file: FileModel) {
             viewModelScope.launch { mediaUseCase.selectFile(file) }
         }
 
-        private fun unselectFile() {
-            viewModelScope.launch { mediaUseCase.unselectFile() }
+        private fun unselectFile(fileModel: FileModel) {
+            viewModelScope.launch { mediaUseCase.unselectFile(fileModel) }
         }
 
         private fun reduceStateWithMedia(
             state: MediaViewState,
-            links: MediaPartialState.LinksData,
-            files: MediaPartialState.FilesData,
+            partialState: MediaPartialState
         ): MediaViewState {
             return state.copy(
-                isLoading = files.isLoading,
-                files = files.data.checkFiles(),
-                filesError = files.error?.message,
-                links = links.data,
-                linksError = links.error?.message
+                filesLoading = (partialState as? MediaPartialState.FilesLoading)?.isLoading ?: state.filesLoading,
+                files = (partialState as? MediaPartialState.Files)?.files ?: state.files,
+                filesError = (partialState as? MediaPartialState.FilesError)?.error?.message ?: state.filesError,
+                links = (partialState as? MediaPartialState.Links)?.links ?: state.links,
+                linksError = (partialState as? MediaPartialState.LinksError)?.error?.message ?: state.linksError,
+                linksLoading = (partialState as? MediaPartialState.LinksLoading)?.isLoading ?: state.linksLoading
             )
-        }
-
-        private fun List<FileModel>.checkFiles(): List<FileModel> = this.map {
-            if (it.downloadStatus == DownloadStatus.CanBeDownloaded) {
-                val fileName = "${it.title}.${
-                    (it.photoUrl.toUri().getFileExtension(contextWorker.getContext())) ?: "tmp"
-                }"
-                val file = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    fileName
-                )
-                when {
-                    file.exists() -> {
-                        it.copy(downloadStatus = DownloadStatus.Downloaded(file.absolutePath))
-                    }
-                    else -> it
-                }
-            } else it
         }
     }
 }

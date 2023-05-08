@@ -56,11 +56,11 @@ interface ApiService {
     suspend fun links(
         @Path("alias") alias: String,
         @Query("limit") limit: Int
-    ) : Result<List<LinkResponse>>
+    ) : List<LinkResponse>
 
     @GET("/games/{alias}/files")
     suspend fun files(
         @Path("alias") alias: String,
         @Query("limit") limit: Int
-    ) : Result<List<FileResponse>>
+    ) : List<FileResponse>
 }

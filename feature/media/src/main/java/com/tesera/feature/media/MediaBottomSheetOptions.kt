@@ -1,12 +1,14 @@
 package com.tesera.feature.media
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.BottomSheetScaffoldState
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -18,26 +20,29 @@ import com.tesera.designsystem.theme.components.MediaOptionItem
 import com.tesera.domain.model.DownloadStatus
 import com.tesera.domain.model.FileModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetOptionsScreen(
+fun ModalBottomSheet(
     fileModel: FileModel?,
-    modalBottomSheetValue: BottomSheetScaffoldState,
-    onStartDownload: (url: String) -> Unit,
+    sheetState: ModalBottomSheetState,
+    onStartDownload: (FileModel) -> Unit,
     content: @Composable () -> Unit,
 ) {
+
     val context = LocalContext.current
     val share = stringResource(id = R.string.share)
-    BottomSheetScaffold(
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetBackgroundColor = Color.White,
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetContent = {
             if (fileModel != null) {
                 Text(
                     fileModel.title,
                     style = AppTheme.typography.heading5,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 )
-                if(fileModel.content.isNotEmpty())
+                if (fileModel.content.isNotEmpty())
                     Text(
                         fileModel.content,
                         style = AppTheme.typography.body1,
@@ -57,7 +62,7 @@ fun BottomSheetOptionsScreen(
                     DownloadStatus.CanBeDownloaded -> MediaOptionItem(
                         title = stringResource(id = R.string.download),
                         R.drawable.ic_download,
-                    ) { onStartDownload(fileModel.photoUrl) }
+                    ) { onStartDownload(fileModel) }
 
                     is DownloadStatus.Downloaded -> {
                         MediaOptionItem(
@@ -74,11 +79,9 @@ fun BottomSheetOptionsScreen(
                     is DownloadStatus.Error -> MediaOptionItem(
                         title = stringResource(id = R.string.download),
                         R.drawable.ic_error,
-                    ) { onStartDownload(fileModel.photoUrl) }
+                    ) { onStartDownload(fileModel) }
                 }
             }
-        },
-        sheetPeekHeight = 0.dp,
-        scaffoldState = modalBottomSheetValue
+        }
     ) { content() }
 }

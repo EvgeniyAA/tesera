@@ -8,7 +8,7 @@ sealed class MediaIntent : UiIntent {
     data class GetMedia(val alias: String, val linksLimit: Int, val filesLimit: Int) : MediaIntent()
     data class LinkClicked(val link: LinkModel) : MediaIntent()
     data class FileClicked(val file: FileModel) : MediaIntent()
-    object UnselectFile: MediaIntent()
+    data class UnselectFile(val fileModel: FileModel): MediaIntent()
     object ActionInvoked : MediaIntent()
-    data class StartDownload(val fileUrl: String) : MediaIntent()
+    data class StartDownload(val fileModel: FileModel) : MediaIntent()
 }

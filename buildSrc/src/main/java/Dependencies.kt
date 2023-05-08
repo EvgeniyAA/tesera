@@ -32,6 +32,8 @@ object Versions {
     const val paging = "3.1.1"
     const val composePaging = "1.0.0-alpha18"
 
+    const val room = "2.5.1"
+
     const val junit = "4.13.2"
     const val mockito = "2.2.0"
     const val mockk = "1.11.0"
@@ -67,6 +69,10 @@ object Deps {
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
     const val paging_runtime = "androidx.paging:paging-runtime:${Versions.paging}"
     const val paging_compose = "androidx.paging:paging-compose:${Versions.composePaging}"
+
+    const val room_runtime = "androidx.room:room-runtime:${Versions.room}"
+    const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
+    const val room_ktx = "androidx.room:room-ktx:${Versions.room}"
 
     const val plugin_gradle = "com.android.tools.build:gradle:${Versions.gradle}"
     const val plugin_kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"

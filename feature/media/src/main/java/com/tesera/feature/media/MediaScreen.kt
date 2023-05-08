@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -17,7 +21,7 @@ import com.tesera.domain.model.FileModel
 import com.tesera.feature.media.models.MediaIntent
 import com.tesera.feature.media.models.MediaViewState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MediaScreen(
     alias: String,
@@ -26,9 +30,6 @@ fun MediaScreen(
     navController: NavController,
     mediaViewModel: MediaViewModel = hiltViewModel(),
 ) {
-    val modalBottomSheetState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(skipHiddenState = false)
-    )
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetData = remember { mutableStateOf<FileModel?>(null) }
 
@@ -41,11 +42,15 @@ fun MediaScreen(
             mediaViewModel.obtainIntent(MediaIntent.ActionInvoked)
         }
     }
+    val modalBottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
 
     val state by mediaViewModel.state.collectAsState()
     handleState(mediaViewModel, state, bottomSheetData, modalBottomSheetState)
 
-    BottomSheetOptionsScreen(
+
+    ModalBottomSheet(
         bottomSheetData.value,
         modalBottomSheetState,
         onStartDownload = { mediaViewModel.obtainIntent(MediaIntent.StartDownload(it)) }
@@ -78,24 +83,29 @@ fun MediaScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun handleState(
     mediaViewModel: MediaViewModel,
     state: MediaViewState,
     bottomSheetData: MutableState<FileModel?>,
-    modalBottomSheetState: BottomSheetScaffoldState,
+    modalBottomSheetState: ModalBottomSheetState,
 ) {
     val selectedFile = state.files.firstOrNull { it.isSelected }
     when {
         selectedFile != null -> {
             LaunchedEffect(key1 = selectedFile) {
                 bottomSheetData.value = selectedFile
-                modalBottomSheetState.bottomSheetState.expand()
+                modalBottomSheetState.show()
             }
         }
         selectedFile == null -> LaunchedEffect(key1 = selectedFile) {
-            modalBottomSheetState.bottomSheetState.hide()
+            modalBottomSheetState.hide()
         }
+    }
+
+    LaunchedEffect(key1 = modalBottomSheetState.isVisible) {
+        if (!modalBottomSheetState.isVisible && selectedFile != null)
+            mediaViewModel.obtainIntent(MediaIntent.UnselectFile(selectedFile))
     }
 }

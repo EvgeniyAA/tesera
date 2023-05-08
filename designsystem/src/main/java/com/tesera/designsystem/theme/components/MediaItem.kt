@@ -27,7 +27,6 @@ fun MediaItem(
             modifier = Modifier
                 .size(width = 40.dp, height = 48.dp)
                 .padding(vertical = 4.dp)
-                .background(color = AppTheme.colors.interactiveBackground)
         ) {
             AsyncImage(
                 model = icon,

@@ -64,6 +64,10 @@ dependencies {
     api(Deps.paging_runtime)
     api(Deps.paging_compose)
 
+    api(Deps.room_runtime)
+    api(Deps.room_ktx)
+    kapt(Deps.room_compiler)
+
     //Tests
     testApi(Deps.junit)
     testApi(Deps.mockito)

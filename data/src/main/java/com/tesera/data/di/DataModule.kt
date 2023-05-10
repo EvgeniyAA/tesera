@@ -14,6 +14,7 @@ import com.tesera.domain.gameDetails.GameDetailsRepository
 import com.tesera.domain.games.GamesRepository
 import com.tesera.domain.games.filters.GamesFilterRepository
 import com.tesera.domain.media.MediaRepository
+import com.tesera.domain.news.NewsDetailsRepository
 import com.tesera.domain.news.NewsRepository
 import dagger.Binds
 import dagger.Module
@@ -44,6 +45,8 @@ interface DataModule {
     @Binds
     fun bindsMediaRepository(mediaRepository: RemoteMediaRepository): MediaRepository
 
+    @Binds
+    fun bindsNewsDetailsRepository(newsDetailsRepository: RemoteNewsDetailsRepository): NewsDetailsRepository
     @Binds
     @Singleton
     fun bindsGamesFilterRepository(gamesFilterRepository: LocalGamesFilterRepository): GamesFilterRepository

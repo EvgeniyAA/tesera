@@ -1,6 +1,7 @@
 package com.tesera.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
+import com.tesera.core.utils.toDate
 import com.tesera.domain.model.CommentModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,8 +29,3 @@ fun CommentResponse?.toModel() = CommentModel(
     author = this?.author.toAuthorModel(),
     teseraObject = this?.teseraObject.toModel()
 )
-
-private fun String.toDate(): Date {
-    val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    return parser.parse(this) ?: Date()
-}

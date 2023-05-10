@@ -4,7 +4,7 @@ data class NewsModel(
     val teseraId: Int,
     val title: String,
     val alias: String,
-    val contentShort: String,
+    val content: String,
     val creationDateUtc: String,
     val modificationDateUtc: String,
     val publicationDateUtc: String,

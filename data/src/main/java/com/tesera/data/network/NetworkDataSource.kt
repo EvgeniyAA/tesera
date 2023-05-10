@@ -1,15 +1,10 @@
 package com.tesera.data.network
 
-import android.os.Environment
 import com.tesera.data.network.model.request.AuthParams
-import com.tesera.data.network.model.request.WakeUpParams
 import com.tesera.domain.model.FileModel
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
-import okio.buffer
-import okio.sink
-import java.io.File
 import javax.inject.Inject
 
 const val SEGMENT_SIZE = 8192 // or any other value that you need
@@ -28,7 +23,7 @@ class NetworkDataSource @Inject constructor(
     suspend fun getGameDetails(alias: String) = api.gameDetails(alias)
 
     suspend fun getNews(limit: Int, offset: Int) =
-        api.news(limit, offset)
+        api.publications(limit, offset)
 
     suspend fun getComments(
         objecttype: String,
@@ -44,4 +39,9 @@ class NetworkDataSource @Inject constructor(
         val request = Request.Builder().url(fileModel.photoUrl).build()
         return OkHttpClient().newCall(request).execute()
     }
+
+    suspend fun getNews(alias: String) = api.news(alias)
+    suspend fun getThoughts(alias: String) = api.thoughts(alias)
+    suspend fun getArticles(alias: String) = api.articles(alias)
+    suspend fun getJournals(alias: String) = api.journals(alias)
 }

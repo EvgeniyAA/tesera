@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.GamePreviewContent
+import com.tesera.designsystem.theme.components.NewsPreviewContent
 import com.tesera.designsystem.theme.components.StickyHeader
 import com.tesera.domain.model.GamePreviewModel
 import com.tesera.domain.model.NewsPreviewModel
@@ -39,7 +40,8 @@ fun HomeScreen(
             is HomeAction.ToGameDetails ->
                 navController.navigate("${NavigationTree.GamesDetails.name}/${action.game.alias}")
             HomeAction.ToGamesList -> navController.navigate(NavigationTree.Games.name)
-            HomeAction.ToNewsList -> Unit // todo navController.navigate(NavigationTree.Games.name)
+            HomeAction.ToNewsList -> navController.navigate(NavigationTree.News.name)
+            is HomeAction.ToNewsDetails -> navController.navigate("${NavigationTree.NewsDetails.name}/${action.news.objectType.name}/${action.news.alias}")
         }
     })
 
@@ -84,7 +86,7 @@ fun List(
 
         items(
             items = hotnessGames,
-            key = { game -> game.bggId }
+            key = { game -> game.id }
         ) {
             GamePreviewContent(it) { game ->
                 homeViewModel.obtainIntent(HomeIntent.GameDetailsClicked(game))
@@ -106,23 +108,10 @@ fun List(
 
         items(
             items = news,
-            key = { newsItem -> newsItem.teseraId }
+            key = { newsItem -> newsItem.objectId }
         ) {
-            GamePreviewContent(
-                GamePreviewModel(
-                    it.teseraId,
-                    it.teseraId,
-                    it.title,
-                    "",
-                    2023,
-                    it.photoUrl,
-                    144,
-                    45,
-                    8.89,
-                    "news"
-                )
-            ) {
-                homeViewModel.obtainIntent(HomeIntent.NewsListClicked)
+            NewsPreviewContent(it) {
+                homeViewModel.obtainIntent(HomeIntent.NewsDetailsClicked(it))
             }
         }
     }

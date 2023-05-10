@@ -34,7 +34,6 @@ import com.tesera.domain.model.TeseraObjectModel
 import java.util.*
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun Comment(
     commentModel: CommentModel,
@@ -44,26 +43,7 @@ fun Comment(
 ) {
     Row(modifier = modifier) {
         val iconSize = if (commentModel.parentId == null) 40f else 20f
-        AsyncImage(
-            model = commentModel.author.avatarUrl,
-            contentDescription = commentModel.author.name,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(iconSize.dp)
-                .clip(CircleShape),
-            placeholder = TextPainter(
-                Color((commentModel.author.name + commentModel.author.login).toHslColor()),
-                circleSize = iconSize,
-                textMeasurer = rememberTextMeasurer(),
-                commentModel.author.name.substring(0, 2).uppercase()
-            ),
-            error = TextPainter(
-                Color((commentModel.author.name + commentModel.author.login).toHslColor()),
-                circleSize = iconSize,
-                textMeasurer = rememberTextMeasurer(),
-                commentModel.author.name.substring(0, 2).uppercase()
-            ),
-        )
+        Avatar(author = commentModel.author, avatarSize = iconSize)
         Column(modifier = Modifier.padding(horizontal = 4.dp)) {
 
             Text(text = commentModel.author.name, style = AppTheme.typography.body1)
@@ -95,7 +75,9 @@ fun Comment(
                     AsyncImage(
                         model = R.drawable.ic_like_not_filled,
                         contentDescription = "",
-                        modifier = Modifier.size(12.dp).clickable { onLikeClicked(commentModel.id) },
+                        modifier = Modifier
+                            .size(12.dp)
+                            .clickable { onLikeClicked(commentModel.id) },
                         colorFilter = ColorFilter.tint(color = AppTheme.colors.secondaryTextColor),
                     )
                     if (commentModel.rating > 0)
@@ -108,48 +90,6 @@ fun Comment(
                 }
             }
         }
-    }
-}
-
-@ColorInt
-fun String.toHslColor(saturation: Float = 0.5f, lightness: Float = 0.4f): Int {
-    val hue = fold(0) { acc, char -> char.code + acc * 37 } % 360
-    return ColorUtils.HSLToColor(floatArrayOf(hue.absoluteValue.toFloat(), saturation, lightness))
-}
-
-class TextPainter @OptIn(ExperimentalTextApi::class) constructor(
-    val circleColor: Color,
-    val circleSize: Float,
-    val textMeasurer: TextMeasurer,
-    val text: String,
-) : Painter() {
-
-    @OptIn(ExperimentalTextApi::class)
-    val textLayoutResult: TextLayoutResult =
-        textMeasurer.measure(
-            text = AnnotatedString(text),
-            style = TextStyle(color = Color.White, fontSize = (circleSize / 2).sp)
-        )
-
-    override val intrinsicSize: Size get() = Size(circleSize, circleSize)
-
-    @OptIn(ExperimentalTextApi::class)
-    override fun DrawScope.onDraw() {
-        //the circle background
-        drawCircle(
-            color = circleColor,
-            radius = size.maxDimension / 2
-        )
-
-        val textSize = textLayoutResult.size
-        //The text
-        drawText(
-            textLayoutResult = textLayoutResult,
-            topLeft = Offset(
-                (this.size.width - textSize.width) / 2f,
-                (this.size.height - textSize.height) / 2f
-            )
-        )
     }
 }
 

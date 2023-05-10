@@ -44,6 +44,9 @@ class GameDetailsViewModel @Inject constructor(
 
             sendViewState(_gameDetailsViewState.value.copy(action = action))
         }
+        is GameDetailsIntent.NewsDetailsClicked -> sendViewState(
+            _gameDetailsViewState.value.copy(action = GameDetailsAction.ToNewsDetails(intent.news))
+        )
     }
 
     private fun getGameDetails(alias: String) {

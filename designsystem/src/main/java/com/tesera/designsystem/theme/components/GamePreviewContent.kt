@@ -16,7 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -89,7 +91,12 @@ fun GamePreviewContent(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                Text(text = game.title, style = AppTheme.typography.body1)
+                Text(
+                    text = game.title,
+                    style = AppTheme.typography.body1,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
                 if (game.year > 0)
                     Text(text = game.year.toString(), style = AppTheme.typography.body2)
             }
@@ -136,11 +143,14 @@ fun GamePreviewContent(
                 )
             }
 
-            if (game.isAddition) AdditionLabel(
-                Modifier.constrainAs(addition) {
-                    start.linkTo(image.end)
-                    bottom.linkTo(comments.bottom)
-                }.padding(8.dp)
+            if (game.isAddition) LabelWithBackground(
+                stringResource(id = R.string.addition),
+                Modifier
+                    .constrainAs(addition) {
+                        start.linkTo(image.end)
+                        bottom.linkTo(comments.bottom)
+                    }
+                    .padding(8.dp)
             )
         }
     }
@@ -154,7 +164,7 @@ fun GameContent_Preview() {
             GamePreviewModel(
                 0,
                 0,
-                "Game extra1 extra2 extra3 extra4 extra5 extra6 long title",
+                "Game extra1 extra2 extra3 extra4 extra5 extra6 long title extra4 extra5 extra6 long title",
                 "",
                 2023,
                 "",

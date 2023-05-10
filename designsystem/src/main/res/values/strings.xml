@@ -18,4 +18,9 @@
     <string name="open_in_browser">Посмотреть в браузере</string>
     <string name="open">Открыть</string>
     <string name="download">Скачать</string>
+
+    <string name="news">Новости</string>
+    <string name="journal">Отчет</string>
+    <string name="thought">Мысли</string>
+    <string name="article">Статья</string>
 </resources>

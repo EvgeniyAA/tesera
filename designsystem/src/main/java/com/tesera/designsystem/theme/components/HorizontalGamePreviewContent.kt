@@ -2,7 +2,6 @@ package com.tesera.designsystem.theme.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,7 +11,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -92,7 +90,7 @@ fun HorizontalGamePreviewContent(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                if (game.isAddition) AdditionLabel()
+                if (game.isAddition) LabelWithBackground(stringResource(id = R.string.addition))
                 Text(
                     text = game.title, style = AppTheme.typography.body1, maxLines = 2,
                     overflow = TextOverflow.Ellipsis

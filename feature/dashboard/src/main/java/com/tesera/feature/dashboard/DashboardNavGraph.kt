@@ -4,12 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.tesera.base.newsdetails.NewsDetailsScreen
 import com.tesera.core.ui.NavigationTree
+import com.tesera.domain.model.NewsType
 import com.tesera.feature.comments.CommentsScreen
 import com.tesera.feature.gamedetails.GameDetailsScreen
 import com.tesera.feature.games.GamesScreen
 import com.tesera.feature.home.HomeScreen
 import com.tesera.feature.media.MediaScreen
+import com.tesera.feature.news.NewsScreen
 import com.tesera.feature.profile.ProfileScreen
 import com.tesera.feature.search.SearchScreen
 
@@ -46,6 +49,16 @@ fun DashboardNavGraph(navController: NavHostController) {
                 alias = it.arguments?.getString("alias").orEmpty(),
                 linksLimit = it.arguments?.getString("linksLimit")?.toInt() ?: 0,
                 filesLimit = it.arguments?.getString("filesLimit")?.toInt() ?: 0,
+                navController = navController
+            )
+        }
+        composable(route = NavigationTree.News.name) {
+            NewsScreen(navController)
+        }
+        composable(route = "${NavigationTree.NewsDetails.name}/{newsType}/{alias}") {
+            NewsDetailsScreen(
+                newsType = NewsType.valueOf(it.arguments?.getString("newsType").orEmpty()),
+                alias = it.arguments?.getString("alias").orEmpty(),
                 navController = navController
             )
         }

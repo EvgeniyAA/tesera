@@ -26,8 +26,6 @@ import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.MediaModel
 import com.tesera.feature.media.models.MediaIntent
 import com.tesera.feature.media.models.MediaViewState
-import timber.log.Timber
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -90,7 +88,7 @@ private fun MediaScreenContent(
     alias: String,
     linksLimit: Int,
     filesLimit: Int,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
 ) {
     val refreshing by remember { mutableStateOf(false) }
 
@@ -98,9 +96,11 @@ private fun MediaScreenContent(
         mediaViewModel.obtainIntent(MediaIntent.GetMedia(alias, linksLimit, filesLimit, true))
     })
 
-    Box(modifier = Modifier
-        .padding(paddingValues)
-        .pullRefresh(pullRefreshState)) {
+    Box(
+        modifier = Modifier
+            .padding(paddingValues)
+            .pullRefresh(pullRefreshState)
+    ) {
         val listState = rememberLazyListState()
         LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
             items(state.files, key = { file -> file.teseraId }) { file ->
@@ -108,7 +108,7 @@ private fun MediaScreenContent(
                     mediaViewModel.obtainIntent(MediaIntent.MediaClicked(file))
                 }
             }
-            if(state.filesLoading) {
+            if (state.filesLoading) {
                 item {
                     Box(
                         modifier = Modifier
@@ -116,11 +116,13 @@ private fun MediaScreenContent(
                             .height(48.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(modifier = Modifier
-                            .size(24.dp)
-                            .align(Alignment.Center),
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .align(Alignment.Center),
                             strokeWidth = 2.dp,
-                            color = AppTheme.colors.primaryTintColor)
+                            color = AppTheme.colors.primaryTintColor
+                        )
                     }
                 }
             }
@@ -131,7 +133,7 @@ private fun MediaScreenContent(
                     mediaViewModel.obtainIntent(MediaIntent.MediaClicked(link))
                 }
             }
-            if(state.linksLoading) {
+            if (state.linksLoading) {
                 item {
                     Box(
                         modifier = Modifier
@@ -139,11 +141,13 @@ private fun MediaScreenContent(
                             .height(48.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        CircularProgressIndicator(modifier = Modifier
-                            .size(24.dp)
-                            .align(Alignment.Center),
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .align(Alignment.Center),
                             strokeWidth = 2.dp,
-                            color = AppTheme.colors.primaryTintColor)
+                            color = AppTheme.colors.primaryTintColor
+                        )
                     }
                 }
             }
@@ -167,7 +171,7 @@ private fun HandleState(
     val selectedMedia = state.selectedMedia
     LaunchedEffect(selectedMedia) {
         bottomSheetData.value = selectedMedia
-        if(selectedMedia == null) modalBottomSheetState.hide() else modalBottomSheetState.show()
+        if (selectedMedia == null) modalBottomSheetState.hide() else modalBottomSheetState.show()
     }
 
     LaunchedEffect(key1 = modalBottomSheetState.isVisible) {

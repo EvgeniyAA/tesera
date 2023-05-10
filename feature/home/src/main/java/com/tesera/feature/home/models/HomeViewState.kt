@@ -14,5 +14,6 @@ sealed class HomeAction {
     object ToGamesList : HomeAction()
     data class ToGameDetails(val game: GamePreviewModel) : HomeAction()
     object ToNewsList : HomeAction()
+    data class ToNewsDetails(val news: NewsPreviewModel) : HomeAction()
     object None : HomeAction()
 }

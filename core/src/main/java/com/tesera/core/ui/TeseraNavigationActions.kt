@@ -8,6 +8,7 @@ enum class NavigationTree {
     Search,
     Dashboard,
     Games, GamesDetails,
+    News, NewsDetails,
     Comments,
     Media
 }

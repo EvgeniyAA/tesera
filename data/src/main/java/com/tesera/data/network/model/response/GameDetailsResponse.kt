@@ -21,7 +21,7 @@ data class GameDetailsResponse(
     val links: List<LinkResponse> = emptyList(),
     val similars: List<GameResponse> = emptyList(),
     val relateds: List<GameResponse> = emptyList(),
-    val news: List<NewsResponse> = emptyList(),
+    val news: List<NewsPreviewResponse> = emptyList(),
 )
 
 fun GameDetailsResponse?.toModel() = GameDetailsModel(
@@ -39,9 +39,9 @@ fun GameDetailsResponse?.toModel() = GameDetailsModel(
     videoExternalTotal = this?.videoExternalTotal ?: 0,
     videoInternalTotal = this?.videoInternalTotal ?: 0,
     photos = this?.photos?.map { it.toPhotoModel() } ?: emptyList(),
-    files = this?.files?.map { it.toFileModel(this?.game?.alias) } ?: emptyList(),
+    files = this?.files?.map { it.toFileModel(this.game?.alias) } ?: emptyList(),
     links = this?.links?.map { it.toLinkModel() } ?: emptyList(),
     similarGames = this?.similars?.map { it.toGameModel() } ?: emptyList(),
     relatedGames = this?.relateds?.map { it.toGameModel() } ?: emptyList(),
-    news = this?.news?.map { it.toNewsModel() } ?: emptyList()
+    news = this?.news?.map { it.toModel() } ?: emptyList()
 )

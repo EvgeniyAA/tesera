@@ -19,5 +19,5 @@ data class GameDetailsModel(
     val links: List<LinkModel>,
     val similarGames: List<GameModel>,
     val relatedGames: List<GameModel>,
-    val news: List<NewsModel>,
+    val news: List<NewsPreviewModel>,
 )

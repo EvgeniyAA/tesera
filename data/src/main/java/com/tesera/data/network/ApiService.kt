@@ -1,13 +1,8 @@
 package com.tesera.data.network
 
 import com.tesera.data.network.model.request.AuthParams
-import com.tesera.data.network.model.request.WakeUpParams
 import com.tesera.data.network.model.response.*
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
     @POST("auth/login")
@@ -16,10 +11,6 @@ interface ApiService {
     @GET("auth/info")
     suspend fun authInfo(): Result<Any>
 
-    // статьи и списки
-    @GET("/articles")
-    suspend fun articles(): Result<Any>
-
     // новости
     @GET("/news")
     suspend fun news(
@@ -27,10 +18,35 @@ interface ApiService {
         @Query("offset") offset: Int = 0,
     ): Result<List<NewsPreviewResponse>>
 
+    @GET("/publications")
+    suspend fun publications(
+        @Query("limit") limit: Int = 15,
+        @Query("offset") offset: Int = 0,
+    ): Result<List<NewsPreviewResponse>>
+
+    // новости
     @GET("/news/{alias}")
     suspend fun news(
-        @Path("alias") id: String,
-    ): Result<Any>
+        @Path("alias") alias: String,
+    ): NewsInfoResponse
+
+    // мысли
+    @GET("/thoughts/{alias}")
+    suspend fun thoughts(
+        @Path("alias") alias: String,
+    ): ThoughtResponse
+
+    // статьи
+    @GET("/articles/{alias}")
+    suspend fun articles(
+        @Path("alias") alias: String,
+    ): ArticleResponse
+
+    // отчеты
+    @GET("/journals/{alias}")
+    suspend fun journals(
+        @Path("alias") alias: String,
+    ): JournalResponse
 
     // игры
     @GET("/games")

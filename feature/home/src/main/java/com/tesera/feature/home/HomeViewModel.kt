@@ -52,6 +52,9 @@ class HomeViewModel @Inject constructor(
             is HomeIntent.GameDetailsClicked -> sendViewState(
                 _homeViewState.value.copy(action = HomeAction.ToGameDetails(intent.game))
             )
+            is HomeIntent.NewsDetailsClicked -> sendViewState(
+                _homeViewState.value.copy(action = HomeAction.ToNewsDetails(intent.news))
+            )
         }
 
     private fun gameList() {

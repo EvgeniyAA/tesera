@@ -1,7 +1,6 @@
 package com.tesera.feature.media
 
 import androidx.lifecycle.viewModelScope
-import com.tesera.core.model.ContextWorker
 import com.tesera.core.mvi.MviViewModel
 import com.tesera.core.mvi.Reducer
 import com.tesera.core.mvi.TimeCapsule
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MediaViewModel @Inject constructor(
     private val mediaUseCase: MediaUseCase,
-    private val contextWorker: ContextWorker,
 ) : MviViewModel<MediaViewState, MediaIntent>() {
     private val reducer = MediaReducer(MediaViewState())
 
@@ -39,13 +37,13 @@ class MediaViewModel @Inject constructor(
         Reducer<MediaViewState, MediaIntent>(initial) {
         override fun reduce(oldState: MediaViewState, intent: MediaIntent) = when (intent) {
             MediaIntent.ActionInvoked -> setState(oldState.copy(action = MediaAction.None))
-            is MediaIntent.MediaClicked -> when(intent.media){
+            is MediaIntent.MediaClicked -> when (intent.media) {
                 is FileModel -> selectFile(intent.media)
                 is LinkModel -> setState(oldState.copy(selectedMedia = intent.media))
             }
             is MediaIntent.GetMedia -> getMedia(oldState, intent)
             is MediaIntent.StartDownload -> downloadFile(intent.fileModel)
-            is MediaIntent.MediaUnselected -> when(intent.media) {
+            is MediaIntent.MediaUnselected -> when (intent.media) {
                 is FileModel -> unselectFile(intent.media)
                 is LinkModel -> setState(oldState.copy(selectedMedia = null))
             }
@@ -57,11 +55,12 @@ class MediaViewModel @Inject constructor(
         ) {
             viewModelScope.launch {
                 var oldUpdatedState = oldState
-                mediaUseCase.mediaFromRemote(intent.alias, intent.filesLimit, intent.linksLimit).collect {
-                    val newState = reducePartialState(oldUpdatedState, it)
-                    oldUpdatedState = newState
-                    setState(newState)
-                }
+                mediaUseCase.mediaFromRemote(intent.alias, intent.filesLimit, intent.linksLimit)
+                    .collect {
+                        val newState = reducePartialState(oldUpdatedState, it)
+                        oldUpdatedState = newState
+                        setState(newState)
+                    }
             }
         }
 
@@ -92,7 +91,10 @@ class MediaViewModel @Inject constructor(
                     filesLoading = false,
                     filesError = partialState.error?.message
                 )
-                MediaPartialState.FilesLoading -> oldState.copy(filesLoading = true, files = emptyList())
+                MediaPartialState.FilesLoading -> oldState.copy(
+                    filesLoading = true,
+                    files = emptyList()
+                )
                 is MediaPartialState.Links -> oldState.copy(
                     links = partialState.links,
                     linksLoading = false,
@@ -103,7 +105,10 @@ class MediaViewModel @Inject constructor(
                     linksLoading = false,
                     linksError = partialState.error?.message
                 )
-                MediaPartialState.LinksLoading -> oldState.copy(linksLoading = true, links = emptyList())
+                MediaPartialState.LinksLoading -> oldState.copy(
+                    linksLoading = true,
+                    links = emptyList()
+                )
             }
         }
     }

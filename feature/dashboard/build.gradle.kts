@@ -53,6 +53,8 @@ dependencies {
     implementation(project(":feature:gameDetails"))
     implementation(project(":feature:media"))
     implementation(project(":feature:comments"))
+    implementation(project(":feature:news"))
+    implementation(project(":feature:newsDetails"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

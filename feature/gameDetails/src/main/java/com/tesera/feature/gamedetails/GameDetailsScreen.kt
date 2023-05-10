@@ -31,6 +31,7 @@ import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.*
 import com.tesera.domain.model.GameDetailsModel
 import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.NewsType
 import com.tesera.domain.model.toPreview
 import com.tesera.feature.gamedetails.models.GameDetailsAction
 import com.tesera.feature.gamedetails.models.GameDetailsIntent
@@ -120,87 +121,75 @@ fun GameDetailsScreen(
                                 }
                             }
 
-                                val optionsList = getContentForDetailsButtons(state.allGameInfo)
-                                LazyVerticalGrid(
-                                    GridCells.Fixed(2),
-                                    modifier = Modifier.height(270.dp),
-                                    contentPadding = PaddingValues(
-                                        horizontal = 16.dp,
-                                        vertical = 8.dp
-                                    ),
-                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                                ) {
-                                    items(optionsList) { item ->
-                                        GameDetailsButton(item) { type ->
-                                            gameDetailsViewModel.obtainIntent(
-                                                GameDetailsButtonClicked(allInfo, type)
-                                            )
-                                        }
+                            val optionsList = getContentForDetailsButtons(state.allGameInfo)
+                            LazyVerticalGrid(
+                                GridCells.Fixed(2),
+                                modifier = Modifier.height(270.dp),
+                                contentPadding = PaddingValues(
+                                    horizontal = 16.dp,
+                                    vertical = 8.dp
+                                ),
+                                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(optionsList) { item ->
+                                    GameDetailsButton(item) { type ->
+                                        gameDetailsViewModel.obtainIntent(
+                                            GameDetailsButtonClicked(allInfo, type)
+                                        )
                                     }
                                 }
-
-                                ExpandableText(
-                                    text = Html.fromHtml(
-                                        game.description,
-                                        FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
-                                    ).toString(),
-                                    minimizedMaxLines = 4,
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp
-                                    )
-                                )
-
-                                val density = LocalDensity.current
-
-                                val minimumHeightState = remember { MinimumHeightState() }
-                                val minimumHeightStateModifier = Modifier.minimumHeightModifier(
-                                    minimumHeightState,
-                                    density
-                                )
-                                if (allInfo.relatedGames.isNotEmpty())
-                                    GameOfferBlock(
-                                        text = stringResource(R.string.related_games),
-                                        items = allInfo.relatedGames.map { it.toPreview() },
-                                        modifier = minimumHeightStateModifier
-                                    ) { gamePreview ->
-                                        gameDetailsViewModel.obtainIntent(
-                                            GameDetailsIntent.GameDetailsClicked(gamePreview)
-                                        )
-                                    }
-                                if (allInfo.similarGames.isNotEmpty())
-                                    GameOfferBlock(
-                                        text = stringResource(id = R.string.similar_games),
-                                        items = allInfo.similarGames.map { it.toPreview() },
-                                        modifier = minimumHeightStateModifier
-                                    ) {
-                                        gameDetailsViewModel.obtainIntent(
-                                            GameDetailsIntent.GameDetailsClicked(it)
-                                        )
-                                    }
                             }
+
+                            ExpandableText(
+                                text = Html.fromHtml(
+                                    game.description,
+                                    FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
+                                ).toString(),
+                                minimizedMaxLines = 4,
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    end = 16.dp
+                                )
+                            )
+
+                            val density = LocalDensity.current
+
+                            val minimumHeightState = remember { MinimumHeightState() }
+                            val minimumHeightStateModifier = Modifier.minimumHeightModifier(
+                                minimumHeightState,
+                                density
+                            )
+                            if (allInfo.relatedGames.isNotEmpty())
+                                GameOfferBlock(
+                                    text = stringResource(R.string.related_games),
+                                    items = allInfo.relatedGames.map { it.toPreview() },
+                                    modifier = minimumHeightStateModifier
+                                ) { gamePreview ->
+                                    gameDetailsViewModel.obtainIntent(
+                                        GameDetailsIntent.GameDetailsClicked(gamePreview)
+                                    )
+                                }
+                            if (allInfo.similarGames.isNotEmpty())
+                                GameOfferBlock(
+                                    text = stringResource(id = R.string.similar_games),
+                                    items = allInfo.similarGames.map { it.toPreview() },
+                                    modifier = minimumHeightStateModifier
+                                ) {
+                                    gameDetailsViewModel.obtainIntent(
+                                        GameDetailsIntent.GameDetailsClicked(it)
+                                    )
+                                }
+                        }
                         if (allInfo.news.isNotEmpty()) {
                             items(
                                 items = allInfo.news,
-                                key = { newsItem -> newsItem.teseraId }
+                                key = { newsItem -> newsItem.objectId }
                             ) {
-                                GamePreviewContent(
-                                    GamePreviewModel(
-                                        it.teseraId,
-                                        it.teseraId,
-                                        it.title,
-                                        "",
-                                        2023,
-                                        it.photoUrl,
-                                        144,
-                                        45,
-                                        8.89,
-                                        "news",
-                                        true
+                                NewsPreviewContent(it) {
+                                    gameDetailsViewModel.obtainIntent(
+                                        GameDetailsIntent.NewsDetailsClicked(it)
                                     )
-                                ) {
-                                    //homeViewModel.obtainIntent(HomeIntent.NewsListClicked)
                                 }
                             }
                         }
@@ -220,6 +209,8 @@ fun GameDetailsScreen(
             is GameDetailsAction.ToComments ->
                 navController.navigate("${NavigationTree.Comments.name}/${action.game.game.alias}/games")
             is GameDetailsAction.ToMedia -> navController.navigate("${NavigationTree.Media.name}/${action.game.game.alias}/${action.game.linksTotal}/${action.game.filesTotal}")
+            is GameDetailsAction.ToNewsDetails ->
+                navController.navigate("${NavigationTree.NewsDetails.name}/${NewsType.News.name}/${action.news.alias}")
             else -> Unit
         }
     }

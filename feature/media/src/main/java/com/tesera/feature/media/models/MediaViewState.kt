@@ -13,7 +13,7 @@ data class MediaViewState(
     val filesLoading: Boolean = false,
     val linksLoading: Boolean = false,
     val selectedMedia: MediaModel? = null,
-    val action: MediaAction = MediaAction.None
+    val action: MediaAction = MediaAction.None,
 ) : UiState
 
 sealed class MediaAction {

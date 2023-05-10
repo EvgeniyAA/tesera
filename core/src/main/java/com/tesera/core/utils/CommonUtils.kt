@@ -6,6 +6,7 @@ import android.net.Uri
 import android.text.format.DateUtils
 import android.webkit.MimeTypeMap
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.*
 
 fun Date.niceDateStr() = DateUtils.getRelativeTimeSpanString(
@@ -37,3 +38,8 @@ inline fun <reified T> tryOrNull(expression: () -> T?): T? =
     } catch (e: Throwable) {
         null
     }
+
+fun String.toDate(): Date {
+    val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    return parser.parse(this) ?: Date()
+}

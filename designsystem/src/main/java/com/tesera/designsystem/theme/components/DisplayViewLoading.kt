@@ -22,7 +22,7 @@ fun DisplayViewLoading(
                 .size(48.dp)
                 .align(Alignment.Center),
             strokeWidth = 4.dp,
-            color = com.tesera.designsystem.theme.AppTheme.colors.primaryTintColor
+            color = AppTheme.colors.primaryTintColor
         )
     }
 }

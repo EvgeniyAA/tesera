@@ -19,9 +19,7 @@ import com.tesera.domain.model.DownloadStatus
 import com.tesera.domain.model.FileModel
 import com.tesera.domain.model.LinkModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.sink
@@ -40,37 +38,28 @@ class RemoteMediaRepository @Inject constructor(
 
     private val _links = MutableStateFlow<List<LinkModel>>(emptyList())
 
-    override suspend fun files(alias: String, filesLimit: Int): Flow<List<FileModel>> {
-        withContext(ioDispatcher) {
-            getFiles(alias, filesLimit)
-        }
-        return fileDao.findAllFilesByAlias(alias)
+    override suspend fun files(alias: String, filesLimit: Int) = withContext(ioDispatcher) {
+        val result =
+            datasource.getFiles(alias, filesLimit).map { it.toFileModel(alias).checkFile() }
+        fileDao.insertFiles(result.map { it.toEntity() })
+    }
+
+    override suspend fun localFiles(alias: String): Flow<List<FileModel>> =
+        fileDao.findAllFilesByAliasAsFlow(alias)
+            .distinctUntilChanged()
             .map { it.map { it.toModel() } }
+
+    override suspend fun links(alias: String, linksLimit: Int) = withContext(ioDispatcher) {
+        val result = datasource.getLinks(alias, linksLimit).map { it.toLinkModel() }
+        cachedLinks = result
+        _links.emit(cachedLinks)
     }
 
-    override suspend fun links(alias: String, linksLimit: Int): Flow<List<LinkModel>> {
-        withContext(ioDispatcher) {
-            getLinks(alias, linksLimit)
-        }
-        return _links
-    }
-
-    private suspend fun getLinks(alias: String, limit: Int): Unit =
-        withContext(ioDispatcher) {
-            val result = datasource.getLinks(alias, limit).map { it.toLinkModel() }
-            cachedLinks = result
-            _links.emit(cachedLinks)
-        }
-
-    private suspend fun getFiles(alias: String, limit: Int): Unit =
-        withContext(ioDispatcher) {
-            val result = datasource.getFiles(alias, limit).map { it.toFileModel(alias).checkFile() }
-            fileDao.insertFiles(result.map { it.toEntity() })
-        }
+    override suspend fun localLinks(): Flow<List<LinkModel>> = _links
 
     override suspend fun selectFile(fileModel: FileModel) {
         withContext(ioDispatcher) {
-            fileDao.update(fileModel.copy(isSelected = true).toEntity())
+            fileDao.selectFile(fileModel.teseraId)
         }
     }
 
@@ -106,9 +95,8 @@ class RemoteMediaRepository @Inject constructor(
                         totalBytesRead += bytesRead
                         val progress = totalBytesRead.toFloat() / contentLength
                         val status =
-                            if (progress < 1f) DownloadStatus.Downloading(progress) else DownloadStatus.Downloaded(
-                                localFile.absolutePath
-                            )
+                            if (progress < 1f) DownloadStatus.Downloading(progress) else
+                                DownloadStatus.Downloaded(localFile.absolutePath)
                         fileModel.updateFileDownloadStatus(status)
                     }
                     sink.flush()
@@ -144,6 +132,7 @@ class RemoteMediaRepository @Inject constructor(
 
     private fun String.fileExtension(context: Context) =
         this.toUri().getFileExtension(context) ?: ""
+
     private fun FileModel.getFileNameWithExt(context: Context) =
         "${title}-${teseraId}.${photoUrl.fileExtension(context)}"
 }

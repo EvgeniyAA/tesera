@@ -49,18 +49,18 @@ interface ApiService {
         @Path("objecttype") objectType: String,
         @Path("alias") alias: String,
         @Path("lastcommentid") lastCommentId: Int,
-        @Query("limit") limit: Int?
+        @Query("limit") limit: Int?,
     ): Result<List<CommentResponse>>
 
     @GET("/games/{alias}/links")
     suspend fun links(
         @Path("alias") alias: String,
-        @Query("limit") limit: Int
-    ) : List<LinkResponse>
+        @Query("limit") limit: Int,
+    ): List<LinkResponse>
 
     @GET("/games/{alias}/files")
     suspend fun files(
         @Path("alias") alias: String,
-        @Query("limit") limit: Int
-    ) : List<FileResponse>
+        @Query("limit") limit: Int,
+    ): List<FileResponse>
 }

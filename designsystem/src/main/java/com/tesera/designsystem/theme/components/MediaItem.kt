@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.tesera.designsystem.theme.AppTheme
@@ -38,7 +39,9 @@ fun MediaItem(
         }
         Text(
             text = title,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.align(Alignment.CenterVertically).padding(end = 16.dp)
         )
     }
 }

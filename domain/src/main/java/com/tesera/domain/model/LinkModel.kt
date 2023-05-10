@@ -8,4 +8,4 @@ data class LinkModel(
     val modificationDateUtc: String,
     val creationDateUtc: String,
     val author: AuthorModel,
-)
+): MediaModel()

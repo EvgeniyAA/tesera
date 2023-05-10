@@ -3,6 +3,7 @@ package com.tesera.feature.media.models
 import com.tesera.core.mvi.UiState
 import com.tesera.domain.model.FileModel
 import com.tesera.domain.model.LinkModel
+import com.tesera.domain.model.MediaModel
 
 data class MediaViewState(
     val links: List<LinkModel> = emptyList(),
@@ -11,6 +12,7 @@ data class MediaViewState(
     val filesError: String? = null,
     val filesLoading: Boolean = false,
     val linksLoading: Boolean = false,
+    val selectedMedia: MediaModel? = null,
     val action: MediaAction = MediaAction.None
 ) : UiState
 

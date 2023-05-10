@@ -12,7 +12,7 @@ data class FileModel(
     val downloadStatus: DownloadStatus = DownloadStatus.CanBeDownloaded,
     val isSelected: Boolean = false,
     val alias: String
-)
+): MediaModel()
 
 sealed class DownloadStatus {
     object CanBeDownloaded : DownloadStatus()

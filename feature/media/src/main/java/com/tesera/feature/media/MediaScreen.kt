@@ -7,19 +7,27 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.MediaItem
 import com.tesera.designsystem.theme.components.Separator
 import com.tesera.designsystem.theme.components.TeseraToolbar
-import com.tesera.domain.model.FileModel
+import com.tesera.domain.model.MediaModel
 import com.tesera.feature.media.models.MediaIntent
 import com.tesera.feature.media.models.MediaViewState
+import timber.log.Timber
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -31,24 +39,25 @@ fun MediaScreen(
     mediaViewModel: MediaViewModel = hiltViewModel(),
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val bottomSheetData = remember { mutableStateOf<FileModel?>(null) }
+    val bottomSheetData = remember { mutableStateOf<MediaModel?>(null) }
 
     LaunchedEffect(key1 = alias) {
         mediaViewModel.obtainIntent(MediaIntent.GetMedia(alias, linksLimit, filesLimit))
-
     }
+
     DisposableEffect(key1 = Unit) {
         onDispose {
             mediaViewModel.obtainIntent(MediaIntent.ActionInvoked)
         }
     }
+
+    val state by mediaViewModel.state.collectAsState()
+
+
     val modalBottomSheetState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
-
-    val state by mediaViewModel.state.collectAsState()
-    handleState(mediaViewModel, state, bottomSheetData, modalBottomSheetState)
-
+    HandleState(mediaViewModel, state, bottomSheetData, modalBottomSheetState)
 
     ModalBottomSheet(
         bottomSheetData.value,
@@ -61,51 +70,108 @@ fun MediaScreen(
                 timeMachine = mediaViewModel.timeMachine
             ) { navController.popBackStack() }
         ) {
-            Box(modifier = Modifier.padding(it)) {
-                val listState = rememberLazyListState()
-                LazyColumn(state = listState) {
-                    items(state.files, key = { file -> file.teseraId }) { file ->
-                        MediaItem(R.drawable.ic_file, file.title) {
-                            mediaViewModel.obtainIntent(MediaIntent.FileClicked(file))
-                        }
-                    }
-                    item { Separator() }
-
-                    items(state.links, key = { links -> links.teseraId }) { link ->
-                        MediaItem(icon = R.drawable.ic_link, title = link.title) {
-//                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link.photoUrl))
-//                            context.startActivity(intent)
-                        }
-                    }
-                }
-            }
+            MediaScreenContent(
+                mediaViewModel = mediaViewModel,
+                state = state,
+                alias = alias,
+                linksLimit = linksLimit,
+                filesLimit = filesLimit,
+                paddingValues = it
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun handleState(
+private fun MediaScreenContent(
     mediaViewModel: MediaViewModel,
     state: MediaViewState,
-    bottomSheetData: MutableState<FileModel?>,
-    modalBottomSheetState: ModalBottomSheetState,
+    alias: String,
+    linksLimit: Int,
+    filesLimit: Int,
+    paddingValues: PaddingValues
 ) {
-    val selectedFile = state.files.firstOrNull { it.isSelected }
-    when {
-        selectedFile != null -> {
-            LaunchedEffect(key1 = selectedFile) {
-                bottomSheetData.value = selectedFile
-                modalBottomSheetState.show()
+    val refreshing by remember { mutableStateOf(false) }
+
+    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
+        mediaViewModel.obtainIntent(MediaIntent.GetMedia(alias, linksLimit, filesLimit, true))
+    })
+
+    Box(modifier = Modifier
+        .padding(paddingValues)
+        .pullRefresh(pullRefreshState)) {
+        val listState = rememberLazyListState()
+        LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+            items(state.files, key = { file -> file.teseraId }) { file ->
+                MediaItem(R.drawable.ic_file, file.title) {
+                    mediaViewModel.obtainIntent(MediaIntent.MediaClicked(file))
+                }
+            }
+            if(state.filesLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier
+                            .size(24.dp)
+                            .align(Alignment.Center),
+                            strokeWidth = 2.dp,
+                            color = AppTheme.colors.primaryTintColor)
+                    }
+                }
+            }
+            item { Separator() }
+
+            items(state.links, key = { links -> links.teseraId }) { link ->
+                MediaItem(icon = R.drawable.ic_link, title = link.title) {
+                    mediaViewModel.obtainIntent(MediaIntent.MediaClicked(link))
+                }
+            }
+            if(state.linksLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier
+                            .size(24.dp)
+                            .align(Alignment.Center),
+                            strokeWidth = 2.dp,
+                            color = AppTheme.colors.primaryTintColor)
+                    }
+                }
             }
         }
-        selectedFile == null -> LaunchedEffect(key1 = selectedFile) {
-            modalBottomSheetState.hide()
-        }
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun HandleState(
+    mediaViewModel: MediaViewModel,
+    state: MediaViewState,
+    bottomSheetData: MutableState<MediaModel?>,
+    modalBottomSheetState: ModalBottomSheetState,
+) {
+    val selectedMedia = state.selectedMedia
+    LaunchedEffect(selectedMedia) {
+        bottomSheetData.value = selectedMedia
+        if(selectedMedia == null) modalBottomSheetState.hide() else modalBottomSheetState.show()
     }
 
     LaunchedEffect(key1 = modalBottomSheetState.isVisible) {
-        if (!modalBottomSheetState.isVisible && selectedFile != null)
-            mediaViewModel.obtainIntent(MediaIntent.UnselectFile(selectedFile))
+        if (!modalBottomSheetState.isVisible && selectedMedia != null)
+            mediaViewModel.obtainIntent(MediaIntent.MediaUnselected(selectedMedia))
     }
 }

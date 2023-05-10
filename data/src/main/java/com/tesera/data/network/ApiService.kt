@@ -63,4 +63,35 @@ interface ApiService {
         @Path("alias") alias: String,
         @Query("limit") limit: Int,
     ): List<FileResponse>
+
+    // продают
+    @GET("/trade/sales/")
+    suspend fun sales(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int?,
+        @Query("alias") alias: String?
+    ): List<Any>
+
+    // покупают
+    @GET("/trade/purchases/")
+    suspend fun purchases(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int?,
+        @Query("alias") alias: String?
+    ): List<Any>
+
+    @GET("/games/{alias}/owns/")
+    suspend fun owns(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Path("alias") alias: String
+    ): List<Any>
+
+    @GET("/reports/")
+    suspend fun reports(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("game") alias: String,
+        @Query("AccessType") accessType: Int?
+    ): List<Any>
 }

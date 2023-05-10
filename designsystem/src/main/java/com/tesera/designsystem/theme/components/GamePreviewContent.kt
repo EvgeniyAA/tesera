@@ -33,18 +33,22 @@ import com.tesera.domain.model.GamePreviewModel
 @Composable
 fun GamePreviewContent(
     game: GamePreviewModel,
-    onClick: (GamePreviewModel) -> Unit = {}
+    onClick: (GamePreviewModel) -> Unit = {},
 ) {
     val showRating = rememberSaveable { mutableStateOf(game.n10Rating > 0) }
     Card(
         modifier = Modifier
-            .padding(horizontal = 4.dp, vertical = 4.dp)
+            .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         onClick = { onClick(game) }
     ) {
-        ConstraintLayout(modifier = Modifier.fillMaxWidth().background(color = AppTheme.colors.interactiveBackground)) {
-            val (rating, image, mainInfo, comments) = createRefs()
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = AppTheme.colors.interactiveBackground)
+        ) {
+            val (rating, image, mainInfo, comments, addition) = createRefs()
             Box(
                 modifier = Modifier
                     .zIndex(1f)
@@ -86,7 +90,8 @@ fun GamePreviewContent(
                     }
             ) {
                 Text(text = game.title, style = AppTheme.typography.body1)
-                Text(text = game.year.toString(), style = AppTheme.typography.body2)
+                if (game.year > 0)
+                    Text(text = game.year.toString(), style = AppTheme.typography.body2)
             }
             AsyncImage(
                 model = game.photoUrl,
@@ -130,6 +135,13 @@ fun GamePreviewContent(
                     modifier = Modifier.align(Alignment.Bottom)
                 )
             }
+
+            if (game.isAddition) AdditionLabel(
+                Modifier.constrainAs(addition) {
+                    start.linkTo(image.end)
+                    bottom.linkTo(comments.bottom)
+                }.padding(8.dp)
+            )
         }
     }
 }
@@ -149,7 +161,8 @@ fun GameContent_Preview() {
                 144,
                 45,
                 8.89,
-                ""
+                "",
+                true
             )
         )
     }

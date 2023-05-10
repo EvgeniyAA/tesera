@@ -5,9 +5,11 @@ import android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,10 +30,12 @@ import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.*
 import com.tesera.domain.model.GameDetailsModel
+import com.tesera.domain.model.GamePreviewModel
 import com.tesera.domain.model.toPreview
 import com.tesera.feature.gamedetails.models.GameDetailsAction
 import com.tesera.feature.gamedetails.models.GameDetailsIntent
 import com.tesera.feature.gamedetails.models.GameDetailsIntent.GameDetailsButtonClicked
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -56,124 +60,149 @@ fun GameDetailsScreen(
                 }
             ) {
                 Box(modifier = Modifier.padding(it)) {
-                    Column(
+                    LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(rememberScrollState())
                     ) {
-                        SlidingCarousel(
-                            itemsCount = images.size,
-                            itemContent = { index ->
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(images[index])
-                                        .build(),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .height(200.dp)
-                                        .padding(vertical = 16.dp)
-                                )
-                            }
-                        )
-                        val roundedCorners =
-                            RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                        Column(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .zIndex(1f)
-                                .background(
-                                    color = AppTheme.colors.primaryBackground,
-                                    shape = roundedCorners
-                                )
-                        ) {
-                            Row(
+                        item {
+                            SlidingCarousel(
+                                itemsCount = images.size,
+                                itemContent = { index ->
+                                    AsyncImage(
+                                        model = ImageRequest.Builder(LocalContext.current)
+                                            .data(images[index])
+                                            .build(),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .height(200.dp)
+                                            .padding(vertical = 16.dp)
+                                    )
+                                }
+                            )
+                            val roundedCorners =
+                                RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
+                                    .fillMaxHeight()
+                                    .zIndex(1f)
+                                    .background(
+                                        color = AppTheme.colors.primaryBackground,
+                                        shape = roundedCorners
+                                    )
                             ) {
-                                RatingView(
-                                    startBackgroundColor = AppTheme.colors.bggBackgroundGradientStart,
-                                    endBackgroundColor = AppTheme.colors.bggBackgroundGradientEnd,
-                                    icon = R.drawable.ic_bgg,
-                                    rating = game.bggRating,
-                                    votesNum = game.bggNumVotes,
-                                    shape = RoundedCornerShape(
-                                        topStart = 16.dp,
-                                        bottomStart = 16.dp
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    RatingView(
+                                        startBackgroundColor = AppTheme.colors.bggBackgroundGradientStart,
+                                        endBackgroundColor = AppTheme.colors.bggBackgroundGradientEnd,
+                                        icon = R.drawable.ic_bgg,
+                                        rating = game.bggRating,
+                                        votesNum = game.bggNumVotes,
+                                        shape = RoundedCornerShape(
+                                            topStart = 16.dp,
+                                            bottomStart = 16.dp
+                                        )
                                     )
-                                )
-                                RatingView(
-                                    startBackgroundColor = AppTheme.colors.teseraBackgroundGradientStart,
-                                    endBackgroundColor = AppTheme.colors.teseraBackgroundGradientEnd,
-                                    icon = R.drawable.ic_tesera,
-                                    rating = game.ratingUser,
-                                    votesNum = game.numVotes,
-                                    shape = RoundedCornerShape(
-                                        topEnd = 16.dp,
-                                        bottomEnd = 16.dp
+                                    RatingView(
+                                        startBackgroundColor = AppTheme.colors.teseraBackgroundGradientStart,
+                                        endBackgroundColor = AppTheme.colors.teseraBackgroundGradientEnd,
+                                        icon = R.drawable.ic_tesera,
+                                        rating = game.ratingUser,
+                                        votesNum = game.numVotes,
+                                        shape = RoundedCornerShape(
+                                            topEnd = 16.dp,
+                                            bottomEnd = 16.dp
+                                        )
                                     )
-                                )
+                                }
                             }
 
-                            val optionsList = getContentForDetailsButtons(state.allGameInfo)
-                            LazyVerticalGrid(
-                                GridCells.Fixed(2),
-                                modifier = Modifier.height(270.dp),
-                                contentPadding = PaddingValues(
-                                    horizontal = 16.dp,
-                                    vertical = 8.dp
-                                ),
-                                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                items(optionsList) { item ->
-                                    GameDetailsButton(item) { type ->
-                                        gameDetailsViewModel.obtainIntent(
-                                            GameDetailsButtonClicked(allInfo, type)
-                                        )
+                                val optionsList = getContentForDetailsButtons(state.allGameInfo)
+                                LazyVerticalGrid(
+                                    GridCells.Fixed(2),
+                                    modifier = Modifier.height(270.dp),
+                                    contentPadding = PaddingValues(
+                                        horizontal = 16.dp,
+                                        vertical = 8.dp
+                                    ),
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    items(optionsList) { item ->
+                                        GameDetailsButton(item) { type ->
+                                            gameDetailsViewModel.obtainIntent(
+                                                GameDetailsButtonClicked(allInfo, type)
+                                            )
+                                        }
                                     }
                                 }
-                            }
 
-                            ExpandableText(
-                                text = Html.fromHtml(
-                                    game.description,
-                                    FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
-                                ).toString(),
-                                minimizedMaxLines = 4,
-                                modifier = Modifier.padding(
-                                    start = 16.dp,
-                                    end = 16.dp
+                                ExpandableText(
+                                    text = Html.fromHtml(
+                                        game.description,
+                                        FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH
+                                    ).toString(),
+                                    minimizedMaxLines = 4,
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        end = 16.dp
+                                    )
                                 )
-                            )
 
-                            val density = LocalDensity.current
+                                val density = LocalDensity.current
 
-                            val minimumHeightState = remember { MinimumHeightState() }
-                            val minimumHeightStateModifier = Modifier.minimumHeightModifier(
-                                minimumHeightState,
-                                density
-                            )
-                            if (allInfo.relatedGames.isNotEmpty())
-                                GameOfferBlock(
-                                    text = stringResource(R.string.related_games),
-                                    items = allInfo.relatedGames.map { it.toPreview() },
-                                    modifier = minimumHeightStateModifier
-                                ) { gamePreview ->
-                                    gameDetailsViewModel.obtainIntent(
-                                        GameDetailsIntent.GameDetailsClicked(gamePreview)
+                                val minimumHeightState = remember { MinimumHeightState() }
+                                val minimumHeightStateModifier = Modifier.minimumHeightModifier(
+                                    minimumHeightState,
+                                    density
+                                )
+                                if (allInfo.relatedGames.isNotEmpty())
+                                    GameOfferBlock(
+                                        text = stringResource(R.string.related_games),
+                                        items = allInfo.relatedGames.map { it.toPreview() },
+                                        modifier = minimumHeightStateModifier
+                                    ) { gamePreview ->
+                                        gameDetailsViewModel.obtainIntent(
+                                            GameDetailsIntent.GameDetailsClicked(gamePreview)
+                                        )
+                                    }
+                                if (allInfo.similarGames.isNotEmpty())
+                                    GameOfferBlock(
+                                        text = stringResource(id = R.string.similar_games),
+                                        items = allInfo.similarGames.map { it.toPreview() },
+                                        modifier = minimumHeightStateModifier
+                                    ) {
+                                        gameDetailsViewModel.obtainIntent(
+                                            GameDetailsIntent.GameDetailsClicked(it)
+                                        )
+                                    }
+                            }
+                        if (allInfo.news.isNotEmpty()) {
+                            items(
+                                items = allInfo.news,
+                                key = { newsItem -> newsItem.teseraId }
+                            ) {
+                                GamePreviewContent(
+                                    GamePreviewModel(
+                                        it.teseraId,
+                                        it.teseraId,
+                                        it.title,
+                                        "",
+                                        2023,
+                                        it.photoUrl,
+                                        144,
+                                        45,
+                                        8.89,
+                                        "news",
+                                        true
                                     )
-                                }
-                            if (allInfo.similarGames.isNotEmpty())
-                                GameOfferBlock(
-                                    text = stringResource(id = R.string.similar_games),
-                                    items = allInfo.similarGames.map { it.toPreview() },
-                                    modifier = minimumHeightStateModifier
                                 ) {
-                                    gameDetailsViewModel.obtainIntent(
-                                        GameDetailsIntent.GameDetailsClicked(it)
-                                    )
+                                    //homeViewModel.obtainIntent(HomeIntent.NewsListClicked)
                                 }
+                            }
                         }
                     }
                 }

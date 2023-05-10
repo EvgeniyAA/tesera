@@ -2,20 +2,20 @@ package com.tesera.designsystem.theme.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -81,7 +81,7 @@ fun HorizontalGamePreviewContent(
             }
             Column(
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 8.dp, bottom = 4.dp)
+                    .padding(start = 8.dp, end = 8.dp, bottom = 4.dp)
                     .fillMaxWidth()
                     .constrainAs(mainInfo) {
                         top.linkTo(image.bottom)
@@ -92,18 +92,20 @@ fun HorizontalGamePreviewContent(
                         width = Dimension.fillToConstraints
                     }
             ) {
+                if (game.isAddition) AdditionLabel()
                 Text(
                     text = game.title, style = AppTheme.typography.body1, maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(text = game.year.toString(), style = AppTheme.typography.body2)
+                if (game.year > 0)
+                    Text(text = game.year.toString(), style = AppTheme.typography.body2)
             }
             AsyncImage(
                 model = game.photoUrl,
                 contentDescription = game.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 16.dp)
+                    .padding(start = 8.dp, end = 8.dp, top = 16.dp, bottom = 8.dp)
                     .size(84.dp)
                     .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
                     .constrainAs(image) {
@@ -133,7 +135,8 @@ fun HorizontalGamePreviewContent_Preview() {
                 144,
                 45,
                 8.89,
-                ""
+                "",
+                true
             )
         )
     }

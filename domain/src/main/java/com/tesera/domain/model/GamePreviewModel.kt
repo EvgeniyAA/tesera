@@ -10,5 +10,6 @@ data class GamePreviewModel(
     val commentsTotal: Int,
     val commentsTotalNew: Int,
     val n10Rating: Double,
-    val alias: String
+    val alias: String,
+    val isAddition: Boolean = false
 )

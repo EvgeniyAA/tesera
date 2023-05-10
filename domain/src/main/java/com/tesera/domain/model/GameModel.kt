@@ -43,5 +43,6 @@ fun GameModel.toPreview() = GamePreviewModel(
     commentsTotal = this.commentsTotal,
     commentsTotalNew = this.commentsTotalNew,
     n10Rating = this.n10Rating,
-    alias = this.alias
+    alias = this.alias,
+    isAddition = this.isAddition
 )

@@ -21,16 +21,16 @@ import com.tesera.core.utils.niceDateStr
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.TeseraTheme
-import com.tesera.domain.model.AuthorModel
-import com.tesera.domain.model.NewsPreviewModel
+import com.tesera.domain.model.Author
+import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.model.NewsType
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsPreviewContent(
-    news: NewsPreviewModel,
-    onClick: (NewsPreviewModel) -> Unit,
+    news: NewsPreview,
+    onClick: (NewsPreview) -> Unit,
 ) {
     val type = when (news.objectType) {
         NewsType.News -> R.string.news
@@ -80,12 +80,12 @@ fun NewsPreviewContent(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (news.authorModel.name.isNotEmpty()) {
+                    if (news.author.name.isNotEmpty()) {
                         Row(modifier = Modifier.padding(top = 4.dp)) {
 
-                            Avatar(author = news.authorModel, avatarSize = 20F)
+                            Avatar(author = news.author, avatarSize = 20F)
                             Text(
-                                text = news.authorModel.name,
+                                text = news.author.name,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = AppTheme.typography.body2,
@@ -140,7 +140,7 @@ fun NewsPreviewContent(
 fun NewsContent_Preview() {
     TeseraTheme {
         NewsPreviewContent(
-            NewsPreviewModel(
+            NewsPreview(
                 0,
                 NewsType.News,
                 "All bgg top 100 games are localized!",
@@ -152,7 +152,7 @@ fun NewsContent_Preview() {
                 8.89,
                 1,
                 12,
-                AuthorModel(1, 1, "AB", "Ivan", "", 1, "")
+                Author(1, 1, "AB", "Ivan", "", 1, "")
             )
         ) {}
     }

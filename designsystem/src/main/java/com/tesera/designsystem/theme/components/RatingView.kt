@@ -41,24 +41,24 @@ fun RowScope.RatingView(
             contentDescription = "rating",
             modifier = Modifier.size(30.dp)
         )
-        if (rating > 0.0)
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = if (rating > 0.0) String.format("%.1f", rating) else "-",
+                color = AppTheme.colors.lightTextColor
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                AsyncImage(
+                    model = R.drawable.ic_person,
+                    contentDescription = "number of votes",
+                    modifier = Modifier.size(12.dp),
+                    colorFilter = ColorFilter.tint(color = AppTheme.colors.lightTextColor)
+                )
                 Text(
-                    text = String.format("%.1f", rating),
+                    text = if (votesNum > 0) votesNum.toString() else "-",
                     color = AppTheme.colors.lightTextColor
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    AsyncImage(
-                        model = R.drawable.ic_person,
-                        contentDescription = "number of votes",
-                        modifier = Modifier.size(12.dp),
-                        colorFilter = ColorFilter.tint(color = AppTheme.colors.lightTextColor)
-                    )
-                    Text(
-                        text = votesNum.toString(),
-                        color = AppTheme.colors.lightTextColor
-                    )
-                }
             }
+        }
     }
 }

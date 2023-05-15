@@ -25,15 +25,15 @@ import coil.compose.AsyncImage
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.TeseraTheme
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.GamePreview
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizontalGamePreviewContent(
     modifier: Modifier = Modifier,
-    game: GamePreviewModel,
-    onClick: (GamePreviewModel) -> Unit = {},
+    game: GamePreview,
+    onClick: (GamePreview) -> Unit = {},
 ) {
     val showRating = rememberSaveable { mutableStateOf(game.n10Rating > 0) }
     Card(
@@ -123,7 +123,7 @@ fun HorizontalGamePreviewContent_Preview() {
     TeseraTheme {
         HorizontalGamePreviewContent(
             Modifier,
-            GamePreviewModel(
+            GamePreview(
                 0,
                 0,
                 "Game extra1 extra2 extra3 extra4 extra5 extra6 long title",

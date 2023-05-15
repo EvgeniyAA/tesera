@@ -23,4 +23,8 @@
     <string name="journal">Отчет</string>
     <string name="thought">Мысли</string>
     <string name="article">Статья</string>
+
+
+    <string name="somethin_went_wrong">Что-то пошло не так</string>
+    <string name="retry">Повторить</string>
 </resources>

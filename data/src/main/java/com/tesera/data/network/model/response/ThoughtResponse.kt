@@ -1,10 +1,11 @@
 package com.tesera.data.network.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.NewsInfo
 
 data class ThoughtResponse(
-    val thought: NewsResponse,
-    val author: AuthorResponse
+    @SerializedName("thought") val thought: NewsResponse,
+    @SerializedName("author") val author: AuthorResponse
 )
 
 fun ThoughtResponse?.toModel() = NewsInfo(

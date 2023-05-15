@@ -53,10 +53,12 @@ fun NewsDetailsScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxHeight(),
-        topBar = TeseraToolbar(
-            title = details?.news?.title ?: title ?: "",
-            timeMachine = viewModel.timeMachine
-        ) { navController.popBackStack() }
+        topBar = {
+            TeseraToolbar(
+                titleText = details?.news?.title ?: title ?: "",
+                timeMachine = viewModel.timeMachine
+            ) { navController.popBackStack() }
+        }
     )
     {
         val refreshing by remember { mutableStateOf(false) }

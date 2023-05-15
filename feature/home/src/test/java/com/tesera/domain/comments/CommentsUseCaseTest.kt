@@ -1,6 +1,6 @@
 package com.tesera.domain.comments
 
-import com.tesera.domain.model.AuthorModel
+import com.tesera.domain.model.Author
 import com.tesera.domain.model.CommentModel
 import com.tesera.domain.model.TeseraObjectModel
 import io.mockk.mockk
@@ -20,12 +20,12 @@ internal class CommentsUseCaseTest {
     fun useCase() = CommentsUseCase(repository)
 
     companion object {
-        val authorModel = AuthorModel(0, 0, "", "", "", 0, "")
+        val author = Author(0, 0, "", "", "", 0, "")
         val teseraObject = TeseraObjectModel(0, 0, 0, "", "", "", "")
 
         fun CommentModel(id: Int, parentId: Int?, date: Date) = CommentModel(
             teseraObject = teseraObject,
-            author = authorModel,
+            author = author,
             title = "",
             content = "",
             rating = 0,

@@ -7,14 +7,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 data class CommentResponse(
-    val teseraId: Int? = null,
-    val id: Int? = null,
-    val parentId: Int? = null,
-    val title: String? = null,
-    val content: String? = null,
-    val rating: Int? = null,
-    val creationDateUtc: String? = null,
-    val author: AuthorResponse? = null,
+    @SerializedName("teseraId") val teseraId: Int? = null,
+    @SerializedName("id") val id: Int? = null,
+    @SerializedName("parentId") val parentId: Int? = null,
+    @SerializedName("title") val title: String? = null,
+    @SerializedName("content") val content: String? = null,
+    @SerializedName("rating") val rating: Int? = null,
+    @SerializedName("creationDateUtc") val creationDateUtc: String? = null,
+    @SerializedName("author") val author: AuthorResponse? = null,
     @SerializedName("object") val teseraObject: TeseraObjectResponse? = null,
 )
 

@@ -1,6 +1,9 @@
 package com.tesera.domain.model
 
-data class GameModel(
+import androidx.compose.runtime.Stable
+
+@Stable
+data class Game(
     val id: Int,
     val teseraId: Int,
     val bggId: Int,
@@ -33,7 +36,7 @@ data class GameModel(
     val isAddition: Boolean,
 )
 
-fun GameModel.toPreview() = GamePreviewModel(
+fun Game.toPreview() = GamePreview(
     id = this.id,
     bggId = this.bggId,
     title = this.title,

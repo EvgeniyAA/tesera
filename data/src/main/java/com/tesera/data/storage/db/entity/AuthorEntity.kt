@@ -2,7 +2,7 @@ package com.tesera.data.storage.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.tesera.domain.model.AuthorModel
+import com.tesera.domain.model.Author
 
 @Entity(tableName = "authors")
 data class AuthorEntity(
@@ -15,7 +15,7 @@ data class AuthorEntity(
     val teseraUrl: String,
 )
 
-fun AuthorEntity?.toModel() = AuthorModel(
+fun AuthorEntity?.toModel() = Author(
     teseraId = this?.teseraId ?: 0,
     id = this?.id ?: 0,
     login = this?.login.orEmpty(),
@@ -25,7 +25,7 @@ fun AuthorEntity?.toModel() = AuthorModel(
     teseraUrl = this?.teseraUrl.orEmpty()
 )
 
-fun AuthorModel?.toEntity() = AuthorEntity(
+fun Author?.toEntity() = AuthorEntity(
     teseraId = this?.teseraId ?: 0,
     id = this?.id ?: 0,
     login = this?.login.orEmpty(),

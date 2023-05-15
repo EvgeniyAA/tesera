@@ -2,5 +2,5 @@ package com.tesera.domain.model
 
 data class NewsInfo(
     val news: NewsModel,
-    val author: AuthorModel,
+    val author: Author,
 )

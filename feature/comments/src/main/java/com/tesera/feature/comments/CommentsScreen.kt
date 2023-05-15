@@ -17,32 +17,25 @@ import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.CommentModel
 import com.tesera.feature.comments.models.CommentsIntent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
-    navController: NavController,
-    alias: String,
-    objectType: String,
+    onBack: () -> Unit,
     commentsViewModel: CommentsViewModel = hiltViewModel(),
 ) {
 
     val viewState = commentsViewModel.commentsViewState.collectAsState()
     val state = viewState.value
+    val title = stringResource(id = R.string.comments)
 
     Scaffold(
         modifier = Modifier.fillMaxHeight(),
-        topBar = TeseraToolbar(title = stringResource(id = R.string.comments)) {
-            navController.popBackStack()
+        topBar = {
+            TeseraToolbar(titleText = title, navAction = onBack)
         }
     ) {
         Box(modifier = Modifier.padding(it)) {
             CommentsList(commentsViewModel, state.comments)
         }
-    }
-
-
-    LaunchedEffect(key1 = alias, key2 = objectType) {
-        commentsViewModel.obtainIntent(CommentsIntent.GetComments(alias, objectType))
     }
     DisposableEffect(key1 = Unit) {
         onDispose {

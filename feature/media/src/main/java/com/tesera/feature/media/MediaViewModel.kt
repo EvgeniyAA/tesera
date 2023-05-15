@@ -6,8 +6,8 @@ import com.tesera.core.mvi.Reducer
 import com.tesera.core.mvi.TimeCapsule
 import com.tesera.domain.media.MediaPartialState
 import com.tesera.domain.media.MediaUseCase
-import com.tesera.domain.model.FileModel
-import com.tesera.domain.model.LinkModel
+import com.tesera.domain.model.GameFile
+import com.tesera.domain.model.Link
 import com.tesera.feature.media.models.MediaAction
 import com.tesera.feature.media.models.MediaIntent
 import com.tesera.feature.media.models.MediaViewState
@@ -38,14 +38,14 @@ class MediaViewModel @Inject constructor(
         override fun reduce(oldState: MediaViewState, intent: MediaIntent) = when (intent) {
             MediaIntent.ActionInvoked -> setState(oldState.copy(action = MediaAction.None))
             is MediaIntent.MediaClicked -> when (intent.media) {
-                is FileModel -> selectFile(intent.media)
-                is LinkModel -> setState(oldState.copy(selectedMedia = intent.media))
+                is GameFile -> selectFile(intent.media)
+                is Link -> setState(oldState.copy(selectedMedia = intent.media))
             }
             is MediaIntent.GetMedia -> getMedia(oldState, intent)
-            is MediaIntent.StartDownload -> downloadFile(intent.fileModel)
+            is MediaIntent.StartDownload -> downloadFile(intent.gameFile)
             is MediaIntent.MediaUnselected -> when (intent.media) {
-                is FileModel -> unselectFile(intent.media)
-                is LinkModel -> setState(oldState.copy(selectedMedia = null))
+                is GameFile -> unselectFile(intent.media)
+                is Link -> setState(oldState.copy(selectedMedia = null))
             }
         }
 
@@ -64,16 +64,16 @@ class MediaViewModel @Inject constructor(
             }
         }
 
-        private fun downloadFile(fileModel: FileModel) {
-            viewModelScope.launch { mediaUseCase.downloadFile(fileModel) }
+        private fun downloadFile(gameFile: GameFile) {
+            viewModelScope.launch { mediaUseCase.downloadFile(gameFile) }
         }
 
-        private fun selectFile(file: FileModel) {
-            viewModelScope.launch { mediaUseCase.selectFile(file) }
+        private fun selectFile(gameFile: GameFile) {
+            viewModelScope.launch { mediaUseCase.selectFile(gameFile) }
         }
 
-        private fun unselectFile(fileModel: FileModel) {
-            viewModelScope.launch { mediaUseCase.unselectFile(fileModel) }
+        private fun unselectFile(gameFile: GameFile) {
+            viewModelScope.launch { mediaUseCase.unselectFile(gameFile) }
         }
 
         private fun reducePartialState(
@@ -83,17 +83,17 @@ class MediaViewModel @Inject constructor(
             Timber.d(partialState.toString())
             return when (partialState) {
                 is MediaPartialState.Files -> oldState.copy(
-                    files = partialState.files,
+                    gameFiles = partialState.gameFiles,
                     filesLoading = false,
                     filesError = null,
-                    selectedMedia = partialState.files.firstOrNull { it.isSelected })
+                    selectedMedia = partialState.gameFiles.firstOrNull { it.isSelected })
                 is MediaPartialState.FilesError -> oldState.copy(
                     filesLoading = false,
                     filesError = partialState.error?.message
                 )
                 MediaPartialState.FilesLoading -> oldState.copy(
                     filesLoading = true,
-                    files = emptyList()
+                    gameFiles = emptyList()
                 )
                 is MediaPartialState.Links -> oldState.copy(
                     links = partialState.links,

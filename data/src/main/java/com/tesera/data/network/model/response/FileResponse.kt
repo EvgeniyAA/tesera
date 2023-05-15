@@ -1,19 +1,20 @@
 package com.tesera.data.network.model.response
 
-import com.tesera.domain.model.FileModel
+import com.google.gson.annotations.SerializedName
+import com.tesera.domain.model.GameFile
 
 data class FileResponse(
-    val teseraId: Int? = null,
-    val objectType: String? = null,
-    val title: String? = null,
-    val content: String? = null,
-    val photoUrl: String? = null,
-    val modificationDateUtc: String? = null,
-    val creationDateUtc: String? = null,
-    val author: AuthorResponse? = AuthorResponse(),
+    @SerializedName("teseraId") val teseraId: Int? = null,
+    @SerializedName("objectType") val objectType: String? = null,
+    @SerializedName("title") val title: String? = null,
+    @SerializedName("content") val content: String? = null,
+    @SerializedName("photoUrl") val photoUrl: String? = null,
+    @SerializedName("modificationDateUtc") val modificationDateUtc: String? = null,
+    @SerializedName("creationDateUtc") val creationDateUtc: String? = null,
+    @SerializedName("author") val author: AuthorResponse? = AuthorResponse(),
 )
 
-fun FileResponse?.toFileModel(alias: String?) = FileModel(
+fun FileResponse?.toFileModel(alias: String?) = GameFile(
     teseraId = this?.teseraId ?: 0,
     objectType = this?.objectType.orEmpty(),
     title = this?.title.orEmpty(),

@@ -1,18 +1,19 @@
 package com.tesera.data.network.model.response
 
-import com.tesera.domain.model.AuthorModel
+import com.google.gson.annotations.SerializedName
+import com.tesera.domain.model.Author
 
 data class AuthorResponse(
-    val teseraId: Int? = null,
-    val id: Int? = null,
-    val login: String? = null,
-    val name: String? = null,
-    val avatarUrl: String? = null,
-    val rating: Int? = null,
-    val teseraUrl: String? = null,
+    @SerializedName("teseraId") val teseraId: Int? = null,
+    @SerializedName("id") val id: Int? = null,
+    @SerializedName("login") val login: String? = null,
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("avatarUrl") val avatarUrl: String? = null,
+    @SerializedName("rating") val rating: Int? = null,
+    @SerializedName("teseraUrl") val teseraUrl: String? = null,
 )
 
-fun AuthorResponse?.toAuthorModel() = AuthorModel(
+fun AuthorResponse?.toAuthorModel() = Author(
     teseraId = this?.teseraId ?: 0,
     id = this?.id ?: 0,
     login = this?.login.orEmpty(),

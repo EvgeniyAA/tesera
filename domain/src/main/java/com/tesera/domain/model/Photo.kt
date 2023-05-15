@@ -1,11 +1,10 @@
 package com.tesera.domain.model
 
-data class LinkModel(
+data class Photo(
     val teseraId: Int,
-    val objectType: String,
     val title: String,
     val photoUrl: String,
-    val modificationDateUtc: String,
     val creationDateUtc: String,
-    val author: AuthorModel,
-): MediaModel()
+    val commentsTotal: Int,
+    val author: Author
+)

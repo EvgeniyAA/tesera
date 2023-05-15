@@ -1,6 +1,9 @@
 package com.tesera.domain.model
 
-data class AuthorModel(
+import androidx.compose.runtime.Stable
+
+@Stable
+data class Author(
     val teseraId: Int,
     val id: Int,
     val login: String,

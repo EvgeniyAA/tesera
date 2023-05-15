@@ -6,7 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.tesera.core.mvi.IntentHandler
 import com.tesera.domain.games.GamesUseCase
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.GamePreview
 import com.tesera.feature.games.models.GamesAction
 import com.tesera.feature.games.models.GamesIntent
 import com.tesera.feature.games.models.GamesViewState
@@ -26,7 +26,7 @@ class GamesViewModel @Inject constructor(
         MutableStateFlow(GamesViewState())
     val gamesViewState: StateFlow<GamesViewState> = _gamesViewState
 
-    fun getGames(): Flow<PagingData<GamePreviewModel>> =
+    fun getGames(): Flow<PagingData<GamePreview>> =
         gamesUseCase.getHotnessGames().cachedIn(viewModelScope)
 
     override fun obtainIntent(intent: GamesIntent) = when (intent) {

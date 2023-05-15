@@ -1,5 +1,6 @@
 package com.tesera.feature.games
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,8 +16,8 @@ import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.GamePreviewContent
-import com.tesera.designsystem.theme.components.StickyHeader
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.designsystem.theme.components.StickyHeaderContent
+import com.tesera.domain.model.GamePreview
 import com.tesera.feature.games.models.GamesAction
 import com.tesera.feature.games.models.GamesIntent
 import kotlinx.coroutines.launch
@@ -50,27 +51,27 @@ fun GamesScreen(
     })
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun List(
-    games: LazyPagingItems<GamePreviewModel>,
+    games: LazyPagingItems<GamePreview>,
     gamesViewModel: GamesViewModel,
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(state = listState) {
-        StickyHeader(
-            R.drawable.ic_hotness,
-            R.string.hotness_title
-        )
-        {
-            coroutineScope.launch {
-                listState.animateScrollToItem(0)
+        stickyHeader {
+            StickyHeaderContent(R.drawable.ic_hotness, R.string.hotness_title)
+            {
+                coroutineScope.launch {
+                    listState.animateScrollToItem(0)
+                }
             }
         }
         items(
             items = games,
-            key = { game -> game.bggId }
+            key = { game -> game.id }
         ) {
             it?.let { game ->
                 GamePreviewContent(game) {

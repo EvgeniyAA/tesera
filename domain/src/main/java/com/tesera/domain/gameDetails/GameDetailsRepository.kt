@@ -1,8 +1,7 @@
 package com.tesera.domain.gameDetails
 
-import com.tesera.domain.model.GameDetailsModel
-import kotlinx.coroutines.flow.Flow
+import com.tesera.domain.model.GameDetails
 
 interface GameDetailsRepository {
-    fun getGameDetails(alias: String): Flow<GameDetailsModel>
+    suspend fun getGameDetails(alias: String): GameDetails
 }

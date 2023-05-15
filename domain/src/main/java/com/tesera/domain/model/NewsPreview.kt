@@ -1,9 +1,11 @@
 package com.tesera.domain.model
 
+import androidx.compose.runtime.Stable
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
-data class NewsPreviewModel(
+@Stable
+data class NewsPreview(
     val objectId: Int,
     val objectType: NewsType,
     val title: String,
@@ -15,16 +17,19 @@ data class NewsPreviewModel(
     val rating: Double,
     val commentsTotal: Int,
     val numVotes: Int,
-    val authorModel: AuthorModel,
+    val author: Author,
 )
 
 enum class NewsType {
     @SerializedName("News")
     News,
+
     @SerializedName("Article")
     Article,
+
     @SerializedName("Thought")
     Thought,
+
     @SerializedName("Journal")
     Journal,
     None

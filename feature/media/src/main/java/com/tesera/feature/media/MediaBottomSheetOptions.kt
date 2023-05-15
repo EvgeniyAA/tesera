@@ -18,8 +18,8 @@ import com.tesera.core.extensions.share
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.MediaOptionItem
 import com.tesera.domain.model.DownloadStatus
-import com.tesera.domain.model.FileModel
-import com.tesera.domain.model.LinkModel
+import com.tesera.domain.model.GameFile
+import com.tesera.domain.model.Link
 import com.tesera.domain.model.MediaModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -27,7 +27,7 @@ import com.tesera.domain.model.MediaModel
 fun ModalBottomSheet(
     mediaModel: MediaModel?,
     sheetState: ModalBottomSheetState,
-    onStartDownload: (FileModel) -> Unit,
+    onStartDownload: (GameFile) -> Unit,
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
@@ -36,8 +36,8 @@ fun ModalBottomSheet(
         sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetContent = {
             when (mediaModel) {
-                is FileModel -> FileOptions(mediaModel, onStartDownload)
-                is LinkModel -> LinkOptions(mediaModel)
+                is GameFile -> FileOptions(mediaModel, onStartDownload)
+                is Link -> LinkOptions(mediaModel)
                 null -> Unit
             }
         }
@@ -46,37 +46,37 @@ fun ModalBottomSheet(
 
 @Composable
 fun FileOptions(
-    fileModel: FileModel,
-    onStartDownload: (FileModel) -> Unit,
+    gameFile: GameFile,
+    onStartDownload: (GameFile) -> Unit,
 ) {
     val share = stringResource(id = R.string.share)
     val context = LocalContext.current
     Text(
-        fileModel.title,
+        gameFile.title,
         style = AppTheme.typography.heading5,
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
-    if (fileModel.content.isNotEmpty())
+    if (gameFile.content.isNotEmpty())
         Text(
-            fileModel.content,
+            gameFile.content,
             style = AppTheme.typography.body1,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
     MediaOptionItem(title = share, R.drawable.ic_share) {
-        share(share, fileModel.photoUrl, context)
+        share(share, gameFile.photoUrl, context)
     }
 
     MediaOptionItem(
         title = stringResource(id = R.string.open_in_browser),
         R.drawable.ic_eye
     ) {
-        openInBrowser(fileModel.photoUrl, context)
+        openInBrowser(gameFile.photoUrl, context)
     }
-    when (val status = fileModel.downloadStatus) {
+    when (val status = gameFile.downloadStatus) {
         DownloadStatus.CanBeDownloaded -> MediaOptionItem(
             title = stringResource(id = R.string.download),
             R.drawable.ic_download,
-        ) { onStartDownload(fileModel) }
+        ) { onStartDownload(gameFile) }
 
         is DownloadStatus.Downloaded -> {
             MediaOptionItem(
@@ -93,29 +93,29 @@ fun FileOptions(
         is DownloadStatus.Error -> MediaOptionItem(
             title = stringResource(id = R.string.download),
             R.drawable.ic_error,
-        ) { onStartDownload(fileModel) }
+        ) { onStartDownload(gameFile) }
     }
 }
 
 @Composable
 fun LinkOptions(
-    linkModel: LinkModel,
+    link: Link,
 ) {
     val share = stringResource(id = R.string.share)
     val context = LocalContext.current
     Text(
-        linkModel.title,
+        link.title,
         style = AppTheme.typography.heading5,
         modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
     )
     MediaOptionItem(title = share, R.drawable.ic_share) {
-        share(share, linkModel.photoUrl, context)
+        share(share, link.photoUrl, context)
     }
 
     MediaOptionItem(
         title = stringResource(id = R.string.open_in_browser),
         R.drawable.ic_eye
     ) {
-        openInBrowser(linkModel.photoUrl, context)
+        openInBrowser(link.photoUrl, context)
     }
 }

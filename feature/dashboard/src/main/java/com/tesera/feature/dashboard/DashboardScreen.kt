@@ -17,23 +17,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.tesera.designsystem.theme.AppTheme
 import com.tesera.core.ui.NavigationTree
+import com.tesera.designsystem.theme.AppTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(navController: NavHostController = rememberNavController()) {
+fun DashboardScreen() {
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) },
+        bottomBar = { BottomBar() },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            DashboardNavGraph(navController = navController)
+            DashboardNavGraph()
         }
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar() {
+    val navController: NavHostController = rememberNavController()
     val bottomNavItems = listOf(
         BottomNavItem(
             name = stringResource(id = R.string.title_home),

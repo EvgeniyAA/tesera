@@ -16,13 +16,13 @@ interface ApiService {
     suspend fun news(
         @Query("limit") limit: Int = 15,
         @Query("offset") offset: Int = 0,
-    ): Result<List<NewsPreviewResponse>>
+    ): List<NewsPreviewResponse>
 
     @GET("/publications")
     suspend fun publications(
         @Query("limit") limit: Int = 15,
         @Query("offset") offset: Int = 0,
-    ): Result<List<NewsPreviewResponse>>
+    ): List<NewsPreviewResponse>
 
     // новости
     @GET("/news/{alias}")
@@ -55,10 +55,10 @@ interface ApiService {
         @Query("offset") offset: Int = 0,
         @Query("Type") type: String,
         @Query("sort") sort: String,
-    ): Result<List<GameResponse>>
+    ): List<GameResponse>
 
     @GET("/games/{alias}")
-    suspend fun gameDetails(@Path("alias") id: String): Result<GameDetailsResponse>
+    suspend fun gameDetails(@Path("alias") id: String): GameDetailsResponse
 
     @GET("/comments/{objecttype}/{alias}/{lastcommentid}")
     suspend fun comments(

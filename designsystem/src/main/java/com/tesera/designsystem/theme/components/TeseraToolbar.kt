@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.tesera.core.mvi.TimeCapsule
 import com.tesera.core.mvi.UiState
@@ -16,18 +17,18 @@ import com.tesera.designsystem.theme.AppTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TeseraToolbar(
-    title: String,
+    titleText: String = "",
     description: String? = null,
     timeMachine: TimeCapsule<out UiState>? = null,
     navAction: () -> Unit,
-): @Composable () -> Unit = {
+) {
     TopAppBar(
         title = {
             Column(modifier = timeMachine
                 ?.let { Modifier.debugInputPointer(LocalContext.current, it) } ?: Modifier
             ) {
                 Text(
-                    text = title,
+                    text = titleText,
                     style = AppTheme.typography.heading6,
                     color = AppTheme.colors.lightTextColor,
                     maxLines = 1,
@@ -50,6 +51,6 @@ fun TeseraToolbar(
                 )
             }
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = AppTheme.colors.secondaryBackground)
+        colors = TopAppBarDefaults.topAppBarColors(containerColor = AppTheme.colors.secondaryBackground)
     )
 }

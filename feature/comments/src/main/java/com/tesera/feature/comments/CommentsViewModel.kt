@@ -1,7 +1,10 @@
 package com.tesera.feature.comments
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tesera.core.constants.KEY_ALIAS
+import com.tesera.core.constants.KEY_OBJECT_TYPE
 import com.tesera.core.mvi.IntentHandler
 import com.tesera.domain.comments.CommentsUseCase
 import com.tesera.feature.comments.models.CommentsAction
@@ -16,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentsViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val commentsUseCase: CommentsUseCase,
 ) : ViewModel(), IntentHandler<CommentsIntent> {
 
@@ -25,6 +29,10 @@ class CommentsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val objectType = savedStateHandle.get<String>(KEY_OBJECT_TYPE) ?: ""
+            val alias = savedStateHandle.get<String>(KEY_ALIAS) ?: ""
+            getComments(objectType, alias, 0, 5)
+
             commentsUseCase.comments().collect {
                 sendViewState(_commentsViewState.value.copy(comments = it))
             }
@@ -35,14 +43,10 @@ class CommentsViewModel @Inject constructor(
         CommentsIntent.ActionInvoked -> {
             sendViewState(_commentsViewState.value.copy(action = CommentsAction.None))
         }
-        is CommentsIntent.GetComments -> getComments(
-            intent.objectType,
-            intent.alias,
-            intent.lastCommendId,
-            intent.limit
-        )
+
         is CommentsIntent.CommentExpanded -> expandComment(intent.id)
         is CommentsIntent.CommentLiked -> Unit
+        CommentsIntent.GetMoreComments -> {}
     }
 
     private fun getComments(

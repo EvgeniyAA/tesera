@@ -18,7 +18,11 @@ fun ApplicationScreen() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = NavigationTree.Splash.name) {
         composable(route = NavigationTree.Splash.name) {
-            ScreenContainer { SplashScreen(navController) }
+            ScreenContainer { SplashScreen {
+                navController.navigate(NavigationTree.Dashboard.name) {
+                    popUpTo(NavigationTree.Splash.name) { inclusive = true }
+                }
+            } }
         }
         composable(route = NavigationTree.Login.name) {
             ScreenContainer { LoginScreen(navController) }

@@ -2,7 +2,6 @@ package com.tesera.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.tesera.data.repository.local.LocalGamesFilterRepository
 import com.tesera.data.repository.remote.*
 import com.tesera.data.storage.TeseraEncryptedPrefs
 import com.tesera.data.storage.TeseraPrefs
@@ -12,7 +11,6 @@ import com.tesera.domain.authentication.LoginRepository
 import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.gameDetails.GameDetailsRepository
 import com.tesera.domain.games.GamesRepository
-import com.tesera.domain.games.filters.GamesFilterRepository
 import com.tesera.domain.media.MediaRepository
 import com.tesera.domain.news.NewsDetailsRepository
 import com.tesera.domain.news.NewsRepository
@@ -47,9 +45,9 @@ interface DataModule {
 
     @Binds
     fun bindsNewsDetailsRepository(newsDetailsRepository: RemoteNewsDetailsRepository): NewsDetailsRepository
-    @Binds
-    @Singleton
-    fun bindsGamesFilterRepository(gamesFilterRepository: LocalGamesFilterRepository): GamesFilterRepository
+//    @Binds
+//    @Singleton
+//    fun bindsGamesFilterRepository(gamesFilterRepository: LocalGamesFilterRepository): GamesFilterRepository
 
     @Binds
     fun bindsTeseraPrefs(teseraPrefs: TeseraEncryptedPrefs): TeseraPrefs

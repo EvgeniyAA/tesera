@@ -1,15 +1,16 @@
 package com.tesera.data.network.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.TeseraObjectModel
 
 data class TeseraObjectResponse(
-    val id: Int? = null,
-    val teseraId: Int? = null,
-    val commentsTotal: Int? = null,
-    val pictureUrl: String? = null,
-    val alias: String? = null,
-    val title: String? = null,
-    val objectType: String? = null
+    @SerializedName("id") val id: Int? = null,
+    @SerializedName("teseraId") val teseraId: Int? = null,
+    @SerializedName("commentsTotal") val commentsTotal: Int? = null,
+    @SerializedName("pictureUrl") val pictureUrl: String? = null,
+    @SerializedName("alias") val alias: String? = null,
+    @SerializedName("title") val title: String? = null,
+    @SerializedName("objectType") val objectType: String? = null
 )
 
 fun TeseraObjectResponse?.toModel() = TeseraObjectModel(

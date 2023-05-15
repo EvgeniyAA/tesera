@@ -25,9 +25,9 @@ fun TeseraButton(
     Button(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .height(40.dp),
         onClick = { if (!isProgress) onClick() },
-        shape = RoundedCornerShape(size = 10.dp),
+        shape = RoundedCornerShape(size = 24.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = AppTheme.colors.primaryTintColor
         )

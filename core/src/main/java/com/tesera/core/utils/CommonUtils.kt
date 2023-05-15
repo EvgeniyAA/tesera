@@ -39,7 +39,7 @@ inline fun <reified T> tryOrNull(expression: () -> T?): T? =
         null
     }
 
-fun String.toDate(): Date {
+fun String?.toDate(): Date {
     val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    return parser.parse(this) ?: Date()
+    return runCatching { this?.let { parser.parse(it) } ?: Date() }.getOrDefault(Date())
 }

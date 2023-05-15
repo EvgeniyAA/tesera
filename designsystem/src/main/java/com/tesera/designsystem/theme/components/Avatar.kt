@@ -16,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import coil.compose.AsyncImage
-import com.tesera.domain.model.AuthorModel
+import com.tesera.domain.model.Author
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun Avatar(author: AuthorModel, avatarSize: Float) {
+fun Avatar(author: Author, avatarSize: Float) {
     AsyncImage(
         model = author.avatarUrl,
         contentDescription = author.name,

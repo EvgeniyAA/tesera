@@ -1,9 +1,11 @@
 package com.tesera.domain.gameDetails
 
+import com.tesera.domain.model.GameDetails
 import javax.inject.Inject
 
 class GameDetailsUseCase @Inject constructor(
     private val gameDetailsRepository: GameDetailsRepository,
 ) {
-    fun getGameDetails(alias: String) = gameDetailsRepository.getGameDetails(alias)
+    suspend fun getGameDetails(alias: String): GameDetails =
+        gameDetailsRepository.getGameDetails(alias)
 }

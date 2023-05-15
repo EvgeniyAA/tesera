@@ -1,6 +1,6 @@
 package com.tesera.feature.games.models
 
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.GamePreview
 
 data class GamesViewState(
     val action: GamesAction = GamesAction.None
@@ -8,5 +8,5 @@ data class GamesViewState(
 
 sealed class GamesAction {
     object None : GamesAction()
-    data class ToGameDetails(val game: GamePreviewModel) : GamesAction()
+    data class ToGameDetails(val game: GamePreview) : GamesAction()
 }

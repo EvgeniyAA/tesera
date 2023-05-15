@@ -1,6 +1,6 @@
 package com.tesera.domain.media
 
-import com.tesera.domain.model.FileModel
+import com.tesera.domain.model.GameFile
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class MediaUseCase @Inject constructor(
         merge(links(alias, linksLimit), files(alias, filesLimit))
 
 
-    suspend fun selectFile(file: FileModel) = mediaRepository.selectFile(file)
-    suspend fun unselectFile(fileModel: FileModel) = mediaRepository.unselectFile(fileModel)
-    suspend fun downloadFile(fileModel: FileModel) = mediaRepository.downloadFile(fileModel)
+    suspend fun selectFile(gameFile: GameFile) = mediaRepository.selectFile(gameFile)
+    suspend fun unselectFile(gameFile: GameFile) = mediaRepository.unselectFile(gameFile)
+    suspend fun downloadFile(gameFile: GameFile) = mediaRepository.downloadFile(gameFile)
 }

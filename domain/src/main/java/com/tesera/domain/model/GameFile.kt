@@ -1,6 +1,6 @@
 package com.tesera.domain.model
 
-data class FileModel(
+data class GameFile(
     val teseraId: Int,
     val objectType: String,
     val title: String,
@@ -8,7 +8,7 @@ data class FileModel(
     val photoUrl: String,
     val modificationDateUtc: String,
     val creationDateUtc: String,
-    val author: AuthorModel,
+    val author: Author,
     val downloadStatus: DownloadStatus = DownloadStatus.CanBeDownloaded,
     val isSelected: Boolean = false,
     val alias: String

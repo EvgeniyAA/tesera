@@ -1,13 +1,13 @@
 package com.tesera.feature.media.models
 
 import com.tesera.core.mvi.UiState
-import com.tesera.domain.model.FileModel
-import com.tesera.domain.model.LinkModel
+import com.tesera.domain.model.GameFile
+import com.tesera.domain.model.Link
 import com.tesera.domain.model.MediaModel
 
 data class MediaViewState(
-    val links: List<LinkModel> = emptyList(),
-    val files: List<FileModel> = emptyList(),
+    val links: List<Link> = emptyList(),
+    val gameFiles: List<GameFile> = emptyList(),
     val linksError: String? = null,
     val filesError: String? = null,
     val filesLoading: Boolean = false,

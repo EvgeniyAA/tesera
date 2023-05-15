@@ -57,16 +57,19 @@ fun MediaScreen(
 
     HandleState(mediaViewModel, state, bottomSheetData, modalBottomSheetState)
 
+    val title = stringResource(id = R.string.publications_and_files)
     ModalBottomSheet(
         bottomSheetData.value,
         modalBottomSheetState,
         onStartDownload = { mediaViewModel.obtainIntent(MediaIntent.StartDownload(it)) }
     ) {
         Scaffold(modifier = Modifier.fillMaxHeight(),
-            topBar = TeseraToolbar(
-                title = stringResource(id = R.string.publications_and_files),
-                timeMachine = mediaViewModel.timeMachine
-            ) { navController.popBackStack() }
+            topBar = {
+                TeseraToolbar(
+                    titleText = title,
+                    timeMachine = mediaViewModel.timeMachine
+                ) { navController.popBackStack() }
+            }
         ) {
             MediaScreenContent(
                 mediaViewModel = mediaViewModel,
@@ -103,7 +106,7 @@ private fun MediaScreenContent(
     ) {
         val listState = rememberLazyListState()
         LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-            items(state.files, key = { file -> file.teseraId }) { file ->
+            items(state.gameFiles, key = { file -> file.teseraId }) { file ->
                 MediaItem(R.drawable.ic_file, file.title) {
                     mediaViewModel.obtainIntent(MediaIntent.MediaClicked(file))
                 }

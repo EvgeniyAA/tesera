@@ -12,22 +12,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.tesera.designsystem.theme.AppTheme
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.GamePreview
 
 @Composable
 fun GameOfferBlock(
     text: String,
-    items: List<GamePreviewModel>,
+    items: List<GamePreview>,
     modifier: Modifier,
-    onClick: (GamePreviewModel) -> Unit,
+    onClick: (GamePreview) -> Unit,
 ) {
     Text(
         text = text,
         style = AppTheme.typography.body1,
+        fontWeight = FontWeight.Bold,
         modifier = Modifier
             .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
     )

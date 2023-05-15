@@ -8,12 +8,13 @@ import com.tesera.data.network.NetworkDataSource
 import com.tesera.data.network.TeseraDispatchers
 import com.tesera.data.network.model.response.toModel
 import com.tesera.domain.news.NewsPageParams
-import com.tesera.domain.model.NewsPreviewModel
+import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.news.NewsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RemoteNewsRepository @Inject constructor(
@@ -21,15 +22,14 @@ class RemoteNewsRepository @Inject constructor(
     private val datasource: NetworkDataSource
 ) : NewsRepository {
 
-    override fun getLatestNews(params: NewsPageParams): Flow<List<NewsPreviewModel>> = flow {
+    override suspend fun getLatestNews(params: NewsPageParams): List<NewsPreview> = withContext(ioDispatcher) {
         datasource.getNews(params.limit, params.offset)
-            .onSuccess { news ->
-                emit(news.map { it.toModel() })
-            }
-    }.flowOn(ioDispatcher)
+            .map { it.toModel() }
+            .onEach { println(it.toString()) }
+    }
 
-    override fun getNews(params: NewsPageParams): Flow<PagingData<NewsPreviewModel>> = Pager(
-        config = PagingConfig(pageSize = 5),
+    override fun getNews(params: NewsPageParams): Flow<PagingData<NewsPreview>> = Pager(
+        config = PagingConfig(pageSize = 20),
         pagingSourceFactory = { NewsPagingSource(datasource, params) }
     ).flow
 }

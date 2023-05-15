@@ -28,14 +28,14 @@ import coil.compose.AsyncImage
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.TeseraTheme
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.GamePreview
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GamePreviewContent(
-    game: GamePreviewModel,
-    onClick: (GamePreviewModel) -> Unit = {},
+    game: GamePreview,
+    onClick: () -> Unit,
 ) {
     val showRating = rememberSaveable { mutableStateOf(game.n10Rating > 0) }
     Card(
@@ -43,7 +43,7 @@ fun GamePreviewContent(
             .padding(horizontal = 16.dp, vertical = 4.dp)
             .fillMaxWidth(),
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
-        onClick = { onClick(game) }
+        onClick = onClick
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -161,7 +161,7 @@ fun GamePreviewContent(
 fun GameContent_Preview() {
     TeseraTheme {
         GamePreviewContent(
-            GamePreviewModel(
+            GamePreview(
                 0,
                 0,
                 "Game extra1 extra2 extra3 extra4 extra5 extra6 long title extra4 extra5 extra6 long title",
@@ -173,7 +173,7 @@ fun GameContent_Preview() {
                 8.89,
                 "",
                 true
-            )
+            ), {}
         )
     }
 }

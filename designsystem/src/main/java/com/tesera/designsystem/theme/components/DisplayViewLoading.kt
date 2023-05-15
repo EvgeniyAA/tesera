@@ -1,4 +1,4 @@
-package com.tesera.core.ui
+package com.tesera.designsystem.theme.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tesera.designsystem.theme.AppTheme
-import com.tesera.designsystem.theme.TeseraTheme
 
 @Composable
 fun DisplayViewLoading(

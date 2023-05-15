@@ -1,7 +1,8 @@
 package com.tesera.domain.model
 
-data class GameDetailsModel(
-    val game: GameModel,
+data class GameDetails(
+    val id: Int,
+    val game: Game,
     val ownersTotal: Int,
     val sellTotal: Int,
     val buyTotal: Int,
@@ -14,10 +15,10 @@ data class GameDetailsModel(
     val linksTotal: Int,
     val videoExternalTotal: Int,
     val videoInternalTotal: Int,
-    val photos: List<PhotoModel>,
-    val files: List<FileModel>,
-    val links: List<LinkModel>,
-    val similarGames: List<GameModel>,
-    val relatedGames: List<GameModel>,
-    val news: List<NewsPreviewModel>,
+    val photos: List<Photo>,
+    val gameFiles: List<GameFile>,
+    val links: List<Link>,
+    val similarGames: List<Game>,
+    val relatedGames: List<Game>,
+    val news: List<NewsPreview>,
 )

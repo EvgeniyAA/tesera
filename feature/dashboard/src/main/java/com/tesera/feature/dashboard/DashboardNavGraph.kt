@@ -1,11 +1,17 @@
 package com.tesera.feature.dashboard
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.remember
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tesera.base.newsdetails.NewsDetailsScreen
+import com.tesera.core.constants.KEY_ALIAS
+import com.tesera.core.constants.KEY_OBJECT_TYPE
 import com.tesera.core.ui.NavigationTree
+import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.model.NewsType
 import com.tesera.feature.comments.CommentsScreen
 import com.tesera.feature.gamedetails.GameDetailsScreen
@@ -16,14 +22,39 @@ import com.tesera.feature.news.NewsScreen
 import com.tesera.feature.profile.ProfileScreen
 import com.tesera.feature.search.SearchScreen
 
+
 @Composable
-fun DashboardNavGraph(navController: NavHostController) {
+fun DashboardNavGraph() {
+    val navController = rememberNavController()
+    val onBack: () -> Unit = remember(navController) { { navController.popBackStack() } }
+    val onNewsDetailsScreen =
+        remember(navController) { { news: NewsPreview -> navController.navigate("${NavigationTree.NewsDetails.name}/${news.objectType.name}/${news.alias}") } }
+    val onGameDetailsScreen = remember(navController) {
+        { alias: String ->
+            navController.navigate("${NavigationTree.GamesDetails.name}/$alias")
+        }
+    }
+    val onGames = remember(navController) { { navController.navigate(NavigationTree.Games.name) } }
+    val onNews = remember(navController) { { navController.navigate(NavigationTree.News.name) } }
+    val onComments =
+        remember(navController) { { alias: String, objectType: String -> navController.navigate("${NavigationTree.Comments.name}/$alias/$objectType") } }
+    val onMedia = remember(navController) {
+        { alias: String, linksTotal: Int, filesTotal: Int ->
+            navController.navigate("${NavigationTree.Media.name}/$alias/$linksTotal/$filesTotal")
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = NavigationTree.Home.name
     ) {
         composable(route = NavigationTree.Home.name) {
-            HomeScreen(navController)
+            HomeScreen(
+                onGameDetails = onGameDetailsScreen,
+                onGames = onGames,
+                onNews = onNews,
+                onNewsDetails = onNewsDetailsScreen
+            )
         }
         composable(route = NavigationTree.Search.name) {
             SearchScreen(navController)
@@ -34,15 +65,23 @@ fun DashboardNavGraph(navController: NavHostController) {
         composable(route = NavigationTree.Games.name) {
             GamesScreen(navController)
         }
-        composable(route = "${NavigationTree.GamesDetails.name}/{alias}") {
-            GameDetailsScreen(navController, it.arguments?.getString("alias").orEmpty())
-        }
-        composable(route = "${NavigationTree.Comments.name}/{alias}/{objectType}") {
-            CommentsScreen(
-                navController = navController,
-                alias = it.arguments?.getString("alias").orEmpty(),
-                objectType = it.arguments?.getString("objectType").orEmpty()
+        composable(route = "${NavigationTree.GamesDetails.name}/{alias}",
+            arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType })
+        ) {
+            GameDetailsScreen(
+                onBack = onBack,
+                onGameDetails = onGameDetailsScreen,
+                onComments = onComments,
+                onMedia = onMedia,
+                onNewsDetails = onNewsDetailsScreen
             )
+        }
+        composable(
+            route = "${NavigationTree.Comments.name}/{alias}/{objectType}",
+            arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType },
+                navArgument(KEY_OBJECT_TYPE) { type = NavType.StringType })
+        ) {
+            CommentsScreen(onBack = onBack)
         }
         composable(route = "${NavigationTree.Media.name}/{alias}/{linksLimit}/{filesLimit}") {
             MediaScreen(
@@ -52,8 +91,9 @@ fun DashboardNavGraph(navController: NavHostController) {
                 navController = navController
             )
         }
+
         composable(route = NavigationTree.News.name) {
-            NewsScreen(navController)
+            NewsScreen(onBack = onBack, onDetailsScreen = onNewsDetailsScreen)
         }
         composable(route = "${NavigationTree.NewsDetails.name}/{newsType}/{alias}") {
             NewsDetailsScreen(

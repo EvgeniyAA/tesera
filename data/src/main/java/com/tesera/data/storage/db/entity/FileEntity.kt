@@ -1,12 +1,11 @@
 package com.tesera.data.storage.db.entity
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.tesera.data.storage.db.Converters
 import com.tesera.domain.model.DownloadStatus
-import com.tesera.domain.model.FileModel
+import com.tesera.domain.model.GameFile
 
 @Entity(tableName = "files")
 @TypeConverters(Converters::class)
@@ -24,7 +23,7 @@ data class FileEntity(
     val isSelected: Boolean,
 )
 
-fun FileEntity?.toModel() = FileModel(
+fun FileEntity?.toModel() = GameFile(
     teseraId = this?.teseraId ?: 0,
     objectType = this?.objectType.orEmpty(),
     title = this?.title.orEmpty(),
@@ -38,7 +37,7 @@ fun FileEntity?.toModel() = FileModel(
     isSelected = this?.isSelected ?: false
 )
 
-fun FileModel?.toEntity() = FileEntity(
+fun GameFile?.toEntity() = FileEntity(
     teseraId = this?.teseraId ?: 0,
     objectType = this?.objectType.orEmpty(),
     title = this?.title.orEmpty(),

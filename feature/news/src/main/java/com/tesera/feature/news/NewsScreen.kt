@@ -2,7 +2,6 @@ package com.tesera.feature.news
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -13,73 +12,55 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.theme.components.NewsPreviewContent
 import com.tesera.designsystem.theme.components.TeseraToolbar
-import com.tesera.feature.news.models.NewsAction
-import com.tesera.feature.news.models.NewsIntent
+import com.tesera.domain.model.NewsPreview
+import com.tesera.feature.news.models.NewsViewState
+import timber.log.Timber
 
 @Composable
 fun NewsScreen(
-    navController: NavController,
+    onBack: () -> Unit,
+    onDetailsScreen: (NewsPreview) -> Unit,
     viewModel: NewsViewModel = hiltViewModel(),
 ) {
+    Timber.d("News screen recomposed")
 
+//    val viewState by remember(viewModel) { viewModel.viewState }.collectAsState()
+    val news = viewModel.news.collectAsLazyPagingItems()
+    val title = stringResource(id = R.string.news_title)
     Scaffold(modifier = Modifier.fillMaxHeight(),
-        topBar = TeseraToolbar(
-            title = stringResource(id = R.string.news_title)
-        ) { navController.popBackStack() }
+        topBar = { TeseraToolbar(titleText = title) { onBack() } }
     ) {
-        NewsList(viewModel = viewModel, paddingValues = it)
+        NewsList(news, paddingValues = { it }, onDetailsScreen)
     }
-
-    val viewState = viewModel.viewState.collectAsState()
-
-    LaunchedEffect(key1 = viewState.value.action, block = {
-        when (val action = viewState.value.action) {
-            NewsAction.None -> Unit
-            is NewsAction.ToNewsDetails ->
-                navController.navigate("${NavigationTree.NewsDetails.name}/${action.news.objectType.name}/${action.news.alias}")
-
-        }
-    })
-
-    DisposableEffect(key1 = Unit, effect = {
-        onDispose {
-            viewModel.obtainIntent(NewsIntent.ActionInvoked)
-        }
-    })
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NewsList(
-    viewModel: NewsViewModel,
-    paddingValues: PaddingValues,
+    news: LazyPagingItems<NewsPreview>,
+    paddingValues: () -> PaddingValues,
+    onDetailsScreen: (NewsPreview) -> Unit,
 ) {
+    Timber.d("News list recomposed")
+
     val refreshing by remember { mutableStateOf(false) }
 
-    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
-    })
-
-    val news = viewModel.getNews().collectAsLazyPagingItems()
-
+    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {})
 
     Box(
         modifier = Modifier
-            .padding(paddingValues)
+            .padding(paddingValues())
             .pullRefresh(pullRefreshState)
     ) {
-        val listState = rememberLazyListState()
-        LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(news, key = { key -> key.objectId }) {
                 it?.let {
-                    NewsPreviewContent(news = it) {
-                        viewModel.obtainIntent(NewsIntent.NewsDetailsClicked(it))
-                    }
+                    NewsPreviewContent(news = it) { onDetailsScreen(it) }
                 }
             }
         }

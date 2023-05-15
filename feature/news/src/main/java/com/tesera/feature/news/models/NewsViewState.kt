@@ -1,12 +1,12 @@
 package com.tesera.feature.news.models
 
-import com.tesera.domain.model.NewsPreviewModel
+import androidx.compose.runtime.Stable
 
+@Stable
 data class NewsViewState(
-    val action: NewsAction = NewsAction.None
+    val action: NewsAction = NewsAction.None,
 )
 
 sealed class NewsAction {
     object None : NewsAction()
-    data class ToNewsDetails(val news: NewsPreviewModel) : NewsAction()
 }

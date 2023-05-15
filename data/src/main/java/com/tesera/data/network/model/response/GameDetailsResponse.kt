@@ -1,30 +1,32 @@
 package com.tesera.data.network.model.response
 
-import com.tesera.domain.model.GameDetailsModel
+import com.google.gson.annotations.SerializedName
+import com.tesera.domain.model.GameDetails
 
 data class GameDetailsResponse(
-    val game: GameResponse? = GameResponse(),
-    val ownersTotal: Int? = null,
-    val sellTotal: Int? = null,
-    val buyTotal: Int? = null,
-    val sellTotalAll: Int? = null,
-    val buyTotalAll: Int? = null,
-    val commentsTotal: Int? = null,
-    val reportsTotal: Int? = null,
-    val photosTotal: Int? = null,
-    val filesTotal: Int? = null,
-    val linksTotal: Int? = null,
-    val videoExternalTotal: Int? = null,
-    val videoInternalTotal: Int? = null,
-    val photos: List<PhotoResponse> = emptyList(),
-    val files: List<FileResponse> = emptyList(),
-    val links: List<LinkResponse> = emptyList(),
-    val similars: List<GameResponse> = emptyList(),
-    val relateds: List<GameResponse> = emptyList(),
-    val news: List<NewsPreviewResponse> = emptyList(),
+    @SerializedName("game") val game: GameResponse? = GameResponse(),
+    @SerializedName("ownersTotal") val ownersTotal: Int? = null,
+    @SerializedName("sellTotal") val sellTotal: Int? = null,
+    @SerializedName("buyTotal") val buyTotal: Int? = null,
+    @SerializedName("sellTotalAll") val sellTotalAll: Int? = null,
+    @SerializedName("buyTotalAll") val buyTotalAll: Int? = null,
+    @SerializedName("commentsTotal") val commentsTotal: Int? = null,
+    @SerializedName("reportsTotal") val reportsTotal: Int? = null,
+    @SerializedName("photosTotal") val photosTotal: Int? = null,
+    @SerializedName("filesTotal") val filesTotal: Int? = null,
+    @SerializedName("linksTotal") val linksTotal: Int? = null,
+    @SerializedName("videoExternalTotal") val videoExternalTotal: Int? = null,
+    @SerializedName("videoInternalTotal") val videoInternalTotal: Int? = null,
+    @SerializedName("photos") val photos: List<PhotoResponse> = emptyList(),
+    @SerializedName("files") val files: List<FileResponse> = emptyList(),
+    @SerializedName("links") val links: List<LinkResponse> = emptyList(),
+    @SerializedName("similars") val similars: List<GameResponse> = emptyList(),
+    @SerializedName("relateds") val relateds: List<GameResponse> = emptyList(),
+    @SerializedName("news") val news: List<NewsPreviewResponse> = emptyList(),
 )
 
-fun GameDetailsResponse?.toModel() = GameDetailsModel(
+fun GameDetailsResponse?.toModel() = GameDetails(
+    id = this?.game?.id ?: 0,
     game = this?.game.toGameModel(),
     ownersTotal = this?.ownersTotal ?: 0,
     sellTotal = this?.sellTotal ?: 0,
@@ -39,7 +41,7 @@ fun GameDetailsResponse?.toModel() = GameDetailsModel(
     videoExternalTotal = this?.videoExternalTotal ?: 0,
     videoInternalTotal = this?.videoInternalTotal ?: 0,
     photos = this?.photos?.map { it.toPhotoModel() } ?: emptyList(),
-    files = this?.files?.map { it.toFileModel(this.game?.alias) } ?: emptyList(),
+    gameFiles = this?.files?.map { it.toFileModel(this.game?.alias) } ?: emptyList(),
     links = this?.links?.map { it.toLinkModel() } ?: emptyList(),
     similarGames = this?.similars?.map { it.toGameModel() } ?: emptyList(),
     relatedGames = this?.relateds?.map { it.toGameModel() } ?: emptyList(),

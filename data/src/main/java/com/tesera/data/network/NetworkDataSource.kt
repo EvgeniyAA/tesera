@@ -1,7 +1,7 @@
 package com.tesera.data.network
 
 import com.tesera.data.network.model.request.AuthParams
-import com.tesera.domain.model.FileModel
+import com.tesera.domain.model.GameFile
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -35,8 +35,8 @@ class NetworkDataSource @Inject constructor(
     suspend fun getLinks(alias: String, limit: Int) = api.links(alias, limit)
     suspend fun getFiles(alias: String, limit: Int) = api.files(alias, limit)
 
-    fun downloadFile(fileModel: FileModel): Response {
-        val request = Request.Builder().url(fileModel.photoUrl).build()
+    fun downloadFile(gameFile: GameFile): Response {
+        val request = Request.Builder().url(gameFile.photoUrl).build()
         return OkHttpClient().newCall(request).execute()
     }
 

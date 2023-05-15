@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.tesera.core.ui.DisplayViewLoading
+import com.tesera.designsystem.theme.components.DisplayViewLoading
 import com.tesera.core.ui.NavigationTree
 import com.tesera.feature.login.models.LoginIntent
 import com.tesera.feature.login.models.LoginViewState

@@ -10,7 +10,7 @@ data class CommentModel(
     val content: String,
     val rating: Int,
     val creationDateUtc: Date,
-    val author: AuthorModel,
+    val author: Author,
     val teseraObject: TeseraObjectModel,
     val isExpanded: Boolean = false,
     val isLiked: Boolean = false

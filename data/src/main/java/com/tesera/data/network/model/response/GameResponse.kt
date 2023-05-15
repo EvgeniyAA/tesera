@@ -1,8 +1,8 @@
 package com.tesera.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
-import com.tesera.domain.model.GameModel
-import com.tesera.domain.model.GamePreviewModel
+import com.tesera.domain.model.Game
+import com.tesera.domain.model.GamePreview
 
 data class GameResponse(
     @SerializedName("id") val id: Int? = null,
@@ -37,7 +37,7 @@ data class GameResponse(
     @SerializedName("isAddition") val isAddition: Boolean? = null,
 )
 
-fun GameResponse?.toGamePreviewModel() = GamePreviewModel(
+fun GameResponse?.toGamePreviewModel() = GamePreview(
     id = this?.id ?: 0,
     bggId = this?.bggId ?: 0,
     title = this?.title.orEmpty(),
@@ -50,7 +50,7 @@ fun GameResponse?.toGamePreviewModel() = GamePreviewModel(
     alias = this?.alias.orEmpty()
 )
 
-fun GameResponse?.toGameModel() = GameModel(
+fun GameResponse?.toGameModel() = Game(
     id = this?.id ?: 0,
     teseraId = this?.teseraId ?: 0,
     bggId = this?.bggId ?: 0,

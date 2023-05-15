@@ -1,26 +1,27 @@
 package com.tesera.data.network.model.response
 
+import com.google.gson.annotations.SerializedName
 import com.tesera.core.utils.toDate
-import com.tesera.domain.model.NewsPreviewModel
+import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.model.NewsType
 
 data class NewsPreviewResponse(
-    val objectId: Int? = null,
-    val teseraId: Int? = null,
-    val objectType: NewsType? = null,
-    val title: String? = null,
-    val title2: String? = null,
-    val alias: String? = null,
-    val contentShort: String? = null,
-    val creationDateUtc: String? = null,
-    val photoUrl: String? = null,
-    val rating: Double? = null,
-    val commentsTotal: Int? = null,
-    val numVotes: Int? = null,
-    val author: AuthorResponse? = null,
+    @SerializedName("objectId") val objectId: Int? = null,
+    @SerializedName("teseraId") val teseraId: Int? = null,
+    @SerializedName("objectType") val objectType: NewsType? = null,
+    @SerializedName("title") val title: String? = null,
+    @SerializedName("title2") val title2: String? = null,
+    @SerializedName("alias") val alias: String? = null,
+    @SerializedName("contentShort") val contentShort: String? = null,
+    @SerializedName("creationDateUtc") val creationDateUtc: String? = null,
+    @SerializedName("photoUrl") val photoUrl: String? = null,
+    @SerializedName("rating") val rating: Double? = null,
+    @SerializedName("commentsTotal") val commentsTotal: Int? = null,
+    @SerializedName("numVotes") val numVotes: Int? = null,
+    @SerializedName("author") val author: AuthorResponse? = null,
 )
 
-fun NewsPreviewResponse?.toModel() = NewsPreviewModel(
+fun NewsPreviewResponse?.toModel() = NewsPreview(
     objectId = this?.objectId ?: this?.teseraId ?: 0,
     objectType = this?.objectType ?: NewsType.None,
     title = this?.title ?: this?.title2.orEmpty(),
@@ -32,5 +33,5 @@ fun NewsPreviewResponse?.toModel() = NewsPreviewModel(
     rating = this?.rating ?: 0.0,
     commentsTotal = this?.commentsTotal ?: 0,
     numVotes = this?.numVotes ?: 0,
-    authorModel = this?.author.toAuthorModel()
+    author = this?.author.toAuthorModel()
 )

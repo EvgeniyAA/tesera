@@ -1,6 +1,9 @@
 package com.tesera.domain.model
 
-data class GamePreviewModel(
+import androidx.compose.runtime.Stable
+
+@Stable
+data class GamePreview(
     val id: Int,
     val bggId: Int,
     val title: String,
@@ -11,5 +14,5 @@ data class GamePreviewModel(
     val commentsTotalNew: Int,
     val n10Rating: Double,
     val alias: String,
-    val isAddition: Boolean = false
+    val isAddition: Boolean = false,
 )

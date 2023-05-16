@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import coil.compose.AsyncImage
 import com.tesera.domain.model.Author
+import com.tesera.domain.model.GameOwner
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTextApi::class)
@@ -40,6 +41,31 @@ fun Avatar(author: Author, avatarSize: Float) {
             circleSize = avatarSize,
             textMeasurer = rememberTextMeasurer(),
             author.name.substring(0, minOf(2, author.name.length)).uppercase()
+        ),
+    )
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun Avatar(owner: GameOwner, avatarSize: Float) {
+    AsyncImage(
+        model = owner.avatarUrl,
+        contentDescription = owner.name,
+        contentScale = ContentScale.Crop,
+        modifier = androidx.compose.ui.Modifier
+            .size(avatarSize.dp)
+            .clip(CircleShape),
+        placeholder = TextPainter(
+            Color((owner.name + owner.login).toHslColor()),
+            circleSize = avatarSize,
+            textMeasurer = rememberTextMeasurer(),
+            owner.name.substring(0, minOf(2, owner.name.length)).uppercase()
+        ),
+        error = TextPainter(
+            Color((owner.name + owner.login).toHslColor()),
+            circleSize = avatarSize,
+            textMeasurer = rememberTextMeasurer(),
+            owner.name.substring(0, minOf(2, owner.name.length)).uppercase()
         ),
     )
 }

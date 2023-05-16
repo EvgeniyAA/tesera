@@ -60,7 +60,7 @@ fun HorizontalGamePreviewContent(
             ) {
                 if (showRating.value) {
                     Image(
-                        painter = painterResource(id = R.drawable.user_rating_bg),
+                        painter = painterResource(id = R.drawable.game_rating_bg),
                         contentDescription = null,
                         modifier = Modifier
                             .size(35.dp)

@@ -15,7 +15,7 @@ data class CommentResponse(
     @SerializedName("rating") val rating: Int? = null,
     @SerializedName("creationDateUtc") val creationDateUtc: String? = null,
     @SerializedName("author") val author: AuthorResponse? = null,
-    @SerializedName("object") val teseraObject: TeseraObjectResponse? = null,
+//    @SerializedName("object") val teseraObject: TeseraObjectResponse? = null,
 )
 
 fun CommentResponse?.toModel() = CommentModel(
@@ -27,5 +27,5 @@ fun CommentResponse?.toModel() = CommentModel(
     rating = this?.rating ?: 0,
     creationDateUtc = this?.creationDateUtc.orEmpty().toDate(),
     author = this?.author.toAuthorModel(),
-    teseraObject = this?.teseraObject.toModel()
+//    teseraObject = this?.teseraObject.toModel()
 )

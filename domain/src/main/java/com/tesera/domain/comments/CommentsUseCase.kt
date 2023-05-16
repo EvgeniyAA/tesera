@@ -1,8 +1,10 @@
 package com.tesera.domain.comments
 
 import com.tesera.domain.model.CommentModel
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import java.lang.Exception
 import javax.inject.Inject
 
 class CommentsUseCase @Inject constructor(
@@ -11,14 +13,23 @@ class CommentsUseCase @Inject constructor(
     suspend fun expandComment(id: Int) = commentsRepository.expandComment(id)
 
     fun comments(): Flow<List<CommentModel>> = commentsRepository.comments.map { comments ->
-        groupItemsByRootParent(comments).flatMap { it.value } }
+        groupItemsByRootParent(comments).flatMap { it.value }
+    }
 
     suspend fun getComments(
         objectType: String,
         alias: String,
         lastCommentId: Int,
         limit: Int?,
-    ): Flow<CommentsPartialState> = commentsRepository.getComments(objectType, alias, lastCommentId, limit)
+    ): Flow<CommentsPartialState> = flow {
+        emit(CommentsPartialState.IsLoading)
+        try {
+            commentsRepository.getComments(objectType, alias, lastCommentId, limit)
+            emit(CommentsPartialState.Success)
+        } catch (e: Exception) {
+            emit(CommentsPartialState.Error(e))
+        }
+    }
 
 
     fun groupItemsByRootParent(items: List<CommentModel>): Map<Int?, List<CommentModel>> {

@@ -44,7 +44,7 @@ class RemoteMediaRepository @Inject constructor(
         fileDao.insertFiles(result.map { it.toEntity() })
     }
 
-    override suspend fun localFiles(alias: String): Flow<List<GameFile>> =
+    override fun localFiles(alias: String): Flow<List<GameFile>> =
         fileDao.findAllFilesByAliasAsFlow(alias)
             .distinctUntilChanged()
             .map { it.map { it.toModel() } }
@@ -55,7 +55,7 @@ class RemoteMediaRepository @Inject constructor(
         _links.emit(cachedLinks)
     }
 
-    override suspend fun localLinks(): Flow<List<Link>> = _links
+    override fun localLinks(): Flow<List<Link>> = _links
 
     override suspend fun selectFile(gameFile: GameFile) {
         withContext(ioDispatcher) {

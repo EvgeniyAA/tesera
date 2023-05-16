@@ -10,6 +10,7 @@ interface CommentsRepository {
         alias: String,
         lastCommentId: Int,
         limit: Int?,
-    ): Flow<CommentsPartialState>
-    val comments : Flow<List<CommentModel>>
+    )
+
+    val comments: Flow<List<CommentModel>>
 }

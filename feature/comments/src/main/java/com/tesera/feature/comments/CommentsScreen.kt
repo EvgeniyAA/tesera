@@ -1,17 +1,20 @@
 package com.tesera.feature.comments
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.tesera.designsystem.theme.components.Comment
 import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.CommentModel
@@ -35,11 +38,6 @@ fun CommentsScreen(
     ) {
         Box(modifier = Modifier.padding(it)) {
             CommentsList(commentsViewModel, state.comments)
-        }
-    }
-    DisposableEffect(key1 = Unit) {
-        onDispose {
-            commentsViewModel.obtainIntent(CommentsIntent.ActionInvoked)
         }
     }
 }

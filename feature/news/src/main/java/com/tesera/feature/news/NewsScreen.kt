@@ -27,8 +27,6 @@ fun NewsScreen(
     onDetailsScreen: (NewsPreview) -> Unit,
     viewModel: NewsViewModel = hiltViewModel(),
 ) {
-    Timber.d("News screen recomposed")
-
 //    val viewState by remember(viewModel) { viewModel.viewState }.collectAsState()
     val news = viewModel.news.collectAsLazyPagingItems()
     val title = stringResource(id = R.string.news_title)

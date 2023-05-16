@@ -17,7 +17,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,22 +59,7 @@ fun GamePreviewContent(
                     }
             ) {
                 if (showRating.value) {
-                    Image(
-                        painter = painterResource(id = R.drawable.user_rating_bg),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(35.dp)
-                            .padding(4.dp)
-                    )
-                    Text(
-                        text = String.format("%.1f", game.n10Rating),
-                        style = AppTheme.typography.hint,
-                        color = AppTheme.colors.hintTextColor,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.Center)
-                    )
+                    Rating(rating = game.n10Rating, ratingBg = R.drawable.game_rating_bg)
                 }
             }
             Column(

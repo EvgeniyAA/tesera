@@ -4,12 +4,11 @@ import com.tesera.data.network.Dispatcher
 import com.tesera.data.network.NetworkDataSource
 import com.tesera.data.network.TeseraDispatchers
 import com.tesera.data.network.model.response.toModel
-import com.tesera.domain.comments.CommentsPartialState
 import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.model.CommentModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -26,8 +25,8 @@ class RemoteCommentsRepository @Inject constructor(
 
     override suspend fun expandComment(id: Int) {
         withContext(ioDispatcher) {
-        cachedComments =
-            cachedComments.map { it.copy(isExpanded = if (id == it.id) !it.isExpanded else it.isExpanded) }
+            cachedComments =
+                cachedComments.map { it.copy(isExpanded = if (id == it.id) !it.isExpanded else it.isExpanded) }
             _comments.emit(cachedComments)
         }
     }
@@ -37,14 +36,9 @@ class RemoteCommentsRepository @Inject constructor(
         alias: String,
         lastCommentId: Int,
         limit: Int?,
-    ): Flow<CommentsPartialState> = flow {
-        emit(CommentsPartialState.IsLoading)
-        datasource.getComments(objecttype, alias, lastCommentId, limit)
-            .onSuccess { commentsResponse ->
-                emit(CommentsPartialState.Success)
-                cachedComments = commentsResponse.map { it.toModel() }
-                _comments.emit(cachedComments)
-            }
-            .onFailure { emit(CommentsPartialState.Error(it)) }
+    ) {
+        val result = datasource.getComments(objecttype, alias, lastCommentId, limit)
+        cachedComments = result.map { it.toModel() }
+        _comments.emit(cachedComments)
     }
 }

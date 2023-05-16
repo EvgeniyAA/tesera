@@ -66,7 +66,7 @@ interface ApiService {
         @Path("alias") alias: String,
         @Path("lastcommentid") lastCommentId: Int,
         @Query("limit") limit: Int?,
-    ): Result<List<CommentResponse>>
+    ): List<CommentResponse>
 
     @GET("/games/{alias}/links")
     suspend fun links(
@@ -79,6 +79,13 @@ interface ApiService {
         @Path("alias") alias: String,
         @Query("limit") limit: Int,
     ): List<FileResponse>
+
+    @GET("/games/{alias}/owns")
+    suspend fun owns(
+        @Path("alias") alias: String,
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+    ): List<GameOwnerResponse>
 
     // продают
     @GET("/trade/sales/")
@@ -94,13 +101,6 @@ interface ApiService {
         @Query("limit") limit: Int,
         @Query("offset") offset: Int?,
         @Query("alias") alias: String?
-    ): List<Any>
-
-    @GET("/games/{alias}/owns/")
-    suspend fun owns(
-        @Query("limit") limit: Int,
-        @Query("offset") offset: Int,
-        @Path("alias") alias: String
     ): List<Any>
 
     @GET("/reports/")

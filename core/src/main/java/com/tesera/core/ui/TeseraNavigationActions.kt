@@ -10,7 +10,8 @@ enum class NavigationTree {
     Games, GamesDetails,
     News, NewsDetails,
     Comments,
-    Media
+    Media,
+    Owners,
 }
 
 object TeseraDestinations {

@@ -94,9 +94,6 @@ fun Comment_Preview() {
                 15,
                 Date(),
                 Author(0, 0, "User123", "Ivan", "", 13, ""),
-                TeseraObjectModel(
-                    0, 0, 0, "", "", "", ""
-                )
             ),
             onExpandedClicked = { },
             onLikeClicked = {}

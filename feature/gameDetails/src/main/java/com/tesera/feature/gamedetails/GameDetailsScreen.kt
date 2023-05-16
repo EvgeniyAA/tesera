@@ -67,6 +67,7 @@ fun GameDetailsScreen(
     onComments: (String, String) -> Unit,
     onMedia: (String, Int, Int) -> Unit,
     onNewsDetails: (NewsPreview) -> Unit,
+    onGameOwners: (String) -> Unit,
     viewModel: GameDetailsViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.gameDetailsViewState.collectAsState()
@@ -103,7 +104,8 @@ fun GameDetailsScreen(
                     onGameDetails,
                     onNewsDetails,
                     onMedia,
-                    onComments
+                    onComments,
+                    onGameOwners
                 )
             }
             PullRefreshIndicator(
@@ -123,6 +125,7 @@ private fun GameDetailsContent(
     onNewsDetails: (NewsPreview) -> Unit,
     onMedia: (String, Int, Int) -> Unit,
     onComments: (String, String) -> Unit,
+    onGameOwners: (String) -> Unit,
 ) {
 
     val game = allInfo.game
@@ -212,7 +215,7 @@ private fun GameDetailsContent(
                             )
 
                             GameDetailsButtonType.Comments -> onComments(game.alias, "games")
-                            GameDetailsButtonType.HasGame -> onComments(game.alias, "games")
+                            GameDetailsButtonType.HasGame -> onGameOwners(game.alias)
                             GameDetailsButtonType.Sell -> onComments(game.alias, "games")
                             GameDetailsButtonType.Buy -> onComments(game.alias, "games")
                             GameDetailsButtonType.GameReports -> onComments(game.alias, "games")

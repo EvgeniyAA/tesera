@@ -21,6 +21,7 @@ import com.tesera.feature.media.MediaScreen
 import com.tesera.feature.news.NewsScreen
 import com.tesera.feature.profile.ProfileScreen
 import com.tesera.feature.search.SearchScreen
+import com.tesera.feature.users.UserListScreen
 
 
 @Composable
@@ -41,6 +42,11 @@ fun DashboardNavGraph() {
     val onMedia = remember(navController) {
         { alias: String, linksTotal: Int, filesTotal: Int ->
             navController.navigate("${NavigationTree.Media.name}/$alias/$linksTotal/$filesTotal")
+        }
+    }
+    val onGameOwners = remember(navController) {
+        { alias: String ->
+            navController.navigate("${NavigationTree.Owners.name}/$alias")
         }
     }
 
@@ -65,7 +71,8 @@ fun DashboardNavGraph() {
         composable(route = NavigationTree.Games.name) {
             GamesScreen(navController)
         }
-        composable(route = "${NavigationTree.GamesDetails.name}/{alias}",
+        composable(
+            route = "${NavigationTree.GamesDetails.name}/{alias}",
             arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType })
         ) {
             GameDetailsScreen(
@@ -73,7 +80,8 @@ fun DashboardNavGraph() {
                 onGameDetails = onGameDetailsScreen,
                 onComments = onComments,
                 onMedia = onMedia,
-                onNewsDetails = onNewsDetailsScreen
+                onNewsDetails = onNewsDetailsScreen,
+                onGameOwners = onGameOwners
             )
         }
         composable(
@@ -101,6 +109,12 @@ fun DashboardNavGraph() {
                 alias = it.arguments?.getString("alias").orEmpty(),
                 navController = navController
             )
+        }
+        composable(
+            route = "${NavigationTree.Owners.name}/{alias}",
+            arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType })
+        ) {
+            UserListScreen(onBack = onBack, onAuthorClicked = {})
         }
     }
 }

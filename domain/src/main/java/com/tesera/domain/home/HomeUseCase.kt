@@ -14,7 +14,7 @@ class HomeUseCase @Inject constructor(
     private val gamesRepository: GamesRepository,
     private val newsRepository: NewsRepository,
 ) {
-    suspend fun latestHotnessGames(): Flow<HomePartialState> = flow {
+    fun latestHotnessGames(): Flow<HomePartialState> = flow {
         emit(HomePartialState.GamesLoading.partial())
         try {
             val result = gamesRepository.getLatestGames(
@@ -26,7 +26,7 @@ class HomeUseCase @Inject constructor(
         }
     }
 
-    suspend fun latestNews(): Flow<HomePartialState> = flow {
+    fun latestNews(): Flow<HomePartialState> = flow {
         emit(HomePartialState.NewsLoading)
         try {
             val result = newsRepository.getLatestNews(NewsPageParams())
@@ -36,6 +36,5 @@ class HomeUseCase @Inject constructor(
         }
     }
 
-    suspend fun getContent() = merge(latestHotnessGames(), latestNews())
-
+    fun getContent() = merge(latestHotnessGames(), latestNews())
 }

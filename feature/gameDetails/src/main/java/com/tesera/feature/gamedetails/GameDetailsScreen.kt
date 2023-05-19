@@ -55,6 +55,7 @@ import com.tesera.designsystem.theme.components.RatingView
 import com.tesera.designsystem.theme.components.SlidingCarousel
 import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.designsystem.theme.components.minimumHeightModifier
+import com.tesera.domain.market.MarketType
 import com.tesera.domain.model.GameDetails
 import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.model.toPreview
@@ -68,6 +69,7 @@ fun GameDetailsScreen(
     onMedia: (String, Int, Int) -> Unit,
     onNewsDetails: (NewsPreview) -> Unit,
     onGameOwners: (String) -> Unit,
+    onMarket: (String?, String?, MarketType) -> Unit,
     viewModel: GameDetailsViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.gameDetailsViewState.collectAsState()
@@ -105,7 +107,8 @@ fun GameDetailsScreen(
                     onNewsDetails,
                     onMedia,
                     onComments,
-                    onGameOwners
+                    onGameOwners,
+                    onMarket
                 )
             }
             PullRefreshIndicator(
@@ -126,6 +129,7 @@ private fun GameDetailsContent(
     onMedia: (String, Int, Int) -> Unit,
     onComments: (String, String) -> Unit,
     onGameOwners: (String) -> Unit,
+    onMarket: (String?, String?, MarketType) -> Unit,
 ) {
 
     val game = allInfo.game
@@ -216,8 +220,9 @@ private fun GameDetailsContent(
 
                             GameDetailsButtonType.Comments -> onComments(game.alias, "games")
                             GameDetailsButtonType.HasGame -> onGameOwners(game.alias)
-                            GameDetailsButtonType.Sell -> onComments(game.alias, "games")
-                            GameDetailsButtonType.Buy -> onComments(game.alias, "games")
+                            GameDetailsButtonType.Sell ->
+                                onMarket(game.alias, null, MarketType.Sell)
+                            GameDetailsButtonType.Buy -> onMarket(game.alias, null, MarketType.Buy)
                             GameDetailsButtonType.GameReports -> onComments(game.alias, "games")
                         }
                     }

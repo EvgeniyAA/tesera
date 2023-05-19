@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteGameRepository @Inject constructor(
@@ -24,6 +25,7 @@ class RemoteGameRepository @Inject constructor(
     override suspend fun getLatestGames(params: GamesFilter): List<GamePreview> =
         withContext(ioDispatcher) {
             datasource.getGames(params.limit, params.offset, params.type.value, params.sort.value)
+                .onEach { if (it.id == null || it.id == 0) Timber.e("Danger! $it \nbggId is incorrect") }
                 .map { it.toGamePreviewModel() }
 
         }

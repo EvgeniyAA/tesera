@@ -12,6 +12,7 @@ enum class NavigationTree {
     Comments,
     Media,
     Owners,
+    Market,
 }
 
 object TeseraDestinations {

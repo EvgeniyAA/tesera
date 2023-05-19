@@ -129,7 +129,7 @@ private fun LazyListScope.HotnessGames(
 
     items(
         items = games,
-        key = { game -> game.bggId }
+        key = { game -> game.id }
     ) {
         GamePreviewContent(it) { onGameDetails(it.alias) }
     }

@@ -15,18 +15,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteNewsRepository @Inject constructor(
     @Dispatcher(TeseraDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-    private val datasource: NetworkDataSource
+    private val datasource: NetworkDataSource,
 ) : NewsRepository {
 
-    override suspend fun getLatestNews(params: NewsPageParams): List<NewsPreview> = withContext(ioDispatcher) {
-        datasource.getNews(params.limit, params.offset)
-            .map { it.toModel() }
-            .onEach { println(it.toString()) }
-    }
+    override suspend fun getLatestNews(params: NewsPageParams): List<NewsPreview> =
+        withContext(ioDispatcher) {
+            datasource.getNews(params.limit, params.offset)
+                .onEach { if (it.objectId == null || it.objectId == 0) Timber.e("Danger! objectId is incorrect") }
+                .map { it.toModel() }
+        }
 
     override fun getNews(params: NewsPageParams): Flow<PagingData<NewsPreview>> = Pager(
         config = PagingConfig(pageSize = 20),

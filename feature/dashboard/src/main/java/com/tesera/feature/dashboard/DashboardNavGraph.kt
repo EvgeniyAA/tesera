@@ -9,14 +9,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tesera.base.newsdetails.NewsDetailsScreen
 import com.tesera.core.constants.KEY_ALIAS
+import com.tesera.core.constants.KEY_MARKET_TYPE
 import com.tesera.core.constants.KEY_OBJECT_TYPE
+import com.tesera.core.constants.KEY_USER
 import com.tesera.core.ui.NavigationTree
+import com.tesera.domain.market.MarketType
 import com.tesera.domain.model.NewsPreview
 import com.tesera.domain.model.NewsType
 import com.tesera.feature.comments.CommentsScreen
 import com.tesera.feature.gamedetails.GameDetailsScreen
 import com.tesera.feature.games.GamesScreen
 import com.tesera.feature.home.HomeScreen
+import com.tesera.feature.market.MarketScreen
 import com.tesera.feature.media.MediaScreen
 import com.tesera.feature.news.NewsScreen
 import com.tesera.feature.profile.ProfileScreen
@@ -47,6 +51,17 @@ fun DashboardNavGraph() {
     val onGameOwners = remember(navController) {
         { alias: String ->
             navController.navigate("${NavigationTree.Owners.name}/$alias")
+        }
+    }
+
+    val onMarket = remember(navController) {
+        { alias: String?, user: String?, marketType: MarketType ->
+            when {
+                alias.isNullOrEmpty() && user.isNullOrEmpty() -> navController.navigate("${NavigationTree.Market.name}/$marketType")
+                alias.isNullOrEmpty() -> navController.navigate("${NavigationTree.Market.name}/$marketType?user=$user")
+                user.isNullOrEmpty() -> navController.navigate("${NavigationTree.Market.name}/$marketType?alias=$alias")
+                else -> navController.navigate("${NavigationTree.Market.name}/$marketType?alias=$alias?user=$user")
+            }
         }
     }
 
@@ -81,7 +96,8 @@ fun DashboardNavGraph() {
                 onComments = onComments,
                 onMedia = onMedia,
                 onNewsDetails = onNewsDetailsScreen,
-                onGameOwners = onGameOwners
+                onGameOwners = onGameOwners,
+                onMarket = onMarket
             )
         }
         composable(
@@ -115,6 +131,22 @@ fun DashboardNavGraph() {
             arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType })
         ) {
             UserListScreen(onBack = onBack, onAuthorClicked = {})
+        }
+        composable(
+            route = "${NavigationTree.Market.name}/{marketType}?alias={alias}&user={user}",
+            arguments = listOf(
+                navArgument(KEY_MARKET_TYPE) { type = NavType.EnumType(MarketType::class.java) },
+                navArgument(KEY_ALIAS) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(KEY_USER) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+            )
+        ) {
+            MarketScreen(onBack, onGameDetailsScreen)
         }
     }
 }

@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:news"))
     implementation(project(":feature:newsDetails"))
     implementation(project(":feature:users"))
+    implementation(project(":feature:market"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

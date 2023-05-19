@@ -36,6 +36,13 @@ class NetworkDataSource @Inject constructor(
     suspend fun getFiles(alias: String, limit: Int) = api.files(alias, limit)
 
     suspend fun getOwners(alias: String, limit: Int, offset: Int) = api.owns(alias, limit, offset)
+
+    suspend fun purchases(limit: Int, offset: Int, alias: String? = null, user: String? = null) =
+        api.purchases(limit, offset, alias, user)
+
+    suspend fun sales(limit: Int, offset: Int, alias: String? = null, user: String? = null) =
+        api.sales(limit, offset, alias, user)
+
     fun downloadFile(gameFile: GameFile): Response {
         val request = Request.Builder().url(gameFile.photoUrl).build()
         return OkHttpClient().newCall(request).execute()

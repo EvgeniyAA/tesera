@@ -11,6 +11,7 @@ import com.tesera.domain.authentication.LoginRepository
 import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.gameDetails.GameDetailsRepository
 import com.tesera.domain.games.GamesRepository
+import com.tesera.domain.market.MarketRepository
 import com.tesera.domain.media.MediaRepository
 import com.tesera.domain.news.NewsDetailsRepository
 import com.tesera.domain.news.NewsRepository
@@ -43,6 +44,9 @@ interface DataModule {
 
     @Binds
     fun bindsUsersRepository(usersRepository: RemoteUsersRepository): UsersRepository
+
+    @Binds
+    fun bindsMarketRepository(marketRepository: RemoteMarketRepository): MarketRepository
 
     @Binds
     fun bindsMediaRepository(mediaRepository: RemoteMediaRepository): MediaRepository

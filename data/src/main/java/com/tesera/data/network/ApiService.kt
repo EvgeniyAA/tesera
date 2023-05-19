@@ -92,22 +92,24 @@ interface ApiService {
     suspend fun sales(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int?,
-        @Query("alias") alias: String?
-    ): List<Any>
+        @Query("game") alias: String?,
+        @Query("user") user: String?,
+    ): List<MarketItemResponse>
 
     // покупают
     @GET("/trade/purchases/")
     suspend fun purchases(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int?,
-        @Query("alias") alias: String?
-    ): List<Any>
+        @Query("game") alias: String?,
+        @Query("user") user: String?,
+    ): List<MarketItemResponse>
 
     @GET("/reports/")
     suspend fun reports(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
         @Query("game") alias: String,
-        @Query("AccessType") accessType: Int?
+        @Query("AccessType") accessType: Int?,
     ): List<Any>
 }

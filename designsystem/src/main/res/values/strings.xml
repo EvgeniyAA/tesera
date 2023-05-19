@@ -6,6 +6,7 @@
     <string name="show_more">  Показать еще</string>
     <string name="publications_and_files">Ссылки и файлы</string>
     <string name="has_game">Владеют игрой</string>
+    <string name="market">Барахолка</string>
     <string name="comments">Комментарии</string>
     <string name="game_reports">Игровые отчеты</string>
     <string name="people_sell">Продают</string>
@@ -23,6 +24,10 @@
     <string name="journal">Отчет</string>
     <string name="thought">Мысли</string>
     <string name="article">Статья</string>
+
+    <string name="game_condition_new">Новая</string>
+    <string name="game_condition_used">б/у</string>
+    <string name="game_condition_any">Любая</string>
 
 
     <string name="somethin_went_wrong">Что-то пошло не так</string>

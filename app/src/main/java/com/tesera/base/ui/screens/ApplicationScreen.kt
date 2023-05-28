@@ -3,6 +3,7 @@ package com.tesera.base.ui.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,13 +17,16 @@ import com.tesera.feature.splash.SplashScreen
 @Composable
 fun ApplicationScreen() {
     val navController = rememberNavController()
+    val onDashboard: () -> Unit = remember(navController) {
+        {
+            navController.navigate(NavigationTree.Dashboard.name) {
+                popUpTo(NavigationTree.Splash.name) { inclusive = true }
+            }
+        }
+    }
     NavHost(navController = navController, startDestination = NavigationTree.Splash.name) {
         composable(route = NavigationTree.Splash.name) {
-            ScreenContainer { SplashScreen {
-                navController.navigate(NavigationTree.Dashboard.name) {
-                    popUpTo(NavigationTree.Splash.name) { inclusive = true }
-                }
-            } }
+            ScreenContainer { SplashScreen { onDashboard() } }
         }
         composable(route = NavigationTree.Login.name) {
             ScreenContainer { LoginScreen(navController) }

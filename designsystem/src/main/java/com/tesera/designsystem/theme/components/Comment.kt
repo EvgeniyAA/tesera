@@ -2,7 +2,12 @@ package com.tesera.designsystem.theme.components
 
 import android.text.Html
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,8 +23,7 @@ import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.TeseraTheme
 import com.tesera.domain.model.Author
 import com.tesera.domain.model.CommentModel
-import com.tesera.domain.model.TeseraObjectModel
-import java.util.*
+import java.util.Date
 
 @Composable
 fun Comment(
@@ -27,10 +31,11 @@ fun Comment(
     modifier: Modifier = Modifier,
     onExpandedClicked: (Int) -> Unit,
     onLikeClicked: (Int) -> Unit,
+    onUserClicked: () -> Unit
 ) {
     Row(modifier = modifier) {
         val iconSize = if (commentModel.parentId == null) 40f else 20f
-        Avatar(author = commentModel.author, avatarSize = iconSize)
+        Avatar(author = commentModel.author, avatarSize = iconSize, onUserClicked)
         Column(modifier = Modifier.padding(horizontal = 4.dp)) {
 
             Text(text = commentModel.author.name, style = AppTheme.typography.body1)
@@ -96,7 +101,8 @@ fun Comment_Preview() {
                 Author(0, 0, "User123", "Ivan", "", 13, ""),
             ),
             onExpandedClicked = { },
-            onLikeClicked = {}
+            onLikeClicked = {},
+            onUserClicked = {}
         )
     }
 }

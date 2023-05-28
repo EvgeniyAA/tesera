@@ -15,6 +15,7 @@ import com.tesera.domain.market.MarketRepository
 import com.tesera.domain.media.MediaRepository
 import com.tesera.domain.news.NewsDetailsRepository
 import com.tesera.domain.news.NewsRepository
+import com.tesera.domain.search.SearchRepository
 import com.tesera.domain.users.UsersRepository
 import dagger.Binds
 import dagger.Module
@@ -32,6 +33,9 @@ interface DataModule {
 
     @Binds
     fun bindsGamesRepository(gamesRepository: RemoteGameRepository): GamesRepository
+
+    @Binds
+    fun bindsSearchRepository(searchRepository: RemoteSearchRepository): SearchRepository
 
     @Binds
     fun bindsGameDetailsRepository(gameDetailsRepository: RemoteGameDetailsRepository): GameDetailsRepository

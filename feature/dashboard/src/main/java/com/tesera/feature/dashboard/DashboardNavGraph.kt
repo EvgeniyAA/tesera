@@ -2,10 +2,10 @@ package com.tesera.feature.dashboard
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tesera.base.newsdetails.NewsDetailsScreen
 import com.tesera.core.constants.KEY_ALIAS
@@ -29,8 +29,7 @@ import com.tesera.feature.users.UserListScreen
 
 
 @Composable
-fun DashboardNavGraph() {
-    val navController = rememberNavController()
+fun DashboardNavGraph(navController: NavHostController) {
     val onBack: () -> Unit = remember(navController) { { navController.popBackStack() } }
     val onNewsDetailsScreen =
         remember(navController) { { news: NewsPreview -> navController.navigate("${NavigationTree.NewsDetails.name}/${news.objectType.name}/${news.alias}") } }
@@ -65,6 +64,15 @@ fun DashboardNavGraph() {
         }
     }
 
+    val onProfile = remember(navController) {
+        { user: String? ->
+            when {
+                user.isNullOrEmpty() -> navController.navigate(NavigationTree.Profile.name)
+                else ->navController.navigate("${NavigationTree.Profile.name}?user=$user")
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = NavigationTree.Home.name
@@ -78,10 +86,21 @@ fun DashboardNavGraph() {
             )
         }
         composable(route = NavigationTree.Search.name) {
-            SearchScreen(navController)
+            SearchScreen(onGameDetails = onGameDetailsScreen)
         }
-        composable(route = NavigationTree.Profile.name) {
-            ProfileScreen(navController)
+        composable(
+            route = "${NavigationTree.Profile.name}?user={user}",
+            arguments = listOf(navArgument(KEY_USER) {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) {
+            ProfileScreen()
+        }
+        composable(
+            route = NavigationTree.Profile.name
+        ) {
+            ProfileScreen()
         }
         composable(route = NavigationTree.Games.name) {
             GamesScreen(navController)
@@ -105,7 +124,7 @@ fun DashboardNavGraph() {
             arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType },
                 navArgument(KEY_OBJECT_TYPE) { type = NavType.StringType })
         ) {
-            CommentsScreen(onBack = onBack)
+            CommentsScreen(onBack = onBack, onUserClicked = onProfile)
         }
         composable(route = "${NavigationTree.Media.name}/{alias}/{linksLimit}/{filesLimit}") {
             MediaScreen(
@@ -130,7 +149,7 @@ fun DashboardNavGraph() {
             route = "${NavigationTree.Owners.name}/{alias}",
             arguments = listOf(navArgument(KEY_ALIAS) { type = NavType.StringType })
         ) {
-            UserListScreen(onBack = onBack, onAuthorClicked = {})
+            UserListScreen(onBack = onBack, onAuthorClicked = onProfile)
         }
         composable(
             route = "${NavigationTree.Market.name}/{marketType}?alias={alias}&user={user}",

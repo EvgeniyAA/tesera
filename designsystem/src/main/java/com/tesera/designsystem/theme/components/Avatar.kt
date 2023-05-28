@@ -1,9 +1,11 @@
 package com.tesera.designsystem.theme.components
 
 import androidx.annotation.ColorInt
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -22,14 +24,15 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun Avatar(author: Author, avatarSize: Float) {
+fun Avatar(author: Author, avatarSize: Float, onClick: () -> Unit = {}) {
     AsyncImage(
         model = author.avatarUrl,
         contentDescription = author.name,
         contentScale = ContentScale.Crop,
-        modifier = androidx.compose.ui.Modifier
+        modifier = Modifier
             .size(avatarSize.dp)
-            .clip(CircleShape),
+            .clip(CircleShape)
+            .clickable(onClick = onClick),
         placeholder = TextPainter(
             Color((author.name + author.login).toHslColor()),
             circleSize = avatarSize,
@@ -52,7 +55,7 @@ fun Avatar(owner: GameOwner, avatarSize: Float) {
         model = owner.avatarUrl,
         contentDescription = owner.name,
         contentScale = ContentScale.Crop,
-        modifier = androidx.compose.ui.Modifier
+        modifier = Modifier
             .size(avatarSize.dp)
             .clip(CircleShape),
         placeholder = TextPainter(

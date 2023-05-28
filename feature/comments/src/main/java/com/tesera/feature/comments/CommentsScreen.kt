@@ -23,6 +23,7 @@ import com.tesera.feature.comments.models.CommentsIntent
 @Composable
 fun CommentsScreen(
     onBack: () -> Unit,
+    onUserClicked: (String) -> Unit,
     commentsViewModel: CommentsViewModel = hiltViewModel(),
 ) {
 
@@ -37,7 +38,7 @@ fun CommentsScreen(
         }
     ) {
         Box(modifier = Modifier.padding(it)) {
-            CommentsList(commentsViewModel, state.comments)
+            CommentsList(commentsViewModel, state.comments, onUserClicked)
         }
     }
 }
@@ -46,6 +47,7 @@ fun CommentsScreen(
 fun CommentsList(
     commentsViewModel: CommentsViewModel,
     comments: List<CommentModel>,
+    onUserClicked: (String) -> Unit,
 ) {
     val listState = rememberLazyListState()
 
@@ -62,7 +64,7 @@ fun CommentsList(
                 commentsViewModel.obtainIntent(CommentsIntent.CommentExpanded(id))
             }, onLikeClicked = { id ->
                 commentsViewModel.obtainIntent(CommentsIntent.CommentLiked(id))
-            })
+            }, onUserClicked = { onUserClicked(it.author.login) })
         }
     }
 }

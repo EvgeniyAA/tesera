@@ -57,6 +57,12 @@ interface ApiService {
         @Query("sort") sort: String,
     ): List<GameResponse>
 
+    @GET("/search/games")
+    suspend fun searchGames(
+        @Query("query") query: String,
+        @Query("limit") limit: Int = 10,
+    ): List<SearchItemResponse>
+
     @GET("/games/{alias}")
     suspend fun gameDetails(@Path("alias") id: String): GameDetailsResponse
 
@@ -112,4 +118,19 @@ interface ApiService {
         @Query("game") alias: String,
         @Query("AccessType") accessType: Int?,
     ): List<Any>
+
+    @GET("/user/{username}")
+    suspend fun profile(
+        @Path("username") username: String
+    ): ProfileResponse
+
+    @GET("/collections/user/{username}")
+    suspend fun userCollections(
+        @Path("username") username: String
+    ): CollectionsResponse
+
+    @GET("/reports/user/{username}/info")
+    suspend fun userReports(
+        @Path("username") username: String
+    ): UserReportsInfoResponse
 }

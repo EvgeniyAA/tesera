@@ -6,7 +6,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,19 +26,19 @@ import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.theme.AppTheme
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(navController: NavHostController = rememberNavController()) {
+
     Scaffold(
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(navController) },
     ) {
         Box(modifier = Modifier.padding(it)) {
-            DashboardNavGraph()
+            DashboardNavGraph(navController)
         }
     }
 }
 
 @Composable
-fun BottomBar() {
-    val navController: NavHostController = rememberNavController()
+fun BottomBar(navController: NavHostController) {
     val bottomNavItems = listOf(
         BottomNavItem(
             name = stringResource(id = R.string.title_home),
@@ -63,7 +68,7 @@ fun BottomBar() {
                     ?.any { it.route == item.route } == true
 
                 val contentColor =
-                    if (selected) AppTheme.colors.primaryTextColor else com.tesera.designsystem.theme.AppTheme.colors.secondaryTextColor
+                    if (selected) AppTheme.colors.primaryTextColor else AppTheme.colors.secondaryTextColor
                 NavigationBarItem(
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = AppTheme.colors.interactiveBackground,

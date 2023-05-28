@@ -20,6 +20,8 @@ class NetworkDataSource @Inject constructor(
     suspend fun getGames(limit: Int, offset: Int, type: String, sort: String) =
         api.games(limit, offset, type, sort)
 
+    suspend fun searchGames(query: String) = api.searchGames(query)
+
     suspend fun getGameDetails(alias: String) = api.gameDetails(alias)
 
     suspend fun getNews(limit: Int, offset: Int) =
@@ -52,4 +54,8 @@ class NetworkDataSource @Inject constructor(
     suspend fun getThoughts(alias: String) = api.thoughts(alias)
     suspend fun getArticles(alias: String) = api.articles(alias)
     suspend fun getJournals(alias: String) = api.journals(alias)
+
+    suspend fun profile(username: String) = api.profile(username)
+    suspend fun userCollections(username: String) = api.userCollections(username)
+    suspend fun userReports(username: String) = api.userReports(username)
 }

@@ -16,7 +16,7 @@ import com.tesera.designsystem.theme.components.TeseraToolbar
 @Composable
 fun UserListScreen(
     onBack: () -> Unit,
-    onAuthorClicked: () -> Unit,
+    onAuthorClicked: (String) -> Unit,
     viewModel: UserListViewModel = hiltViewModel(),
 ) {
     val owners = viewModel.owners.collectAsLazyPagingItems()
@@ -26,7 +26,11 @@ fun UserListScreen(
     ) {
         LazyColumn(Modifier.padding(it)) {
             items(owners, key = { key -> key.teseraId }) {
-                it?.let { owner -> OwnerItem(owner = owner, onAuthorClicked) }
+                it?.let { owner ->
+                    OwnerItem(
+                        owner = owner,
+                        onAuthorClicked = { onAuthorClicked(it.login) })
+                }
             }
         }
     }

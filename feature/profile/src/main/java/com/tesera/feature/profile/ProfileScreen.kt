@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -135,7 +136,7 @@ private fun Body(scroll: ScrollState, profileData: ProfileData?) {
                 contentColor = AppTheme.colors.primaryBackground
             ),
         ) {
-            Text(text = profileData.toString(), color = AppTheme.colors.secondaryTextColor)
+            Text(text = profileData.toString(), color = AppTheme.colors.secondaryTextColor, modifier = Modifier.padding(top = AVATAR_RADIUS.dp))
         }
     }
 }
@@ -209,8 +210,12 @@ private fun CollapsingAvatar(
             modifier = modifier
                 .align(Alignment.TopCenter)
                 .padding(top = avatarY)
+                .shadow(
+                    elevation = 10.dp,
+                    shape = CircleShape
+                )
                 .size(avatarSize.dp)
-                .clip(CircleShape),
+            ,
             placeholder = TextPainter(
                 Color((user?.name + user?.login).toHslColor()),
                 circleSize = avatarSize,

@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">core</string>
+
+    <string name="title_profile">Профиль</string>
+    <string name="title_home">Главная</string>
+    <string name="title_search">Поиск</string>
+
     <string name="hotness_title">Самое обсуждаемое</string>
     <string name="news_title">Новости</string>
     <string name="more">Еще</string>

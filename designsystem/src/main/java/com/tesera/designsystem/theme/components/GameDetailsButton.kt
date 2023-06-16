@@ -44,19 +44,10 @@ fun GameDetailsButton(
                     text = gameDetailsButtonModel.title,
                     color = AppTheme.colors.lightTextColor,
                 )
-                Surface(
-                    modifier = Modifier
-                        .padding(top = 4.dp),
-                    shape = CircleShape,
-                    color = Color.Black.copy(alpha = 0.2f)
-                ) {
-                    Text(
-                        modifier = Modifier.padding(2.dp),
-                        text = gameDetailsButtonModel.count.toString(),
-                        style = AppTheme.typography.hint,
-                        color = AppTheme.colors.lightTextColor,
-                    )
-                }
+                LabelWithBackground(
+                    text = gameDetailsButtonModel.count.toString(),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
 
             AsyncImage(

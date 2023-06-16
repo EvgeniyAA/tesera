@@ -1,9 +1,11 @@
 package com.tesera.data.network.model.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.tesera.core.utils.toDate
 import com.tesera.domain.model.User
 
+@Keep
 data class UserResponse(
     @SerializedName("teseraId") val teseraId: Int? = null,
     @SerializedName("login") val login: String? = null,
@@ -21,8 +23,8 @@ data class UserResponse(
     @SerializedName("articlesAdded") val articlesAdded: Int? = null,
     @SerializedName("journalsAdded") val journalsAdded: Int? = null,
     @SerializedName("thoughtsAdded") val thoughtsAdded: Int? = null,
-    @SerializedName("country") val country: LocationResponse? = LocationResponse(),
-    @SerializedName("city") val city: LocationResponse? = LocationResponse(),
+    @SerializedName("country") val country: LocationResponse? = null,
+    @SerializedName("city") val city: LocationResponse? = null,
 )
 
 fun UserResponse?.toModel() = User(

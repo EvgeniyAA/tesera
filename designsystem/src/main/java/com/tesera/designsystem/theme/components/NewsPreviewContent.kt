@@ -2,8 +2,6 @@ package com.tesera.designsystem.theme.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -31,6 +29,7 @@ import java.util.*
 fun NewsPreviewContent(
     news: NewsPreview,
     onClick: (NewsPreview) -> Unit,
+    onUserClicked: (String) -> Unit,
 ) {
     val type = when (news.objectType) {
         NewsType.News -> R.string.news
@@ -42,9 +41,9 @@ fun NewsPreviewContent(
 
     Card(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .padding(horizontal = AppTheme.padding.medium, vertical = AppTheme.padding.small)
             .fillMaxSize(),
-        shape = RoundedCornerShape(corner = CornerSize(16.dp)),
+        shape = AppTheme.shapes.medium,
         onClick = { onClick(news) }
     ) {
         Box(
@@ -55,7 +54,11 @@ fun NewsPreviewContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(
+                        start = AppTheme.padding.small,
+                        top = AppTheme.padding.small,
+                        bottom = AppTheme.padding.small
+                    )
             ) {
                 AsyncImage(
                     model = news.photoUrl,
@@ -63,9 +66,14 @@ fun NewsPreviewContent(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(96.dp)
-                        .clip(RoundedCornerShape(corner = CornerSize(16.dp)))
+                        .clip(AppTheme.shapes.medium)
                 )
-                Column(modifier = Modifier.padding(start = 8.dp, end = 8.dp)) {
+                Column(
+                    modifier = Modifier.padding(
+                        start = AppTheme.padding.small,
+                        end = AppTheme.padding.small
+                    )
+                ) {
                     if (type != null) {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             LabelWithBackground(
@@ -81,16 +89,20 @@ fun NewsPreviewContent(
                         overflow = TextOverflow.Ellipsis
                     )
                     if (news.author.name.isNotEmpty()) {
-                        Row(modifier = Modifier.padding(top = 4.dp)) {
+                        Row(modifier = Modifier.padding(top = AppTheme.padding.xSmall)) {
 
-                            Avatar(author = news.author, avatarSize = 20F)
+                            Avatar(
+                                author = news.author,
+                                avatarSize = 20F,
+                                onClick = { onUserClicked(news.author.login) }
+                            )
                             Text(
                                 text = news.author.name,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 style = AppTheme.typography.body2,
                                 modifier = Modifier
-                                    .padding(start = 2.dp)
+                                    .padding(start = AppTheme.padding.xxSmall)
                                     .align(Alignment.CenterVertically)
                             )
                         }
@@ -102,18 +114,20 @@ fun NewsPreviewContent(
                 modifier = Modifier
                     .fillMaxSize()
                     .align(Alignment.BottomEnd)
-                    .padding(top = 8.dp, end = 8.dp, bottom = 8.dp)
+                    .padding(
+                        top = AppTheme.padding.small,
+                        end = AppTheme.padding.small,
+                        bottom = AppTheme.padding.small
+                    )
             ) {
                 Row(modifier = Modifier.align(Alignment.BottomEnd)) {
                     IconWithText(
                         icon = R.drawable.ic_star,
-                        iconSize = 16,
                         text = news.rating.toString()
                     )
 
                     IconWithText(
                         icon = R.drawable.ic_people,
-                        iconSize = 16,
                         text = news.numVotes.toString()
                     )
 
@@ -127,7 +141,7 @@ fun NewsPreviewContent(
                     Text(
                         text = news.creationDateUtc.niceDateStr(),
                         style = AppTheme.typography.body2,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = AppTheme.padding.small)
                     )
                 }
             }
@@ -153,7 +167,7 @@ fun NewsContent_Preview() {
                 1,
                 12,
                 Author(1, 1, "AB", "Ivan", "", 1, "")
-            )
+            ), {}
         ) {}
     }
 }

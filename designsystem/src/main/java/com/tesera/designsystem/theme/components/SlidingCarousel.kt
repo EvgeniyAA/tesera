@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SlidingCarousel(
     modifier: Modifier = Modifier,
-    pagerState: PagerState = remember { PagerState() },
+    pagerState: PagerState,
     itemsCount: Int,
     itemContent: @Composable (index: Int) -> Unit,
 ) {

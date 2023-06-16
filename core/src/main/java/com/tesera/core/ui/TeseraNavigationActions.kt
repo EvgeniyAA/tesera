@@ -4,7 +4,7 @@ enum class NavigationTree {
     Splash,
     Login,
     Home,
-    Profile,
+    Profile, MyProfile,
     Search,
     Dashboard,
     Games, GamesDetails,

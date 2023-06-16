@@ -1,83 +1,75 @@
 package com.tesera.feature.games
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.tesera.core.ui.NavigationTree
 import com.tesera.designsystem.R
-import com.tesera.designsystem.theme.AppTheme
 import com.tesera.designsystem.theme.components.GamePreviewContent
-import com.tesera.designsystem.theme.components.StickyHeaderContent
+import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.GamePreview
-import com.tesera.feature.games.models.GamesAction
-import com.tesera.feature.games.models.GamesIntent
-import kotlinx.coroutines.launch
 
 @Composable
 fun GamesScreen(
-    navController: NavController,
+    onGameDetails: (String) -> Unit,
+    onBack: () -> Unit,
     gamesViewModel: GamesViewModel = hiltViewModel(),
 ) {
-    val games = gamesViewModel.getGames().collectAsLazyPagingItems()
-    val viewState = gamesViewModel.gamesViewState.collectAsState()
+//    val viewState = gamesViewModel.gamesViewState.collectAsState()
 
-    Column(
-        modifier = Modifier.background(AppTheme.colors.primaryBackground)
+    Scaffold(modifier = Modifier.fillMaxHeight(),
+        topBar = { TeseraToolbar(titleText = stringResource(id = R.string.hotness_title), navAction = onBack) }
     ) {
-        List(games, gamesViewModel)
+        val games = gamesViewModel.games.collectAsLazyPagingItems()
+        List(games, paddingValues = { it }, onGameDetails)
     }
-
-    LaunchedEffect(key1 = viewState.value.action, block = {
-        when (val action = viewState.value.action) {
-            GamesAction.None -> Unit
-            is GamesAction.ToGameDetails ->
-                navController.navigate("${NavigationTree.GamesDetails.name}/${action.game.alias}")
-        }
-    })
-
-    DisposableEffect(key1 = Unit, effect = {
-        onDispose {
-            gamesViewModel.obtainIntent(GamesIntent.ActionInvoked)
-        }
-    })
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun List(
     games: LazyPagingItems<GamePreview>,
-    gamesViewModel: GamesViewModel,
+    paddingValues: () -> PaddingValues,
+    onGameDetails: (String) -> Unit
 ) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
+    val refreshing by remember { mutableStateOf(false) }
 
-    LazyColumn(state = listState) {
-        stickyHeader {
-            StickyHeaderContent(R.drawable.ic_hotness, R.string.hotness_title)
-            {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(0)
-                }
-            }
-        }
+    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {})
+
+    Box(
+        modifier = Modifier
+            .padding(paddingValues())
+            .pullRefresh(pullRefreshState)
+    ) {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(
             items = games,
             key = { game -> game.id }
         ) {
             it?.let { game ->
-                GamePreviewContent(game) {
-                    gamesViewModel.obtainIntent(GamesIntent.GameDetailsClicked(game))
-                }
+                GamePreviewContent(game) { onGameDetails(game.alias) }
             }
         }
+    }
+        PullRefreshIndicator(
+            refreshing = refreshing,
+            state = pullRefreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
     }
 }

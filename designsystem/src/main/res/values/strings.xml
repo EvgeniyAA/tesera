@@ -37,4 +37,8 @@
 
     <string name="somethin_went_wrong">Что-то пошло не так</string>
     <string name="retry">Повторить</string>
+
+    <string name="empty_block">Здесь пока ничего нет</string>
+
+    <string name="user_photo">Фотографии пользователя</string>
 </resources>

@@ -8,5 +8,4 @@ data class GamesViewState(
 
 sealed class GamesAction {
     object None : GamesAction()
-    data class ToGameDetails(val game: GamePreview) : GamesAction()
 }

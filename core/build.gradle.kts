@@ -1,3 +1,4 @@
+import BuildTypes.performance
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 val SERVER_ENDPOINT = "\"https://api.tesera.ru/\""
 
@@ -21,6 +22,10 @@ android {
         getByName("release") {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+        performance {
+            initWith(getByName("debug"))
+            isMinifyEnabled = false
         }
     }
     namespace = "com.tesera.core"

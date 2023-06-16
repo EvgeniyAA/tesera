@@ -20,6 +20,7 @@ data class NewsPreview(
     val author: Author,
 )
 
+@Stable
 enum class NewsType {
     @SerializedName("News")
     News,

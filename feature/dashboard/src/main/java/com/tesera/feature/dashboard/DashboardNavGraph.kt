@@ -68,7 +68,7 @@ fun DashboardNavGraph(navController: NavHostController) {
         { user: String? ->
             when {
                 user.isNullOrEmpty() -> navController.navigate(NavigationTree.Profile.name)
-                else ->navController.navigate("${NavigationTree.Profile.name}?user=$user")
+                else -> navController.navigate("${NavigationTree.Profile.name}?user=$user")
             }
         }
     }
@@ -82,7 +82,8 @@ fun DashboardNavGraph(navController: NavHostController) {
                 onGameDetails = onGameDetailsScreen,
                 onGames = onGames,
                 onNews = onNews,
-                onNewsDetails = onNewsDetailsScreen
+                onNewsDetails = onNewsDetailsScreen,
+                onUserClicked = onProfile
             )
         }
         composable(route = NavigationTree.Search.name) {
@@ -95,15 +96,15 @@ fun DashboardNavGraph(navController: NavHostController) {
                 nullable = true
             })
         ) {
-            ProfileScreen()
+            ProfileScreen(onBack = onBack)
         }
         composable(
-            route = NavigationTree.Profile.name
+            route = NavigationTree.MyProfile.name
         ) {
-            ProfileScreen()
+            ProfileScreen(onBack = {})
         }
         composable(route = NavigationTree.Games.name) {
-            GamesScreen(navController)
+            GamesScreen(onGameDetailsScreen, onBack)
         }
         composable(
             route = "${NavigationTree.GamesDetails.name}/{alias}",
@@ -116,7 +117,8 @@ fun DashboardNavGraph(navController: NavHostController) {
                 onMedia = onMedia,
                 onNewsDetails = onNewsDetailsScreen,
                 onGameOwners = onGameOwners,
-                onMarket = onMarket
+                onMarket = onMarket,
+                onUserClicked = onProfile
             )
         }
         composable(
@@ -131,18 +133,20 @@ fun DashboardNavGraph(navController: NavHostController) {
                 alias = it.arguments?.getString("alias").orEmpty(),
                 linksLimit = it.arguments?.getString("linksLimit")?.toInt() ?: 0,
                 filesLimit = it.arguments?.getString("filesLimit")?.toInt() ?: 0,
-                navController = navController
+                onBack
             )
         }
 
         composable(route = NavigationTree.News.name) {
-            NewsScreen(onBack = onBack, onDetailsScreen = onNewsDetailsScreen)
+            NewsScreen(
+                onBack = onBack, onDetailsScreen = onNewsDetailsScreen, onUserClicked = onProfile
+            )
         }
         composable(route = "${NavigationTree.NewsDetails.name}/{newsType}/{alias}") {
             NewsDetailsScreen(
                 newsType = NewsType.valueOf(it.arguments?.getString("newsType").orEmpty()),
                 alias = it.arguments?.getString("alias").orEmpty(),
-                navController = navController
+                onBack
             )
         }
         composable(

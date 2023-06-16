@@ -14,7 +14,19 @@ private val LocalColorProvider = staticCompositionLocalOf<Colors> {
 }
 
 private val LocalTypographyProvider = staticCompositionLocalOf<TeseraTypography> {
-    error("No default colors provided")
+    error("No default typography provided")
+}
+
+private val LocalPaddingProvider = staticCompositionLocalOf<TeseraPadding> {
+    error("No default paddings provided")
+}
+
+private val LocalComponentSizeProvider = staticCompositionLocalOf<TeseraComponentSize> {
+    error("No default component size provided")
+}
+
+private val LocalShapesProvider = staticCompositionLocalOf<TeseraShapes> {
+    error("No default shapes provided")
 }
 
 object AppTheme {
@@ -24,7 +36,23 @@ object AppTheme {
         get() = LocalColorProvider.current
     val typography: TeseraTypography
         @Composable
+        @ReadOnlyComposable
         get() = LocalTypographyProvider.current
+
+    val padding: TeseraPadding
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalPaddingProvider.current
+
+    val sizes: TeseraComponentSize
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalComponentSizeProvider.current
+
+    val shapes: TeseraShapes
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalShapesProvider.current
 }
 
 
@@ -32,7 +60,7 @@ object AppTheme {
 fun TeseraTheme(
     textSize: TeseraSize = TeseraSize.Medium,
     darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val colors = if (!darkTheme) lightPalette else darkPalette
 
@@ -62,21 +90,21 @@ fun TeseraTheme(
             fontWeight = FontWeight.Bold
         ),
         heading4 = TextStyle(
-            fontSize = when(textSize) {
+            fontSize = when (textSize) {
                 TeseraSize.Small -> 26.sp
                 TeseraSize.Medium -> 30.sp
                 TeseraSize.Big -> 34.sp
             }
         ),
         heading5 = TextStyle(
-            fontSize = when(textSize) {
+            fontSize = when (textSize) {
                 TeseraSize.Small -> 16.sp
                 TeseraSize.Medium -> 20.sp
                 TeseraSize.Big -> 24.sp
             }
         ),
         heading6 = TextStyle(
-            fontSize = when(textSize) {
+            fontSize = when (textSize) {
                 TeseraSize.Small -> 12.sp
                 TeseraSize.Medium -> 16.sp
                 TeseraSize.Big -> 20.sp
@@ -90,14 +118,14 @@ fun TeseraTheme(
             }
         ),
         body2 = TextStyle(
-            fontSize = when(textSize) {
+            fontSize = when (textSize) {
                 TeseraSize.Small -> 10.sp
                 TeseraSize.Medium -> 12.sp
                 TeseraSize.Big -> 14.sp
             }
         ),
         bodySmall = TextStyle(
-            fontSize = when(textSize) {
+            fontSize = when (textSize) {
                 TeseraSize.Small -> 8.sp
                 TeseraSize.Medium -> 10.sp
                 TeseraSize.Big -> 12.sp
@@ -121,6 +149,9 @@ fun TeseraTheme(
     CompositionLocalProvider(
         LocalColorProvider provides colors,
         LocalTypographyProvider provides typography,
+        LocalPaddingProvider provides paddings,
+        LocalComponentSizeProvider provides sizes,
+        LocalShapesProvider provides shapes,
         content = content
     )
 }

@@ -1,5 +1,8 @@
 package com.tesera.domain.model
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class GameFile(
     val teseraId: Int,
     val objectType: String,

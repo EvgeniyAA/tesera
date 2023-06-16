@@ -1,6 +1,7 @@
 package com.tesera.feature.home.models
 
 import androidx.compose.runtime.Stable
+import com.tesera.core.mvi.UiState
 import com.tesera.domain.model.GamePreview
 import com.tesera.domain.model.NewsPreview
 
@@ -12,4 +13,10 @@ data class HomeViewState(
     val isNewsLoading: Boolean = true,
     val newsLoadingError: Throwable? = null,
     val gamesLoadingError: Throwable? = null,
-)
+    val action: HomeAction = HomeAction.None
+) : UiState
+
+@Stable
+sealed class HomeAction {
+    object None: HomeAction()
+}

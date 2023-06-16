@@ -33,20 +33,19 @@ fun Avatar(author: Author, avatarSize: Float, onClick: () -> Unit = {}) {
             .size(avatarSize.dp)
             .clip(CircleShape)
             .clickable(onClick = onClick),
-        placeholder = TextPainter(
-            Color((author.name + author.login).toHslColor()),
-            circleSize = avatarSize,
-            textMeasurer = rememberTextMeasurer(),
-            author.name.substring(0, minOf(2, author.name.length)).uppercase()
-        ),
-        error = TextPainter(
-            Color((author.name + author.login).toHslColor()),
-            circleSize = avatarSize,
-            textMeasurer = rememberTextMeasurer(),
-            author.name.substring(0, minOf(2, author.name.length)).uppercase()
-        ),
+        placeholder = avatarTextPainter(author.name, author.login, avatarSize),
+        error = avatarTextPainter(author.name, author.login, avatarSize),
     )
 }
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun avatarTextPainter(name: String?, login: String?, avatarSize: Float) = TextPainter(
+    Color((name + login).toHslColor()),
+    circleSize = avatarSize,
+    textMeasurer = rememberTextMeasurer(),
+    name?.substring(0, minOf(2, name.length))?.uppercase() ?: ""
+)
 
 @OptIn(ExperimentalTextApi::class)
 @Composable

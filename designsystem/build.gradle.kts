@@ -1,3 +1,5 @@
+import BuildTypes.performance
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -22,6 +24,10 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        performance {
+            initWith(getByName("debug"))
+            isMinifyEnabled = false
         }
     }
     compileOptions {

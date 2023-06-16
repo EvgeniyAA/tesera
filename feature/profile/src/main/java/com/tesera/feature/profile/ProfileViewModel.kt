@@ -35,7 +35,6 @@ class ProfileViewModel @Inject constructor(
                     obtainIntent(it.mapToIntent())
                 }
             }
-
         }
     }
 

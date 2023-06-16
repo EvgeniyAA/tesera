@@ -18,22 +18,20 @@ import androidx.paging.compose.items
 import com.tesera.designsystem.theme.components.NewsPreviewContent
 import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.NewsPreview
-import com.tesera.feature.news.models.NewsViewState
 import timber.log.Timber
 
 @Composable
 fun NewsScreen(
     onBack: () -> Unit,
     onDetailsScreen: (NewsPreview) -> Unit,
+    onUserClicked: (String) -> Unit,
     viewModel: NewsViewModel = hiltViewModel(),
 ) {
-//    val viewState by remember(viewModel) { viewModel.viewState }.collectAsState()
-    val news = viewModel.news.collectAsLazyPagingItems()
-    val title = stringResource(id = R.string.news_title)
     Scaffold(modifier = Modifier.fillMaxHeight(),
-        topBar = { TeseraToolbar(titleText = title) { onBack() } }
+        topBar = { TeseraToolbar(titleText = stringResource(id = R.string.news_title), navAction = onBack) }
     ) {
-        NewsList(news, paddingValues = { it }, onDetailsScreen)
+        val news = viewModel.news.collectAsLazyPagingItems()
+        NewsList(news, paddingValues = { it }, onDetailsScreen, onUserClicked)
     }
 }
 
@@ -43,9 +41,8 @@ fun NewsList(
     news: LazyPagingItems<NewsPreview>,
     paddingValues: () -> PaddingValues,
     onDetailsScreen: (NewsPreview) -> Unit,
+    onUserClicked: (String) -> Unit,
 ) {
-    Timber.d("News list recomposed")
-
     val refreshing by remember { mutableStateOf(false) }
 
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {})
@@ -58,7 +55,11 @@ fun NewsList(
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(news, key = { key -> key.objectId }) {
                 it?.let {
-                    NewsPreviewContent(news = it) { onDetailsScreen(it) }
+                    NewsPreviewContent(
+                        news = it,
+                        onClick = onDetailsScreen,
+                        onUserClicked = onUserClicked
+                    )
                 }
             }
         }

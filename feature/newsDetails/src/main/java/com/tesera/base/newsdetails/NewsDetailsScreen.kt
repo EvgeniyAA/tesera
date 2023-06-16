@@ -33,7 +33,7 @@ import com.tesera.feature.newsdetails.R
 fun NewsDetailsScreen(
     newsType: NewsType,
     alias: String,
-    navController: NavController,
+    onBack: () -> Unit,
     viewModel: NewsDetailsViewModel = hiltViewModel(),
 ) {
 
@@ -56,8 +56,9 @@ fun NewsDetailsScreen(
         topBar = {
             TeseraToolbar(
                 titleText = details?.news?.title ?: title ?: "",
-                timeMachine = viewModel.timeMachine
-            ) { navController.popBackStack() }
+                timeMachine = viewModel.timeMachine,
+                navAction = onBack
+            )
         }
     )
     {

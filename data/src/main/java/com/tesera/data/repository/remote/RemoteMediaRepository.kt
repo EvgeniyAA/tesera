@@ -134,5 +134,5 @@ class RemoteMediaRepository @Inject constructor(
         this.toUri().getFileExtension(context) ?: ""
 
     private fun GameFile.getFileNameWithExt(context: Context) =
-        "${title}-${teseraId}.${photoUrl.fileExtension(context)}"
+        "${title.replace("\"","")}-${teseraId}.${photoUrl.fileExtension(context)}"
 }

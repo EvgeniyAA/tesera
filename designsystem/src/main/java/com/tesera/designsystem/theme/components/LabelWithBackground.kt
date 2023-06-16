@@ -11,11 +11,11 @@ import androidx.compose.ui.unit.dp
 import com.tesera.designsystem.theme.AppTheme
 
 @Composable
-fun LabelWithBackground(text: String, modifier: Modifier = Modifier) {
+fun LabelWithBackground(text: String, modifier: Modifier = Modifier, backgroundColor: Color = Color.Black.copy(alpha = 0.2f)) {
     Surface(
         modifier = modifier,
         shape = CircleShape,
-        color = Color.Black.copy(alpha = 0.2f)
+        color = backgroundColor
     ) {
         Text(
             modifier = Modifier.padding(vertical = 2.dp, horizontal = 4.dp),

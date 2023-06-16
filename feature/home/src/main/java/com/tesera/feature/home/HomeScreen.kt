@@ -14,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tesera.designsystem.R
 import com.tesera.designsystem.theme.AppTheme
@@ -22,9 +21,8 @@ import com.tesera.designsystem.theme.components.DisplayViewError
 import com.tesera.designsystem.theme.components.GamePreviewContent
 import com.tesera.designsystem.theme.components.NewsPreviewContent
 import com.tesera.designsystem.theme.components.StickyHeaderContent
-import com.tesera.domain.model.GamePreview
 import com.tesera.domain.model.NewsPreview
-import kotlinx.coroutines.launch
+import com.tesera.feature.home.models.HomeViewState
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -33,47 +31,31 @@ fun HomeScreen(
     onGames: () -> Unit,
     onNews: () -> Unit,
     onNewsDetails: (NewsPreview) -> Unit,
+    onUserClicked: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val refreshing by remember { mutableStateOf(false) }
 
-    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = {
-        viewModel.getContent()
-    })
+    val pullRefreshState =
+        rememberPullRefreshState(refreshing = refreshing, onRefresh = viewModel::getContent)
 
     val state by viewModel.state.collectAsState()
+    val listState = rememberLazyListState()
 
     Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
-        val listState = rememberLazyListState()
-        val coroutineScope = rememberCoroutineScope()
-
-        val onHeaderClick: () -> Unit = remember {
-            {
-                coroutineScope.launch {
-                    listState.animateScrollToItem(0)
-                }
-            }
-        }
-        val onGamesRetry: () -> Unit = remember { { viewModel.getGames() } }
-        val onNewsRetry: () -> Unit = remember { { viewModel.getNews() } }
         LazyColumn(state = listState) {
-            HotnessGames(
-                onHeaderClick,
+            hotnessGames(
                 onGames,
-                state.hotnessGames,
-                state.isGamesLoading,
-                state.gamesLoadingError,
+                state,
                 onGameDetails,
-                onGamesRetry
+                viewModel::getGames
             )
-            LatestNews(
-                onHeaderClick,
+            latestNews(
                 onNews,
-                state.news,
-                state.isNewsLoading,
-                state.newsLoadingError,
+                state,
                 onNewsDetails,
-                onNewsRetry
+                viewModel::getNews,
+                onUserClicked
             )
         }
         PullRefreshIndicator(
@@ -85,12 +67,9 @@ fun HomeScreen(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-private fun LazyListScope.HotnessGames(
-    onHeaderClick: () -> Unit,
+private fun LazyListScope.hotnessGames(
     onGames: () -> Unit,
-    games: List<GamePreview>,
-    isLoading: Boolean,
-    error: Throwable?,
+    state: HomeViewState,
     onGameDetails: (String) -> Unit,
     onRetry: () -> Unit,
 ) {
@@ -100,35 +79,18 @@ private fun LazyListScope.HotnessGames(
             R.drawable.ic_hotness,
             R.string.hotness_title,
             showMoreButton = true,
-            onClick = onHeaderClick,
             onMoreButtonClick = onGames
         )
     }
 
-    if (isLoading)
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center),
-                    strokeWidth = 2.dp,
-                    color = AppTheme.colors.primaryTintColor
-                )
-            }
-        }
-    if (error != null) {
-        item {
-            DisplayViewError(Modifier.fillMaxWidth(), onRetry)
-        }
+    if (state.isGamesLoading)
+        item { Loading() }
+    if (state.gamesLoadingError != null) {
+        item { DisplayViewError(Modifier.fillMaxWidth(), onRetry) }
     }
 
     items(
-        items = games,
+        items = state.hotnessGames,
         key = { game -> game.id }
     ) {
         GamePreviewContent(it) { onGameDetails(it.alias) }
@@ -136,49 +98,49 @@ private fun LazyListScope.HotnessGames(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-fun LazyListScope.LatestNews(
-    onHeaderClick: () -> Unit,
+fun LazyListScope.latestNews(
     onNews: () -> Unit,
-    news: List<NewsPreview>,
-    isLoading: Boolean,
-    error: Throwable?,
+    state: HomeViewState,
     onNewsDetails: (NewsPreview) -> Unit,
     onRetry: () -> Unit,
+    onUserClicked: (String) -> Unit,
 ) {
     stickyHeader {
         StickyHeaderContent(
             R.drawable.ic_publications,
             R.string.news_title,
             showMoreButton = true,
-            onClick = onHeaderClick,
             onMoreButtonClick = onNews
         )
     }
 
-    if (isLoading)
-        item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.Center),
-                    strokeWidth = 2.dp,
-                    color = AppTheme.colors.primaryTintColor
-                )
-            }
-        }
-    if (error != null) {
-        item {
-            DisplayViewError(Modifier.fillMaxWidth(), onRetry)
-        }
+    if (state.isNewsLoading)
+        item { Loading() }
+    if (state.newsLoadingError != null) {
+        item { DisplayViewError(Modifier.fillMaxWidth(), onRetry) }
     }
 
     items(
-        items = news,
+        items = state.news,
         key = { newsItem -> newsItem.objectId }
-    ) { NewsPreviewContent(it, onNewsDetails) }
+    ) {
+        NewsPreviewContent(it, onClick = onNewsDetails, onUserClicked = onUserClicked)
+    }
+}
+
+@Composable
+fun Loading() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(AppTheme.padding.medium)
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .size(AppTheme.sizes.large)
+                .align(Alignment.Center),
+            strokeWidth = AppTheme.padding.xxSmall,
+            color = AppTheme.colors.primaryTintColor
+        )
+    }
 }

@@ -26,15 +26,12 @@ class GamesViewModel @Inject constructor(
         MutableStateFlow(GamesViewState())
     val gamesViewState: StateFlow<GamesViewState> = _gamesViewState
 
-    fun getGames(): Flow<PagingData<GamePreview>> =
+    val games: Flow<PagingData<GamePreview>> =
         gamesUseCase.getHotnessGames().cachedIn(viewModelScope)
 
     override fun obtainIntent(intent: GamesIntent) = when (intent) {
         GamesIntent.ActionInvoked ->
             sendViewState(_gamesViewState.value.copy(action = GamesAction.None))
-        is GamesIntent.GameDetailsClicked -> sendViewState(
-            _gamesViewState.value.copy(action = GamesAction.ToGameDetails(intent.game))
-        )
     }
 
     private fun sendViewState(viewState: GamesViewState) {

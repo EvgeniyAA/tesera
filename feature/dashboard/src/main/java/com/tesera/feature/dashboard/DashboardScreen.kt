@@ -1,5 +1,8 @@
 package com.tesera.feature.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -52,7 +55,7 @@ fun BottomBar(navController: NavHostController) {
         ),
         BottomNavItem(
             name = stringResource(id = R.string.title_profile),
-            route = NavigationTree.Profile.name,
+            route = NavigationTree.MyProfile.name,
             icon = Icons.Rounded.Person,
         )
     )
@@ -61,7 +64,11 @@ fun BottomBar(navController: NavHostController) {
     val currentDestination = backStackEntry.value?.destination
 
     val bottomBarDestination = bottomNavItems.any { it.route == currentDestination?.route }
-    if (bottomBarDestination) {
+    AnimatedVisibility(
+        visible = bottomBarDestination, enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+    ) {
+
         NavigationBar(containerColor = AppTheme.colors.primaryBackground) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy

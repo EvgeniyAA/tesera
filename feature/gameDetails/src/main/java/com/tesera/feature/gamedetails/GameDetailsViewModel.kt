@@ -1,16 +1,18 @@
 package com.tesera.feature.gamedetails
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tesera.core.constants.KEY_ALIAS
+import com.tesera.core.mvi.MviViewModel
+import com.tesera.core.mvi.Reducer
 import com.tesera.domain.gameDetails.GameDetailsUseCase
+import com.tesera.feature.gamedetails.models.GameDetailsIntent
 import com.tesera.feature.gamedetails.models.GameDetailsViewState
+import com.tesera.feature.gamedetails.models.mapToIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -18,12 +20,12 @@ import javax.inject.Inject
 class GameDetailsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val useCase: GameDetailsUseCase,
-) : ViewModel() {
+) : MviViewModel<GameDetailsViewState, GameDetailsIntent>() {
 
-    private val _gameDetailsViewState: MutableStateFlow<GameDetailsViewState> =
-        MutableStateFlow(GameDetailsViewState())
+    private val reducer = GameDetailsReducer(GameDetailsViewState())
 
-    val gameDetailsViewState: StateFlow<GameDetailsViewState> = _gameDetailsViewState
+    override val state: StateFlow<GameDetailsViewState>
+        get() = reducer.state
 
     init {
         getGameDetails()
@@ -31,37 +33,54 @@ class GameDetailsViewModel @Inject constructor(
 
     fun getGameDetails() {
         viewModelScope.launch {
-            sendViewState(
-                _gameDetailsViewState.value.copy(
-                    isLoading = true,
-                    allGameInfo = null,
-                    error = null
-                )
-            )
-            try {
-                val result = useCase.getGameDetails(savedStateHandle.get<String>(KEY_ALIAS) ?: "")
-                sendViewState(
-                    _gameDetailsViewState.value.copy(
-                        isLoading = false,
-                        allGameInfo = result,
-                        error = null
-                    )
-                )
-            } catch (e: Exception) {
-                sendViewState(
-                    _gameDetailsViewState.value.copy(
-                        isLoading = false,
-                        allGameInfo = null,
-                        error = e
-                    )
-                )
+            useCase.getGameDetails(savedStateHandle.get<String>(KEY_ALIAS) ?: "").collect {
+                obtainIntent(it.mapToIntent())
             }
         }
     }
 
-    private fun sendViewState(viewState: GameDetailsViewState) {
-        viewModelScope.launch {
-            _gameDetailsViewState.emit(viewState)
+    fun onExpandClicked() {
+        obtainIntent(GameDetailsIntent.UiActions.ExpandDescription)
+    }
+
+    override fun obtainIntent(intent: GameDetailsIntent) {
+        reducer.sendIntent(intent)
+    }
+
+    private inner class GameDetailsReducer(initial: GameDetailsViewState) :
+        Reducer<GameDetailsViewState, GameDetailsIntent>(initial) {
+        override fun reduce(oldState: GameDetailsViewState, intent: GameDetailsIntent) {
+            when (intent) {
+                is GameDetailsIntent.PartialState.Error -> setState(
+                    oldState.copy(
+                        isLoading = false,
+                        allGameInfo = null,
+                        error = intent.error
+                    )
+                )
+
+                GameDetailsIntent.PartialState.Loading -> setState(
+                    oldState.copy(
+                        isLoading = true,
+                        allGameInfo = null,
+                        error = null
+                    )
+                )
+
+                is GameDetailsIntent.PartialState.Result -> setState(
+                    oldState.copy(
+                        isLoading = false,
+                        allGameInfo = intent.gameDetails,
+                        error = null
+                    )
+                )
+
+                GameDetailsIntent.UiActions.ExpandDescription -> setState(
+                    oldState.copy(
+                        isDescriptionExpanded = true
+                    )
+                )
+            }
         }
     }
 }

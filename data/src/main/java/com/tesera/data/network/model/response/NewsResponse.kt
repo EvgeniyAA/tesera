@@ -1,8 +1,10 @@
 package com.tesera.data.network.model.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.NewsModel
 
+@Keep
 data class NewsResponse(
     @SerializedName("teseraId") val teseraId: Int? = null,
     @SerializedName("title") val title: String? = null,

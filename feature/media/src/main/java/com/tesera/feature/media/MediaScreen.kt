@@ -33,10 +33,9 @@ fun MediaScreen(
     alias: String,
     linksLimit: Int,
     filesLimit: Int,
-    navController: NavController,
+    onBack: () -> Unit,
     mediaViewModel: MediaViewModel = hiltViewModel(),
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val bottomSheetData = remember { mutableStateOf<MediaModel?>(null) }
 
     LaunchedEffect(key1 = alias) {
@@ -67,8 +66,9 @@ fun MediaScreen(
             topBar = {
                 TeseraToolbar(
                     titleText = title,
-                    timeMachine = mediaViewModel.timeMachine
-                ) { navController.popBackStack() }
+                    timeMachine = mediaViewModel.timeMachine,
+                    navAction = onBack
+                )
             }
         ) {
             MediaScreenContent(

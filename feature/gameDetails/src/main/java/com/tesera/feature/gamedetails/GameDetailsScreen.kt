@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -70,47 +71,58 @@ fun GameDetailsScreen(
     onNewsDetails: (NewsPreview) -> Unit,
     onGameOwners: (String) -> Unit,
     onMarket: (String?, String?, MarketType) -> Unit,
+    onUserClicked: (String) -> Unit,
     viewModel: GameDetailsViewModel = hiltViewModel(),
 ) {
-    val viewState by viewModel.gameDetailsViewState.collectAsState()
-    val allInfo = viewState.allGameInfo
-    val refreshing by remember { mutableStateOf(false) }
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshing,
-        onRefresh = { viewModel.getGameDetails() })
+    val state by viewModel.state.collectAsState()
 
     Scaffold(
         modifier = Modifier.fillMaxHeight(),
         topBar = {
             TeseraToolbar(
-                titleText = allInfo?.game?.title ?: "",
-                description = allInfo?.game?.year.takeIf { it != null && it > 0 }?.toString()
-            ) { onBack() }
+                titleText = state.allGameInfo?.game?.title ?: "",
+                description = state.allGameInfo?.game?.year.takeIf { it != null && it > 0 }
+                    ?.toString(),
+                navAction = onBack
+            )
         }
     ) {
+        val refreshing by remember { mutableStateOf(false) }
+
+        val pullRefreshState = rememberPullRefreshState(
+            refreshing = refreshing,
+            onRefresh = viewModel::getGameDetails
+        )
+
         Box(
             modifier = Modifier
                 .padding(it)
                 .pullRefresh(pullRefreshState)
         ) {
-            when {
-                viewState.isLoading -> DisplayViewLoading()
-                viewState.error != null -> DisplayViewError(
+            if (state.isLoading) DisplayViewLoading()
+
+            state.error?.let {
+                DisplayViewError(
                     modifier = Modifier.fillMaxSize(),
                     viewModel::getGameDetails
                 )
+            }
 
-                allInfo != null -> GameDetailsContent(
-                    allInfo,
+            state.allGameInfo?.let {
+                GameDetailsContent(
+                    it,
+                    state.isDescriptionExpanded,
                     onGameDetails,
                     onNewsDetails,
                     onMedia,
                     onComments,
                     onGameOwners,
-                    onMarket
+                    onMarket,
+                    onUserClicked,
+                    viewModel::onExpandClicked
                 )
             }
+
             PullRefreshIndicator(
                 refreshing = refreshing,
                 state = pullRefreshState,
@@ -124,12 +136,15 @@ fun GameDetailsScreen(
 @Composable
 private fun GameDetailsContent(
     allInfo: GameDetails,
+    isExpanded: Boolean,
     onGamePreviewClicked: (String) -> Unit,
     onNewsDetails: (NewsPreview) -> Unit,
     onMedia: (String, Int, Int) -> Unit,
     onComments: (String, String) -> Unit,
     onGameOwners: (String) -> Unit,
     onMarket: (String?, String?, MarketType) -> Unit,
+    onUserClicked: (String) -> Unit,
+    onExpandClicked: () -> Unit,
 ) {
 
     val game = allInfo.game
@@ -143,8 +158,10 @@ private fun GameDetailsContent(
             .fillMaxSize()
     ) {
         item {
+            val pagerState = remember { PagerState() }
             SlidingCarousel(
                 itemsCount = images.size,
+                pagerState = pagerState,
                 itemContent = { index ->
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -152,26 +169,27 @@ private fun GameDetailsContent(
                             .build(),
                         contentDescription = null,
                         modifier = Modifier
+                            .fillMaxWidth()
                             .height(200.dp)
-                            .padding(vertical = 16.dp)
-                    )
+                            .padding(vertical = AppTheme.padding.medium),
+
+                        )
                 }
             )
-            val roundedCorners =
-                RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .zIndex(1f)
                     .background(
                         color = AppTheme.colors.primaryBackground,
-                        shape = roundedCorners
+                        shape = AppTheme.shapes.mediumTop
                     )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(AppTheme.padding.medium)
                 ) {
                     RatingView(
                         startBackgroundColor = AppTheme.colors.bggBackgroundGradientStart,
@@ -180,8 +198,8 @@ private fun GameDetailsContent(
                         rating = game.bggRating,
                         votesNum = game.bggNumVotes,
                         shape = RoundedCornerShape(
-                            topStart = 16.dp,
-                            bottomStart = 16.dp
+                            topStart = AppTheme.padding.medium,
+                            bottomStart = AppTheme.padding.medium
                         )
                     )
                     RatingView(
@@ -191,8 +209,8 @@ private fun GameDetailsContent(
                         rating = game.ratingUser,
                         votesNum = game.numVotes,
                         shape = RoundedCornerShape(
-                            topEnd = 16.dp,
-                            bottomEnd = 16.dp
+                            topEnd = AppTheme.padding.medium,
+                            bottomEnd = AppTheme.padding.medium
                         )
                     )
                 }
@@ -203,8 +221,8 @@ private fun GameDetailsContent(
                 GridCells.Fixed(2),
                 modifier = Modifier.height(270.dp),
                 contentPadding = PaddingValues(
-                    horizontal = 16.dp,
-                    vertical = 8.dp
+                    horizontal = AppTheme.padding.medium,
+                    vertical = AppTheme.padding.small
                 ),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -222,6 +240,7 @@ private fun GameDetailsContent(
                             GameDetailsButtonType.HasGame -> onGameOwners(game.alias)
                             GameDetailsButtonType.Sell ->
                                 onMarket(game.alias, null, MarketType.Sell)
+
                             GameDetailsButtonType.Buy -> onMarket(game.alias, null, MarketType.Buy)
                             GameDetailsButtonType.GameReports -> onComments(game.alias, "games")
                         }
@@ -236,9 +255,11 @@ private fun GameDetailsContent(
                 ).toString(),
                 minimizedMaxLines = 4,
                 modifier = Modifier.padding(
-                    start = 16.dp,
-                    end = 16.dp
-                )
+                    start = AppTheme.padding.medium,
+                    end = AppTheme.padding.medium
+                ),
+                isExpanded = isExpanded,
+                onExpandedClicked = onExpandClicked
             )
 
             val density = LocalDensity.current
@@ -266,9 +287,11 @@ private fun GameDetailsContent(
                 items = allInfo.news,
                 key = { newsItem -> newsItem.objectId }
             ) {
-                NewsPreviewContent(it) {
-//                            onNewsDetails(it)
-                }
+                NewsPreviewContent(
+                    it,
+                    onUserClicked = onUserClicked,
+                    onClick = onNewsDetails
+                )
             }
         }
     }

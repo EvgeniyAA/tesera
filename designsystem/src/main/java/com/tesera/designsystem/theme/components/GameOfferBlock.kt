@@ -21,7 +21,7 @@ import com.tesera.designsystem.theme.AppTheme
 import com.tesera.domain.model.GamePreview
 
 @Composable
-fun GameOfferBlock(
+fun  GameOfferBlock(
     text: String,
     items: List<GamePreview>,
     modifier: Modifier,

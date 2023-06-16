@@ -125,7 +125,7 @@ fun MarketItem(
                             IconWithText(
                                 icon = R.drawable.ic_location,
                                 iconSize = 14,
-                                text = "${item.country.value}, ${item.city.value}"
+                                text = listOf(item.country.value, item.city.value).filter { it.isNotEmpty() }.joinToString(", ")
                             )
                     }
                 }

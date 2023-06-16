@@ -13,5 +13,4 @@ sealed class ProfilePartialState {
     ) : ProfilePartialState()
 
     data class Error(val error: Throwable) : ProfilePartialState()
-
 }

@@ -8,7 +8,7 @@ import com.tesera.domain.profile.ProfilePartialState
 
 sealed class ProfileIntent : UiIntent {
     sealed class UiActions : ProfileIntent() {
-        object Unauthorized: ProfileIntent()
+        object Unauthorized : ProfileIntent()
     }
 
     sealed class PartialState : ProfileIntent() {

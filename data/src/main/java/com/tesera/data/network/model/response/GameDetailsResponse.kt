@@ -2,6 +2,7 @@ package com.tesera.data.network.model.response
 
 import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.GameDetails
+import com.tesera.domain.model.NewsType
 
 data class GameDetailsResponse(
     @SerializedName("game") val game: GameResponse? = GameResponse(),
@@ -45,5 +46,5 @@ fun GameDetailsResponse?.toModel() = GameDetails(
     links = this?.links?.map { it.toLinkModel() } ?: emptyList(),
     similarGames = this?.similars?.map { it.toGameModel() } ?: emptyList(),
     relatedGames = this?.relateds?.map { it.toGameModel() } ?: emptyList(),
-    news = this?.news?.map { it.toModel() } ?: emptyList()
+    news = this?.news?.map { it.toModel().copy(objectType = NewsType.News) } ?: emptyList()
 )

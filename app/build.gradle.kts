@@ -25,8 +25,10 @@ android {
         }
         create("performance") {
             initWith(getByName("debug"))
-            isDebuggable = false
+            isDebuggable = true
             isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 

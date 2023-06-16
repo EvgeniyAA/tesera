@@ -1,3 +1,5 @@
+import org.gradle.api.NamedDomainObjectContainer
+
 object ProjectSettings {
     const val compileSdk = 33
     const val minSdk = 24
@@ -83,4 +85,12 @@ object Deps {
     const val mockito = "com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockito}"
     const val mockK = "io.mockk:mockk:${Versions.mockk}"
 
+}
+
+object BuildTypes {
+    fun <BuildTypeT> NamedDomainObjectContainer<BuildTypeT>.performance(action: BuildTypeT.() -> Unit) {
+        create("performance") {
+            action()
+        }
+    }
 }

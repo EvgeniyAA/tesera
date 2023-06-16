@@ -1,5 +1,8 @@
 package com.tesera.domain.model
 
+import androidx.compose.runtime.Stable
+
+@Stable
 data class NewsModel(
     val teseraId: Int,
     val title: String,

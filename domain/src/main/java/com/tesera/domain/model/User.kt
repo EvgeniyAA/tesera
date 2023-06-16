@@ -1,7 +1,9 @@
 package com.tesera.domain.model
 
+import androidx.compose.runtime.Stable
 import java.util.Date
 
+@Stable
 data class User(
     val teseraId: Int,
     val login: String,

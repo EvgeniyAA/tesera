@@ -1,15 +1,17 @@
 package com.tesera.data.network.model.response
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.Photo
 
+@Keep
 data class PhotoResponse(
     @SerializedName("teseraId") val teseraId: Int? = null,
     @SerializedName("title") val title: String? = null,
     @SerializedName("photoUrl") val photoUrl: String? = null,
     @SerializedName("creationDateUtc") val creationDateUtc: String? = null,
     @SerializedName("commentsTotal") val commentsTotal: Int? = null,
-    @SerializedName("author") val author: AuthorResponse? = AuthorResponse(),
+    @SerializedName("author") val author: AuthorResponse? = null,
 )
 
 fun PhotoResponse?.toPhotoModel() = Photo(

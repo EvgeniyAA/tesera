@@ -1,3 +1,5 @@
+import BuildTypes.performance
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -25,6 +27,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+        performance {
+            initWith(getByName("debug"))
+            isMinifyEnabled = false
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,6 +51,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
+    implementation(project(":designsystem"))
 
     implementation(Deps.hilt_navigation)
     implementation(Deps.hilt_android)

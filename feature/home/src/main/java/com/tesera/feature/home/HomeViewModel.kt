@@ -1,14 +1,14 @@
 package com.tesera.feature.home
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tesera.core.mvi.IntentHandler
-import com.tesera.domain.home.HomePartialState
+import com.tesera.core.mvi.MviViewModel
+import com.tesera.core.mvi.Reducer
 import com.tesera.domain.home.HomeUseCase
 import com.tesera.feature.home.models.HomeIntent
+import com.tesera.feature.home.models.HomeIntent.PartialState
 import com.tesera.feature.home.models.HomeViewState
+import com.tesera.feature.home.models.mapToIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,12 +16,12 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val useCase: HomeUseCase,
-) : ViewModel(), IntentHandler<HomeIntent> {
+) : MviViewModel<HomeViewState, HomeIntent>() {
 
-    private val _state: MutableStateFlow<HomeViewState> =
-        MutableStateFlow(HomeViewState())
+    private val reducer = HomeReducer(HomeViewState())
 
-    val state: StateFlow<HomeViewState> = _state
+    override val state: StateFlow<HomeViewState>
+        get() = reducer.state
 
     init {
         getContent()
@@ -29,106 +29,86 @@ class HomeViewModel @Inject constructor(
 
     fun getContent() {
         viewModelScope.launch {
-            var oldState = _state.value
             useCase.getContent().collect {
-                val newState = reduce(oldState, it)
-                oldState = newState
-                sendViewState(newState)
+                obtainIntent(it.mapToIntent())
             }
         }
     }
 
     fun getGames() {
         viewModelScope.launch {
-            var oldState = _state.value
             useCase.latestHotnessGames().collect {
-                val newState = reduce(oldState, it)
-                oldState = newState
-                sendViewState(newState)
+                obtainIntent(it.mapToIntent())
             }
         }
     }
 
     fun getNews() {
         viewModelScope.launch {
-            var oldState = _state.value
             useCase.latestNews().collect {
-                val newState = reduce(oldState, it)
-                oldState = newState
-                sendViewState(newState)
+                obtainIntent(it.mapToIntent())
             }
         }
     }
 
-    private fun reduce(oldState: HomeViewState, partialState: HomePartialState): HomeViewState {
-        println(partialState.toString())
-        return when (partialState) {
-            is HomePartialState.Games -> oldState.copy(
-                hotnessGames = partialState.games,
-                isGamesLoading = false,
-                gamesLoadingError = null
-            )
+    private inner class HomeReducer(initial: HomeViewState) :
+        Reducer<HomeViewState, HomeIntent>(initial) {
 
-            HomePartialState.GamesLoading -> oldState.copy(
-                isGamesLoading = true,
-                gamesLoadingError = null,
-                hotnessGames = emptyList()
-            )
+        override fun reduce(
+            oldState: HomeViewState,
+            intent: HomeIntent,
+        ) {
+            when (intent) {
+                is PartialState.Games -> setState(
+                    oldState.copy(
+                        hotnessGames = intent.games,
+                        isGamesLoading = false,
+                        gamesLoadingError = null
+                    )
+                )
 
-            is HomePartialState.GamesLoadingError -> oldState.copy(
-                gamesLoadingError = partialState.error,
-                isGamesLoading = false
-            )
+                PartialState.GamesLoading -> setState(
+                    oldState.copy(
+                        isGamesLoading = true,
+                        gamesLoadingError = null,
+                        hotnessGames = emptyList()
+                    )
+                )
 
-            is HomePartialState.News -> oldState.copy(
-                news = partialState.news,
-                isNewsLoading = false,
-                newsLoadingError = null
-            )
+                is PartialState.GamesLoadingError -> setState(
+                    oldState.copy(
+                        gamesLoadingError = intent.error,
+                        isGamesLoading = false
+                    )
+                )
 
-            HomePartialState.NewsLoading -> oldState.copy(
-                isNewsLoading = true,
-                newsLoadingError = null,
-                news = emptyList()
-            )
+                is PartialState.News -> setState(
+                    oldState.copy(
+                        news = intent.news,
+                        isNewsLoading = false,
+                        newsLoadingError = null
+                    )
+                )
 
-            is HomePartialState.NewsLoadingError -> oldState.copy(
-                newsLoadingError = partialState.error,
-                isNewsLoading = false
-            )
+                PartialState.NewsLoading -> setState(
+                    oldState.copy(
+                        isNewsLoading = true,
+                        newsLoadingError = null,
+                        news = emptyList()
+                    )
+                )
+
+                is PartialState.NewsLoadingError -> setState(
+                    oldState.copy(
+                        newsLoadingError = intent.error,
+                        isNewsLoading = false
+                    )
+                )
+            }
         }
     }
 
-    override fun obtainIntent(intent: HomeIntent) {}//=
-//        when (intent) {
-//            HomeIntent.GameListClicked -> gameList()
-//            HomeIntent.NewsListClicked -> newsList()
-//            HomeIntent.ActionInvoked -> sendViewState(_homeViewState.value.copy(action = HomeAction.None))
-//            is HomeIntent.GameDetailsClicked -> sendViewState(
-//                _homeViewState.value.copy(action = HomeAction.ToGameDetails(intent.game))
-//            )
-//            is HomeIntent.NewsDetailsClicked -> sendViewState(
-//                _homeViewState.value.copy(action = HomeAction.ToNewsDetails(intent.news))
-//            )
-//        }
-
-//    private fun gameList() {
-//        gamesFilterUseCase.setFilter(
-//            GamesFilter(
-//                type = GamesType.HOTNESSBGG,
-//                sort = GamesType.HOTNESS
-//            )
-//        )
-//        sendViewState(_homeViewState.value.copy(action = HomeAction.ToGamesList))
-//    }
-//
-//    private fun newsList() {
-//        sendViewState(_homeViewState.value.copy(action = HomeAction.ToNewsList))
-//    }
-
-    private fun sendViewState(viewState: HomeViewState) {
-        viewModelScope.launch {
-            _state.value = viewState
-        }
+    override fun obtainIntent(intent: HomeIntent) {
+        reducer.sendIntent(intent)
     }
 }

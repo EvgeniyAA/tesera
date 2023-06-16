@@ -3,7 +3,6 @@ package com.tesera.data.network.model.response
 import com.google.gson.annotations.SerializedName
 import com.tesera.core.utils.toDate
 import com.tesera.domain.model.CommentModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 data class CommentResponse(

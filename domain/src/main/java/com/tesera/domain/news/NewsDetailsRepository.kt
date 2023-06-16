@@ -1,7 +1,6 @@
 package com.tesera.domain.news
 
 import com.tesera.domain.model.NewsInfo
-import com.tesera.domain.model.NewsModel
 
 interface NewsDetailsRepository {
     suspend fun getNews(alias: String): NewsInfo

@@ -5,8 +5,6 @@ import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -20,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.tesera.base.newsdetails.models.NewsDetailsIntent
 import com.tesera.core.utils.CoilImageGetter
 import com.tesera.designsystem.theme.components.TeseraToolbar

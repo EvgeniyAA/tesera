@@ -2,7 +2,6 @@ package com.tesera.designsystem.theme
 
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Shapes
 import androidx.compose.ui.unit.dp
 
 data class TeseraShapes(
@@ -10,7 +9,7 @@ data class TeseraShapes(
     val medium: RoundedCornerShape,
     val smallTop: RoundedCornerShape,
     val mediumTop: RoundedCornerShape,
-    val circle: RoundedCornerShape
+    val circle: RoundedCornerShape,
 )
 
 val shapes = TeseraShapes(

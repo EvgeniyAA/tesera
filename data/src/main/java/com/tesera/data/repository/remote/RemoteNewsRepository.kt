@@ -7,13 +7,11 @@ import com.tesera.data.network.Dispatcher
 import com.tesera.data.network.NetworkDataSource
 import com.tesera.data.network.TeseraDispatchers
 import com.tesera.data.network.model.response.toModel
-import com.tesera.domain.news.NewsPageParams
 import com.tesera.domain.model.NewsPreview
+import com.tesera.domain.news.NewsPageParams
 import com.tesera.domain.news.NewsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject

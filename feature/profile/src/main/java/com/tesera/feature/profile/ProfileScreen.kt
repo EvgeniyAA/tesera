@@ -1,15 +1,11 @@
 package com.tesera.feature.profile
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -50,9 +46,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -61,12 +55,12 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.tesera.designsystem.theme.AppTheme
-import com.tesera.designsystem.theme.components.avatarTextPainter
 import com.tesera.designsystem.theme.components.HorizontalPhotoBlock
 import com.tesera.designsystem.theme.components.IconWithText
 import com.tesera.designsystem.theme.components.MarketItemHorizontalBlock
 import com.tesera.designsystem.theme.components.MinimumHeightState
 import com.tesera.designsystem.theme.components.ProfileListButton
+import com.tesera.designsystem.theme.components.avatarTextPainter
 import com.tesera.designsystem.theme.components.minimumHeightModifier
 import com.tesera.domain.model.User
 import com.tesera.feature.profile.models.ProfileData
@@ -133,7 +127,7 @@ private fun Header(scroll: ScrollState, headerHeightPx: Float) {
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun Body(scroll: ScrollState, profileData: ProfileData) {
     val headerHeightPx = with(LocalDensity.current) { headerHeight.dp.toPx() }

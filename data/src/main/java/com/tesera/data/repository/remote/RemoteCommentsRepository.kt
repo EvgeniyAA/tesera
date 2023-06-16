@@ -8,7 +8,6 @@ import com.tesera.domain.comments.CommentsRepository
 import com.tesera.domain.model.CommentModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

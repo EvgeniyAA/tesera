@@ -11,7 +11,6 @@ import com.tesera.feature.gamedetails.models.GameDetailsViewState
 import com.tesera.feature.gamedetails.models.mapToIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -22,7 +22,6 @@ import com.tesera.domain.model.Author
 import com.tesera.domain.model.GameOwner
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun Avatar(author: Author, avatarSize: Float, onClick: () -> Unit = {}) {
     AsyncImage(

@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 import com.tesera.domain.model.NewsInfo
 
 @Keep
-
 data class ArticleResponse(
     @SerializedName("article") val article: NewsResponse,
     @SerializedName("author") val author: AuthorResponse

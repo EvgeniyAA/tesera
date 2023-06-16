@@ -18,7 +18,6 @@ import androidx.paging.compose.items
 import com.tesera.designsystem.theme.components.NewsPreviewContent
 import com.tesera.designsystem.theme.components.TeseraToolbar
 import com.tesera.domain.model.NewsPreview
-import timber.log.Timber
 
 @Composable
 fun NewsScreen(
